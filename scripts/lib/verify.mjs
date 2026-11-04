@@ -6,7 +6,7 @@ import { scan } from "./scan.mjs";
 import { shellBlocks, headings, images, links, prose } from "./markdown.mjs";
 import { firstScreen } from "./screen.mjs";
 import { runCopy } from "./execute.mjs";
-import {heroRelevance,retentionCheck} from "./evidence.mjs";
+import { heroRelevance, retentionCheck } from "./evidence.mjs";
 const check = (id, issues = [], extra = {}) => ({
   id,
   status: issues.length ? "fail" : "pass",
@@ -64,6 +64,24 @@ export async function staticChecks(repo, facts, brief = {}, opts = {}) {
   );
   const imageIssues = [],
     referenced = [...links(md), ...links(zh)];
+  const artInputs = await json(path.join(repo, "docs/readme/art.json"), {
+    images: [],
+  });
+  for (const image of artInputs.images || []) {
+    for (const input of image.screens || [])
+      for (const value of typeof input === "string"
+        ? [input]
+        : Object.values(input))
+        referenced.push(path.posix.join("docs/readme", value));
+    if (image.captureId) {
+      const c = await json(
+        path.join(repo, "docs/readme/captures", image.captureId + ".json"),
+      );
+      for (const input of c?.artifacts || [])
+        referenced.push(path.posix.join("docs/readme", input.file));
+    }
+  }
+
   for (const [file, text] of [
     ["README.md", md],
     ...(zh ? [["README.zh-CN.md", zh]] : []),
@@ -173,9 +191,34 @@ export async function staticChecks(repo, facts, brief = {}, opts = {}) {
       )?.text;
     if (lead) {
       const plain = lead.replace(/[\*_`]/g, "");
-      if (/^(?:Help\s|A tool that\b|An agent skill that\b|This project\b|帮助|一个.*的工具)/i.test(plain)||/using an agent skill/i.test(plain))copy.push(`${file}: Generic one-liner`);
-      const nouns=[...(brief.coreAction?.output?.keywords||[]),'README','draft','text','digest','note','report','profile','image','package','文字','草稿','文风','档案','笔记','摘要','报告','图片'];
-      if(!nouns.some(n=>plain.toLowerCase().includes(n.toLowerCase())))copy.push(`${file}: One-liner needs a concrete artifact noun`);
+      if (
+        /^(?:Help\s|A tool that\b|An agent skill that\b|This project\b|帮助|一个.*的工具)/i.test(
+          plain,
+        ) ||
+        /using an agent skill/i.test(plain)
+      )
+        copy.push(`${file}: Generic one-liner`);
+      const nouns = [
+        "README",
+        "draft",
+        "text",
+        "digest",
+        "note",
+        "report",
+        "profile",
+        "image",
+        "package",
+        "文字",
+        "草稿",
+        "文风档案",
+        "档案",
+        "笔记",
+        "摘要",
+        "报告",
+        "图片",
+      ];
+      if (!nouns.some((n) => plain.toLowerCase().includes(n.toLowerCase())))
+        copy.push(`${file}: One-liner needs a concrete artifact noun`);
       const count =
         lang === "en"
           ? (plain.match(/\b[\w'-]+\b/g) || []).length
@@ -207,13 +250,16 @@ export async function staticChecks(repo, facts, brief = {}, opts = {}) {
   const terms = [
     ...denied,
     ...(!brief.allowNamedAlternatives
-      ? (facts.facts || []).filter(f=>f.kind==="alternative").map(f=>f.value).filter(
-          (t) =>
-            !Object.keys({
-              ...facts.manifest.dependencies,
-              ...facts.manifest.devDependencies,
-            }).includes(t),
-        )
+      ? (facts.facts || [])
+          .filter((f) => f.kind === "alternative")
+          .map((f) => f.value)
+          .filter(
+            (t) =>
+              !Object.keys({
+                ...facts.manifest.dependencies,
+                ...facts.manifest.devDependencies,
+              }).includes(t),
+          )
       : []),
   ];
   for (const t of terms)
@@ -440,16 +486,22 @@ export async function verify(opts) {
         artIssues.push(`Hash mismatch ${f.file}`);
       if (
         !f.checks ||
-        ["overflow", "fontSize", "contrast", "fields", "size","mainText","density"].some(
-          (k) => f.checks[k] !== "pass",
-        )
+        [
+          "overflow",
+          "fontSize",
+          "contrast",
+          "fields",
+          "size",
+          "mainText",
+          "density",
+        ].some((k) => f.checks[k] !== "pass")
       )
         artIssues.push(`Failed or absent self-check ${f.file}`);
     }
   checks.push(check("V9", artIssues));
-  checks.push(await heroRelevance(opts.repo,brief,facts));
-  checks.push(await retentionCheck(opts.repo,opts));
-  checks.sort((a, b) => a.id.localeCompare(b.id));
+  checks.push(await heroRelevance(opts.repo, brief, facts));
+  checks.push(await retentionCheck(opts.repo, opts));
+  checks.sort((a, b) => Number(a.id.slice(1)) - Number(b.id.slice(1)));
   const r = {
     mode: "verify",
     ok: !checks.some((c) => c.status === "fail"),
