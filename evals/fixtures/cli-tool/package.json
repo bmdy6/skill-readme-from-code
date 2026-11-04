@@ -1,0 +1,11 @@
+{
+  "name": "moss-cli-tool",
+  "version": "1.0.0",
+  "license": "MIT",
+  "scripts": {
+    "test": "node --test"
+  },
+  "bin": {
+    "moss": "index.mjs"
+  }
+}
