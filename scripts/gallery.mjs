@@ -26,7 +26,7 @@ for (const [name, title, lines] of [
 ])
   await write(
     path.join(base, `gallery-${name}.svg`),
-    `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="400"><rect width="800" height="400" fill="#f6f6f3"/><rect x="24" y="24" width="752" height="352" rx="14" fill="white" stroke="#dedfd9"/><text x="56" y="90" fill="#1c1e1b" font-family="sans-serif" font-size="32" font-weight="bold">${title}</text>${lines.map((l, i) => `<text x="56" y="${160 + i * 70}" fill="#586052" font-family="sans-serif" font-size="28">${l}</text>`).join("")}</svg>`,
+    `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="400"><rect width="800" height="400" fill="#f6f6f3"/><rect x="24" y="24" width="752" height="352" rx="14" fill="white" stroke="#dedfd9"/><text x="56" y="90" fill="#1c1e1b" font-family="sans-serif" font-size="38" font-weight="bold">${title}</text>${lines.map((l, i) => `<text x="56" y="${160 + i * 70}" fill="#586052" font-family="sans-serif" font-size="34">${l}</text>`).join("")}</svg>`,
   );
 for (const name of ["input", "output"]) {
   const translations = {

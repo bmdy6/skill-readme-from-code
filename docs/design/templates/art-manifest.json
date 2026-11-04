@@ -9,25 +9,36 @@
       "language": "en",
       "kind": "fixture",
       "captureId": "moss",
-      "sha256": "e2193ed8e1fa1a536699b9ab48bd261b475d4d67beb31228c18041b0c1ce4c9a",
-      "bytes": 54135,
-      "cssWidth": 900,
-      "cssHeight": 364.09375,
+      "sha256": "2682a1f1afe9eae8d1ef612d53df2906fa46cc58210d576a42950192c6f2d970",
+      "bytes": 59198,
+      "cssWidth": 640,
+      "cssHeight": 401.28125,
+      "contentBounds": {
+        "left": 28,
+        "top": 41,
+        "right": 612,
+        "bottom": 359.28125
+      },
+      "contentRatio": 0.7237608052332373,
       "checks": {
         "overflow": "pass",
         "fontSize": "pass",
         "contrast": "pass",
         "fields": "pass",
+        "mainText": "pass",
+        "density": "pass",
         "size": "pass"
       },
       "problems": {
         "overflow": [],
         "fontSize": [],
         "contrast": [],
-        "fields": []
+        "fields": [],
+        "mainText": [],
+        "density": []
       },
-      "width": 900,
-      "height": 364.09375
+      "width": 640,
+      "height": 401.28125
     },
     {
       "file": "hero-terminal-dark.png",
@@ -36,25 +47,36 @@
       "language": "en",
       "kind": "fixture",
       "captureId": "moss",
-      "sha256": "cd6f356e345f5dc81c022271319d151bd981376d80cf29017e16c992475dcbe4",
-      "bytes": 54502,
-      "cssWidth": 900,
-      "cssHeight": 364.09375,
+      "sha256": "31a51e27f7abe10a61cf80a8c7ee025857b6b966cf5660b3a500caa4af942e02",
+      "bytes": 59425,
+      "cssWidth": 640,
+      "cssHeight": 401.28125,
+      "contentBounds": {
+        "left": 28,
+        "top": 41,
+        "right": 612,
+        "bottom": 359.28125
+      },
+      "contentRatio": 0.7237608052332373,
       "checks": {
         "overflow": "pass",
         "fontSize": "pass",
         "contrast": "pass",
         "fields": "pass",
+        "mainText": "pass",
+        "density": "pass",
         "size": "pass"
       },
       "problems": {
         "overflow": [],
         "fontSize": [],
         "contrast": [],
-        "fields": []
+        "fields": [],
+        "mainText": [],
+        "density": []
       },
-      "width": 900,
-      "height": 364.09375
+      "width": 640,
+      "height": 401.28125
     },
     {
       "file": "hero-terminal-light.zh-CN.png",
@@ -63,25 +85,36 @@
       "language": "zh-CN",
       "kind": "fixture",
       "captureId": "moss",
-      "sha256": "29bcb77097fd24a04e2c849db46689a196acfba1399fc26dea97c61018ff4f2f",
-      "bytes": 52148,
-      "cssWidth": 900,
-      "cssHeight": 364.09375,
+      "sha256": "5b2044361cabe9d50494bff2b9479c68bcdf0259e6bc2e85cc96e9c8cde4a058",
+      "bytes": 57228,
+      "cssWidth": 640,
+      "cssHeight": 401.28125,
+      "contentBounds": {
+        "left": 28,
+        "top": 41,
+        "right": 612,
+        "bottom": 359.28125
+      },
+      "contentRatio": 0.7237608052332373,
       "checks": {
         "overflow": "pass",
         "fontSize": "pass",
         "contrast": "pass",
         "fields": "pass",
+        "mainText": "pass",
+        "density": "pass",
         "size": "pass"
       },
       "problems": {
         "overflow": [],
         "fontSize": [],
         "contrast": [],
-        "fields": []
+        "fields": [],
+        "mainText": [],
+        "density": []
       },
-      "width": 900,
-      "height": 364.09375
+      "width": 640,
+      "height": 401.28125
     },
     {
       "file": "hero-terminal-dark.zh-CN.png",
@@ -90,25 +123,36 @@
       "language": "zh-CN",
       "kind": "fixture",
       "captureId": "moss",
-      "sha256": "de51522c4ed2606cfcfe4154b81384663d8fc0b8669ea80f9bd2540e21f517db",
-      "bytes": 52519,
-      "cssWidth": 900,
-      "cssHeight": 364.09375,
+      "sha256": "95056a959900ffb5d8e52062c22806a0e1593a292f35b2fabb0f06eef4c93696",
+      "bytes": 57447,
+      "cssWidth": 640,
+      "cssHeight": 401.28125,
+      "contentBounds": {
+        "left": 28,
+        "top": 41,
+        "right": 612,
+        "bottom": 359.28125
+      },
+      "contentRatio": 0.7237608052332373,
       "checks": {
         "overflow": "pass",
         "fontSize": "pass",
         "contrast": "pass",
         "fields": "pass",
+        "mainText": "pass",
+        "density": "pass",
         "size": "pass"
       },
       "problems": {
         "overflow": [],
         "fontSize": [],
         "contrast": [],
-        "fields": []
+        "fields": [],
+        "mainText": [],
+        "density": []
       },
-      "width": 900,
-      "height": 364.09375
+      "width": 640,
+      "height": 401.28125
     },
     {
       "file": "hero-prompt-light.png",
@@ -117,25 +161,36 @@
       "language": "en",
       "kind": "fixture",
       "captureId": "moss",
-      "sha256": "656b4765873055ed95623a55e39cdef3f69e28aa86e37699006cc2c3846787f7",
-      "bytes": 66691,
-      "cssWidth": 900,
-      "cssHeight": 307.5,
+      "sha256": "4fa03779de1b38f2645d2bf06ba30e152202dff081b3755aea2014de6b757eeb",
+      "bytes": 48894,
+      "cssWidth": 640,
+      "cssHeight": 279.1875,
+      "contentBounds": {
+        "left": 28,
+        "top": 40,
+        "right": 612,
+        "bottom": 239.1875
+      },
+      "contentRatio": 0.6510269755988359,
       "checks": {
         "overflow": "pass",
         "fontSize": "pass",
         "contrast": "pass",
         "fields": "pass",
+        "mainText": "pass",
+        "density": "pass",
         "size": "pass"
       },
       "problems": {
         "overflow": [],
         "fontSize": [],
         "contrast": [],
-        "fields": []
+        "fields": [],
+        "mainText": [],
+        "density": []
       },
-      "width": 900,
-      "height": 307.5
+      "width": 640,
+      "height": 279.1875
     },
     {
       "file": "hero-prompt-dark.png",
@@ -144,25 +199,36 @@
       "language": "en",
       "kind": "fixture",
       "captureId": "moss",
-      "sha256": "121ad5e8543014a719236e862597ac3b04bdfd55a9d1e3282487d9da0d7b77c8",
-      "bytes": 66794,
-      "cssWidth": 900,
-      "cssHeight": 307.5,
+      "sha256": "261b769db1f8f62ece54b4ccb1c95413389ffe8d0c401f4a9c5d3a149963de6b",
+      "bytes": 49278,
+      "cssWidth": 640,
+      "cssHeight": 279.1875,
+      "contentBounds": {
+        "left": 28,
+        "top": 40,
+        "right": 612,
+        "bottom": 239.1875
+      },
+      "contentRatio": 0.6510269755988359,
       "checks": {
         "overflow": "pass",
         "fontSize": "pass",
         "contrast": "pass",
         "fields": "pass",
+        "mainText": "pass",
+        "density": "pass",
         "size": "pass"
       },
       "problems": {
         "overflow": [],
         "fontSize": [],
         "contrast": [],
-        "fields": []
+        "fields": [],
+        "mainText": [],
+        "density": []
       },
-      "width": 900,
-      "height": 307.5
+      "width": 640,
+      "height": 279.1875
     },
     {
       "file": "hero-prompt-light.zh-CN.png",
@@ -171,25 +237,36 @@
       "language": "zh-CN",
       "kind": "fixture",
       "captureId": "moss",
-      "sha256": "9596767ce10f10ec03ca5d86a1112fb4fd5de8798571ceab8a16990db1733f15",
-      "bytes": 67640,
-      "cssWidth": 900,
-      "cssHeight": 307.5,
+      "sha256": "b08973ccb5c8081f0b0d689f8293bcffe76036a4fcd234731825dbc68b807eb8",
+      "bytes": 50589,
+      "cssWidth": 640,
+      "cssHeight": 279.1875,
+      "contentBounds": {
+        "left": 28,
+        "top": 40,
+        "right": 612,
+        "bottom": 239.1875
+      },
+      "contentRatio": 0.6510269755988359,
       "checks": {
         "overflow": "pass",
         "fontSize": "pass",
         "contrast": "pass",
         "fields": "pass",
+        "mainText": "pass",
+        "density": "pass",
         "size": "pass"
       },
       "problems": {
         "overflow": [],
         "fontSize": [],
         "contrast": [],
-        "fields": []
+        "fields": [],
+        "mainText": [],
+        "density": []
       },
-      "width": 900,
-      "height": 307.5
+      "width": 640,
+      "height": 279.1875
     },
     {
       "file": "hero-prompt-dark.zh-CN.png",
@@ -198,25 +275,36 @@
       "language": "zh-CN",
       "kind": "fixture",
       "captureId": "moss",
-      "sha256": "94aa572935735b14f17fe8061632750bc075818419a95a070f99176f8c8beec7",
-      "bytes": 68022,
-      "cssWidth": 900,
-      "cssHeight": 307.5,
+      "sha256": "97d147b1fa7832f7630a3286dc44bfa6ea995aac990970afe3838b5fb3ac009a",
+      "bytes": 50957,
+      "cssWidth": 640,
+      "cssHeight": 279.1875,
+      "contentBounds": {
+        "left": 28,
+        "top": 40,
+        "right": 612,
+        "bottom": 239.1875
+      },
+      "contentRatio": 0.6510269755988359,
       "checks": {
         "overflow": "pass",
         "fontSize": "pass",
         "contrast": "pass",
         "fields": "pass",
+        "mainText": "pass",
+        "density": "pass",
         "size": "pass"
       },
       "problems": {
         "overflow": [],
         "fontSize": [],
         "contrast": [],
-        "fields": []
+        "fields": [],
+        "mainText": [],
+        "density": []
       },
-      "width": 900,
-      "height": 307.5
+      "width": 640,
+      "height": 279.1875
     },
     {
       "file": "hero-code-light.png",
@@ -225,25 +313,36 @@
       "language": "en",
       "kind": "fixture",
       "captureId": "moss",
-      "sha256": "4ebf59b957cf3b9b51938c405ed03e52dd107a9a5192b6570fc4cef18d609cd7",
-      "bytes": 53744,
-      "cssWidth": 900,
-      "cssHeight": 346.09375,
+      "sha256": "2eeea3e173889d6858474fc92811d60890d21247c045ac65f56d604c6db60098",
+      "bytes": 59454,
+      "cssWidth": 640,
+      "cssHeight": 401.28125,
+      "contentBounds": {
+        "left": 28,
+        "top": 41,
+        "right": 612,
+        "bottom": 359.28125
+      },
+      "contentRatio": 0.7237608052332373,
       "checks": {
         "overflow": "pass",
         "fontSize": "pass",
         "contrast": "pass",
         "fields": "pass",
+        "mainText": "pass",
+        "density": "pass",
         "size": "pass"
       },
       "problems": {
         "overflow": [],
         "fontSize": [],
         "contrast": [],
-        "fields": []
+        "fields": [],
+        "mainText": [],
+        "density": []
       },
-      "width": 900,
-      "height": 346.09375
+      "width": 640,
+      "height": 401.28125
     },
     {
       "file": "hero-code-dark.png",
@@ -252,25 +351,36 @@
       "language": "en",
       "kind": "fixture",
       "captureId": "moss",
-      "sha256": "c1f14f52c0d693468b125f22b550ddc604cdc80159ba95ca6bace3ea594f04df",
-      "bytes": 54039,
-      "cssWidth": 900,
-      "cssHeight": 346.09375,
+      "sha256": "fe38ce582735f6618ae93201351ad1cc537384b55176ea14762871b5cf48fdb8",
+      "bytes": 59655,
+      "cssWidth": 640,
+      "cssHeight": 401.28125,
+      "contentBounds": {
+        "left": 28,
+        "top": 41,
+        "right": 612,
+        "bottom": 359.28125
+      },
+      "contentRatio": 0.7237608052332373,
       "checks": {
         "overflow": "pass",
         "fontSize": "pass",
         "contrast": "pass",
         "fields": "pass",
+        "mainText": "pass",
+        "density": "pass",
         "size": "pass"
       },
       "problems": {
         "overflow": [],
         "fontSize": [],
         "contrast": [],
-        "fields": []
+        "fields": [],
+        "mainText": [],
+        "density": []
       },
-      "width": 900,
-      "height": 346.09375
+      "width": 640,
+      "height": 401.28125
     },
     {
       "file": "hero-code-light.zh-CN.png",
@@ -279,25 +389,36 @@
       "language": "zh-CN",
       "kind": "fixture",
       "captureId": "moss",
-      "sha256": "5a45a9f62929f60b2121af5bcc7ae62b7b7a8f90ae5fcab1cd4b214e3754fa73",
-      "bytes": 52491,
-      "cssWidth": 900,
-      "cssHeight": 346.09375,
+      "sha256": "1a57a3ea1e5ebce8c020ebec6e7be3b8230294f19272f31f0b17828d02bcf63d",
+      "bytes": 58210,
+      "cssWidth": 640,
+      "cssHeight": 401.28125,
+      "contentBounds": {
+        "left": 28,
+        "top": 41,
+        "right": 612,
+        "bottom": 359.28125
+      },
+      "contentRatio": 0.7237608052332373,
       "checks": {
         "overflow": "pass",
         "fontSize": "pass",
         "contrast": "pass",
         "fields": "pass",
+        "mainText": "pass",
+        "density": "pass",
         "size": "pass"
       },
       "problems": {
         "overflow": [],
         "fontSize": [],
         "contrast": [],
-        "fields": []
+        "fields": [],
+        "mainText": [],
+        "density": []
       },
-      "width": 900,
-      "height": 346.09375
+      "width": 640,
+      "height": 401.28125
     },
     {
       "file": "hero-code-dark.zh-CN.png",
@@ -306,25 +427,36 @@
       "language": "zh-CN",
       "kind": "fixture",
       "captureId": "moss",
-      "sha256": "727d147f550bcbc627137d196eea74cd87aad49b81e63fdd212649c92b4352c5",
-      "bytes": 52858,
-      "cssWidth": 900,
-      "cssHeight": 346.09375,
+      "sha256": "8cd96b8ece0d4ad0429379a7ff12483cac652e64f7cd799675c26220d24e2d0a",
+      "bytes": 58467,
+      "cssWidth": 640,
+      "cssHeight": 401.28125,
+      "contentBounds": {
+        "left": 28,
+        "top": 41,
+        "right": 612,
+        "bottom": 359.28125
+      },
+      "contentRatio": 0.7237608052332373,
       "checks": {
         "overflow": "pass",
         "fontSize": "pass",
         "contrast": "pass",
         "fields": "pass",
+        "mainText": "pass",
+        "density": "pass",
         "size": "pass"
       },
       "problems": {
         "overflow": [],
         "fontSize": [],
         "contrast": [],
-        "fields": []
+        "fields": [],
+        "mainText": [],
+        "density": []
       },
-      "width": 900,
-      "height": 346.09375
+      "width": 640,
+      "height": 401.28125
     },
     {
       "file": "hero-screens-light.png",
@@ -333,25 +465,36 @@
       "language": "en",
       "kind": "illustration",
       "captureId": "moss",
-      "sha256": "0f5e27c166eec83a33172217d99c737816351dc67a215819962eb4f54b44531b",
-      "bytes": 64567,
+      "sha256": "74614f8580954cc5bbedb717f0a33299b570e934b51268a1d4e5db02f8e581fa",
+      "bytes": 50085,
       "cssWidth": 900,
-      "cssHeight": 429.59375,
+      "cssHeight": 361.0625,
+      "contentBounds": {
+        "left": 28,
+        "top": 40,
+        "right": 872,
+        "bottom": 318.5625
+      },
+      "contentRatio": 0.7235027792202796,
       "checks": {
         "overflow": "pass",
         "fontSize": "pass",
         "contrast": "pass",
         "fields": "pass",
+        "mainText": "pass",
+        "density": "pass",
         "size": "pass"
       },
       "problems": {
         "overflow": [],
         "fontSize": [],
         "contrast": [],
-        "fields": []
+        "fields": [],
+        "mainText": [],
+        "density": []
       },
       "width": 900,
-      "height": 429.59375
+      "height": 361.0625
     },
     {
       "file": "hero-screens-dark.png",
@@ -360,25 +503,36 @@
       "language": "en",
       "kind": "illustration",
       "captureId": "moss",
-      "sha256": "1625142631e1eb9d30e914759984dd50b8171fdf577ee91cf62967257f09d8dd",
-      "bytes": 65168,
+      "sha256": "76aedfca0e543af376be765e51ed4df9087f526d1c3fb314010fddddbc7297ac",
+      "bytes": 50642,
       "cssWidth": 900,
-      "cssHeight": 429.59375,
+      "cssHeight": 361.0625,
+      "contentBounds": {
+        "left": 28,
+        "top": 40,
+        "right": 872,
+        "bottom": 318.5625
+      },
+      "contentRatio": 0.7235027792202796,
       "checks": {
         "overflow": "pass",
         "fontSize": "pass",
         "contrast": "pass",
         "fields": "pass",
+        "mainText": "pass",
+        "density": "pass",
         "size": "pass"
       },
       "problems": {
         "overflow": [],
         "fontSize": [],
         "contrast": [],
-        "fields": []
+        "fields": [],
+        "mainText": [],
+        "density": []
       },
       "width": 900,
-      "height": 429.59375
+      "height": 361.0625
     },
     {
       "file": "hero-screens-light.zh-CN.png",
@@ -387,25 +541,36 @@
       "language": "zh-CN",
       "kind": "illustration",
       "captureId": "moss",
-      "sha256": "59022c6fa865a43bd2e3690efb73d226d328869a40b51b8dd897f6aea81e26ca",
-      "bytes": 62355,
+      "sha256": "f83c9805a7d9ebcb4289fc8ebf8481e1712ef9420eeb8a8130f10d5e079d8385",
+      "bytes": 54060,
       "cssWidth": 900,
-      "cssHeight": 429.59375,
+      "cssHeight": 361.0625,
+      "contentBounds": {
+        "left": 28,
+        "top": 40,
+        "right": 872,
+        "bottom": 318.5625
+      },
+      "contentRatio": 0.7235027792202796,
       "checks": {
         "overflow": "pass",
         "fontSize": "pass",
         "contrast": "pass",
         "fields": "pass",
+        "mainText": "pass",
+        "density": "pass",
         "size": "pass"
       },
       "problems": {
         "overflow": [],
         "fontSize": [],
         "contrast": [],
-        "fields": []
+        "fields": [],
+        "mainText": [],
+        "density": []
       },
       "width": 900,
-      "height": 429.59375
+      "height": 361.0625
     },
     {
       "file": "hero-screens-dark.zh-CN.png",
@@ -414,25 +579,36 @@
       "language": "zh-CN",
       "kind": "illustration",
       "captureId": "moss",
-      "sha256": "7f6f1f082ca58898be64b6298c943d2e970e1a8af08b8291b58b46a013a53167",
-      "bytes": 62705,
+      "sha256": "4c64e838a695ffb8347b3200ddb1a998c0e1028ebbccea7c9396a2988ace4339",
+      "bytes": 54569,
       "cssWidth": 900,
-      "cssHeight": 429.59375,
+      "cssHeight": 361.0625,
+      "contentBounds": {
+        "left": 28,
+        "top": 40,
+        "right": 872,
+        "bottom": 318.5625
+      },
+      "contentRatio": 0.7235027792202796,
       "checks": {
         "overflow": "pass",
         "fontSize": "pass",
         "contrast": "pass",
         "fields": "pass",
+        "mainText": "pass",
+        "density": "pass",
         "size": "pass"
       },
       "problems": {
         "overflow": [],
         "fontSize": [],
         "contrast": [],
-        "fields": []
+        "fields": [],
+        "mainText": [],
+        "density": []
       },
       "width": 900,
-      "height": 429.59375
+      "height": 361.0625
     },
     {
       "file": "strip-3-light.png",
@@ -441,25 +617,36 @@
       "language": "en",
       "kind": "illustration",
       "captureId": "moss",
-      "sha256": "00dccbcfa32d0c838a080c6a5a22d1a3a46beb83bd666ecbba38de204f50062c",
-      "bytes": 50503,
+      "sha256": "5a9cc2838a8cdfd38f332d7c73f59a75a1482875f7b0c94d2184534335cb558c",
+      "bytes": 50816,
       "cssWidth": 900,
-      "cssHeight": 270,
+      "cssHeight": 286,
+      "contentBounds": {
+        "left": 28,
+        "top": 40,
+        "right": 872,
+        "bottom": 243.5
+      },
+      "contentRatio": 0.6672649572649573,
       "checks": {
         "overflow": "pass",
         "fontSize": "pass",
         "contrast": "pass",
         "fields": "pass",
+        "mainText": "pass",
+        "density": "pass",
         "size": "pass"
       },
       "problems": {
         "overflow": [],
         "fontSize": [],
         "contrast": [],
-        "fields": []
+        "fields": [],
+        "mainText": [],
+        "density": []
       },
       "width": 900,
-      "height": 270
+      "height": 286
     },
     {
       "file": "strip-3-dark.png",
@@ -468,25 +655,36 @@
       "language": "en",
       "kind": "illustration",
       "captureId": "moss",
-      "sha256": "ce4a33d36b92b1c8c8b53d1b836322dc2b03b60599cea8be44a7abcd1c4d87d2",
-      "bytes": 51247,
+      "sha256": "a641952ff3e23e5469ac77309657a0db8b8d813404240adae09e8ac3b5e3d17d",
+      "bytes": 51621,
       "cssWidth": 900,
-      "cssHeight": 270,
+      "cssHeight": 286,
+      "contentBounds": {
+        "left": 28,
+        "top": 40,
+        "right": 872,
+        "bottom": 243.5
+      },
+      "contentRatio": 0.6672649572649573,
       "checks": {
         "overflow": "pass",
         "fontSize": "pass",
         "contrast": "pass",
         "fields": "pass",
+        "mainText": "pass",
+        "density": "pass",
         "size": "pass"
       },
       "problems": {
         "overflow": [],
         "fontSize": [],
         "contrast": [],
-        "fields": []
+        "fields": [],
+        "mainText": [],
+        "density": []
       },
       "width": 900,
-      "height": 270
+      "height": 286
     },
     {
       "file": "strip-3-light.zh-CN.png",
@@ -495,25 +693,36 @@
       "language": "zh-CN",
       "kind": "illustration",
       "captureId": "moss",
-      "sha256": "ee18699c0b449bc0273400747799ec232b575a647502ca5702898379543a5908",
-      "bytes": 46882,
+      "sha256": "5dcef2e4841319680504fee0586957693c830db111953eaa0825cb9f04d0cd81",
+      "bytes": 47143,
       "cssWidth": 900,
-      "cssHeight": 246,
+      "cssHeight": 262,
+      "contentBounds": {
+        "left": 28,
+        "top": 40,
+        "right": 872,
+        "bottom": 219.5
+      },
+      "contentRatio": 0.6424851569126379,
       "checks": {
         "overflow": "pass",
         "fontSize": "pass",
         "contrast": "pass",
         "fields": "pass",
+        "mainText": "pass",
+        "density": "pass",
         "size": "pass"
       },
       "problems": {
         "overflow": [],
         "fontSize": [],
         "contrast": [],
-        "fields": []
+        "fields": [],
+        "mainText": [],
+        "density": []
       },
       "width": 900,
-      "height": 246
+      "height": 262
     },
     {
       "file": "strip-3-dark.zh-CN.png",
@@ -522,25 +731,36 @@
       "language": "zh-CN",
       "kind": "illustration",
       "captureId": "moss",
-      "sha256": "5814dfa17b35e3b1193dd9f10f84ea3cc1f55e164da4bd794a88ed92df8dec60",
-      "bytes": 47833,
+      "sha256": "69f6ab0f6e18fe463662ca6d62fecb9eafb1f5d8429affdd62cb768a42436a62",
+      "bytes": 48101,
       "cssWidth": 900,
-      "cssHeight": 246,
+      "cssHeight": 262,
+      "contentBounds": {
+        "left": 28,
+        "top": 40,
+        "right": 872,
+        "bottom": 219.5
+      },
+      "contentRatio": 0.6424851569126379,
       "checks": {
         "overflow": "pass",
         "fontSize": "pass",
         "contrast": "pass",
         "fields": "pass",
+        "mainText": "pass",
+        "density": "pass",
         "size": "pass"
       },
       "problems": {
         "overflow": [],
         "fontSize": [],
         "contrast": [],
-        "fields": []
+        "fields": [],
+        "mainText": [],
+        "density": []
       },
       "width": 900,
-      "height": 246
+      "height": 262
     },
     {
       "file": "social-light.png",
@@ -549,22 +769,33 @@
       "language": "en",
       "kind": "fixture",
       "captureId": "moss",
-      "sha256": "1223f8ce3ef33bc8e6d57936d3158defbf4e01bed5ed99d11630f275afc539bc",
-      "bytes": 32177,
+      "sha256": "93e9b956f7a6b832109a868713ea1caa418e10667d95215581533836b50754e0",
+      "bytes": 41120,
       "cssWidth": 1280,
       "cssHeight": 640,
+      "contentBounds": {
+        "left": 40,
+        "top": 102.828125,
+        "right": 1240,
+        "bottom": 600
+      },
+      "contentRatio": 0.7282791137695312,
       "checks": {
         "overflow": "pass",
         "fontSize": "pass",
         "contrast": "pass",
         "fields": "pass",
+        "mainText": "pass",
+        "density": "pass",
         "size": "pass"
       },
       "problems": {
         "overflow": [],
         "fontSize": [],
         "contrast": [],
-        "fields": []
+        "fields": [],
+        "mainText": [],
+        "density": []
       },
       "width": 1280,
       "height": 640
@@ -576,22 +807,33 @@
       "language": "en",
       "kind": "fixture",
       "captureId": "moss",
-      "sha256": "0eacf75a4e54b88ca98f622de0282f94e2c9ff24ea403e966ac3c9bf0f46ed15",
-      "bytes": 31982,
+      "sha256": "ae37a36179dfa57907c8c810200c52f0102a4e51d1905ac5c2a2d2148a99fc06",
+      "bytes": 41297,
       "cssWidth": 1280,
       "cssHeight": 640,
+      "contentBounds": {
+        "left": 40,
+        "top": 102.828125,
+        "right": 1240,
+        "bottom": 600
+      },
+      "contentRatio": 0.7282791137695312,
       "checks": {
         "overflow": "pass",
         "fontSize": "pass",
         "contrast": "pass",
         "fields": "pass",
+        "mainText": "pass",
+        "density": "pass",
         "size": "pass"
       },
       "problems": {
         "overflow": [],
         "fontSize": [],
         "contrast": [],
-        "fields": []
+        "fields": [],
+        "mainText": [],
+        "density": []
       },
       "width": 1280,
       "height": 640
@@ -603,22 +845,33 @@
       "language": "zh-CN",
       "kind": "fixture",
       "captureId": "moss",
-      "sha256": "560fa5bc8e6ddf669ec524773803320fd2d1378632fe498756d2a22d699fd1f1",
-      "bytes": 30237,
+      "sha256": "40f69b52780116e32829f76e0e023dbe13eb837f096aef630143dd75c485f5ad",
+      "bytes": 38668,
       "cssWidth": 1280,
       "cssHeight": 640,
+      "contentBounds": {
+        "left": 40,
+        "top": 102.828125,
+        "right": 1240,
+        "bottom": 600
+      },
+      "contentRatio": 0.7282791137695312,
       "checks": {
         "overflow": "pass",
         "fontSize": "pass",
         "contrast": "pass",
         "fields": "pass",
+        "mainText": "pass",
+        "density": "pass",
         "size": "pass"
       },
       "problems": {
         "overflow": [],
         "fontSize": [],
         "contrast": [],
-        "fields": []
+        "fields": [],
+        "mainText": [],
+        "density": []
       },
       "width": 1280,
       "height": 640
@@ -630,22 +883,33 @@
       "language": "zh-CN",
       "kind": "fixture",
       "captureId": "moss",
-      "sha256": "e1c45943d4b272c9e4a34d7684053eac656f8ab51fa4b2e331c15a4b724d8946",
-      "bytes": 30298,
+      "sha256": "8f103932670105ec4ba0c9818e8ddc6aeac3d50d5272ec012ccf8e9a0e738539",
+      "bytes": 38787,
       "cssWidth": 1280,
       "cssHeight": 640,
+      "contentBounds": {
+        "left": 40,
+        "top": 102.828125,
+        "right": 1240,
+        "bottom": 600
+      },
+      "contentRatio": 0.7282791137695312,
       "checks": {
         "overflow": "pass",
         "fontSize": "pass",
         "contrast": "pass",
         "fields": "pass",
+        "mainText": "pass",
+        "density": "pass",
         "size": "pass"
       },
       "problems": {
         "overflow": [],
         "fontSize": [],
         "contrast": [],
-        "fields": []
+        "fields": [],
+        "mainText": [],
+        "density": []
       },
       "width": 1280,
       "height": 640

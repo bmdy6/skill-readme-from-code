@@ -9,8 +9,8 @@
         "zh-CN": "readme-from-code"
       },
       "subtitle": {
-        "en": "Help maintainers write a verifiable README with tested commands and clear images using an agent skill.",
-        "zh-CN": "用智能体技能，帮助维护者写出有依据、命令实测和配图清晰的项目介绍。"
+        "en": "Turn code into a README people want to try, with tested commands and a checked first screen.",
+        "zh-CN": "把代码变成别人想试的 README：命令都跑过，第一屏都看过。"
       },
       "result": {
         "en": "gh repo clone bmdy6/skill-readme-from-code .agents/skills/readme-from-code -- --branch feat/v0.1",
