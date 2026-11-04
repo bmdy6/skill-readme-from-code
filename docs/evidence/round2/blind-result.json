@@ -1,0 +1,25 @@
+{
+  "status": "pass",
+  "winner": "after",
+  "answers": {
+    "choice": "B",
+    "why": "The before-and-after comparison makes the benefit concrete and gives me a stronger reason to try it. A mostly shows an installation command, which demonstrates less value.",
+    "confusing": [
+      "B’s 60/100 and 100/100 scores have no visible scoring criteria, so they feel self-assigned."
+    ]
+  },
+  "randomization": {
+    "method": "crypto.randomInt(2)",
+    "draw": 0
+  },
+  "labels": {
+    "A": {
+      "source": "before",
+      "sha256": "cdc858caca5252b1047b361919a0fdb0b317fb2033569269271b1cd3b8690a7f"
+    },
+    "B": {
+      "source": "after",
+      "sha256": "9b25a6e80be1cec6ee217a4771e7b629f9f834a9eff815310ade89445f27da40"
+    }
+  }
+}

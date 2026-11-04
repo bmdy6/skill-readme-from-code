@@ -1,0 +1,25 @@
+{
+  "status": "pass",
+  "checks": {
+    "what": true,
+    "forWhom": true,
+    "firstCommand": true,
+    "wouldTry": true,
+    "whatOutput": true
+  },
+  "answers": {
+    "what": "An agent skill that turns source code into a README, with tested commands and a checked first screen.",
+    "forWhom": "Developers using coding agents who want clearer, more compelling project READMEs.",
+    "firstCommand": "gh repo clone bmdy6/skill-readme-from-code .agents/skills/readme-from-code -- --branch feat/v0.1",
+    "wouldTry": "yes",
+    "why": "The before-and-after example shows a concrete improvement, and testing the documented commands sounds useful.",
+    "whatOutput": "A rewritten README with a clearer description, quick-start instructions, and visual evidence of the project running. The example includes a terminal capture showing a generated Markdown digest.",
+    "mostAppealing": "The promise of tested commands backed by a visible before-and-after example.",
+    "confusing": [
+      "The next instruction after cloning is below the visible screen.",
+      "It does not say which coding agents support the skill or what prerequisites are needed.",
+      "The 60/100 and 100/100 scores have no visible explanation.",
+      "It is unclear whether terminal captures and other visuals are generated automatically."
+    ]
+  }
+}

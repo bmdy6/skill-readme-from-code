@@ -2,8 +2,8 @@
 
 Apply manually in repository settings. This command never changes settings.
 
-About: Help maintainers write a verifiable README with tested commands and clear images using an agent skill.
+About: Turn code into a README people want to try, with tested commands and a checked first screen.
 
 Topics: agent-skill, readme, maintainer, documentation, developer-tools, automation, agent-skills
 
-Social image: ../design/storefront/social-light.png (1280 × 640; illustration)
+Social image: social-light.png (1280 × 640; illustration)

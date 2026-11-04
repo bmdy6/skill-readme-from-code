@@ -1,0 +1,63 @@
+
+> readme-from-code@0.1.0 test
+> node --test test/*.test.mjs
+
+✔ terminal output cannot be handwritten (5.299375ms)
+✔ all six templates produce four checked variants (3933.311292ms)
+✔ stranger score requires all five independent checks (0.494583ms)
+✔ report names missing evidence and agent decisions (5.8285ms)
+✔ storefront makes valid topics and a small social image (1001.348666ms)
+✔ V10 rejects installation (6.76525ms)
+✔ V10 rejects checks (2.057416ms)
+✔ V10 rejects README text (1.689ms)
+✔ V10 rejects supporting capture (1.070458ms)
+✔ V10 accepts real core output (1.358417ms)
+✔ V6 rejects generic position: Help writers polish drafts. (10.438583ms)
+✔ V6 rejects generic position: A tool that writes a README. (1.390125ms)
+✔ V6 rejects generic position: An agent skill that writes a README. (0.928041ms)
+✔ V6 rejects generic position: This project writes a README. (1.3525ms)
+✔ V6 rejects generic position: 帮助你写 README。 (9.662125ms)
+✔ V6 rejects generic position: 一个写 README 的工具。 (0.9715ms)
+✔ V6 rejects generic position: Get a README using an agent skill. (1.055375ms)
+✔ V6 rejects generic position: Work smarter every day. (1.065875ms)
+✔ V11 catches a missing integration and old H2 (3.315ms)
+✔ V11 requires a reason for an intentional deletion (2.101125ms)
+✔ V6 allows integrations but rejects alternatives (1.408042ms)
+✔ scan keeps typed integration and H2 baseline evidence (21.4645ms)
+✔ R4 detects undersized primary text and a sparse fixed canvas (424.15225ms)
+✔ R5 requires a recognizable output but only records the appeal answer (0.280666ms)
+✔ R5 preserves random labels and rejects a blind win for the old screen (5.413041ms)
+✔ R1 keeps declared screenshot inputs while detecting true orphan images (1.903083ms)
+✔ R2 output keywords do not turn a vague benefit into an artifact noun (0.805834ms)
+✔ scan cli-tool is deterministic and sourced (64.03825ms)
+✔ scan library is deterministic and sourced (61.226875ms)
+✔ scan web-app is deterministic and sourced (54.938125ms)
+✔ scan agent-skill is deterministic and sourced (52.210042ms)
+✔ scan clean is deterministic and sourced (33.329ms)
+✔ detects tests locking README (14.037917ms)
+✔ skill names every command, gates and hard delivery boundaries (4.718ms)
+✔ each project skeleton puts Quick start immediately after hero (1.649334ms)
+✔ shell fences include tilde and bare blocks (2.763917ms)
+✔ audit fixture cli-tool (674.294125ms)
+✔ audit fixture library (332.854833ms)
+✔ audit fixture web-app (407.807417ms)
+✔ audit fixture agent-skill (349.318416ms)
+✔ audit fixture clean (385.321792ms)
+✔ execution changes only a disposable copy (11.200084ms)
+✔ timeout is recorded (56.828292ms)
+✔ unplanned command fails V1 (493.63375ms)
+✔ Chinese anchors follow heading slugs (1.401708ms)
+✔ badge mismatch, claims and denied words fail independently (1.275833ms)
+✔ V9 rejects changed image bytes (591.595708ms)
+✔ commented examples are not broken links (0.843167ms)
+✔ translated headings in a different order fail V7 (1.160709ms)
+✔ one-liner and literal zero budgets are enforced (0.844458ms)
+✔ reference-style links and images are checked (1.209458ms)
+ℹ tests 51
+ℹ suites 0
+ℹ pass 51
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4148.435917
