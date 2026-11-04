@@ -68,7 +68,16 @@ export async function staticChecks(repo,facts,brief={},opts={}){
   checks.push(check('V7',issues));
  }return checks;
 }
-async function base(opts){const facts=await scan(opts.repo,{github:false}),brief=await json(opts.brief||path.join(opts.work,'brief.json'),{});const checks=await staticChecks(opts.repo,facts,brief,opts);
+async function base(opts){const facts=await scan(opts.repo,{github:false});
+ const supplements=await json(path.join(opts.repo,'docs/readme/facts.json'),await json(path.join(opts.work,'facts.json'),[]));
+ const sourceIssues=[];
+ for(const f of (Array.isArray(supplements)?supplements:supplements.facts||[])){
+  if(facts.facts.some(x=>x.id===f.id))continue;
+  const match=typeof f.source==='string'&&f.source.match(/^(.+):(\d+)$/);const source=match&&path.resolve(opts.repo,match[1]);
+  if(!match||!source.startsWith(path.resolve(opts.repo)+path.sep)||typeof f.value!=='string'||!f.value.trim()||!(await read(source)).split('\n')[Number(match[2])-1]?.includes(f.value))sourceIssues.push(`Invalid supplemental fact source: ${f.id}`);
+  else facts.facts.push(f);
+ }
+ const brief=await json(opts.brief||path.join(opts.work,'brief.json'),{});const checks=await staticChecks(opts.repo,facts,brief,opts);checks.find(c=>c.id==='V5').issues.push(...sourceIssues);if(sourceIssues.length)checks.find(c=>c.id==='V5').status='fail';
  let screen;try{screen=await firstScreen({...opts,install:brief.install?.command});checks.unshift(check('V2',Object.entries(screen.viewports.desktop.checks).filter(([,v])=>!v).map(([k])=>`${k} is not fully visible on desktop`),{screen}));}catch(e){checks.unshift(check('V2',[e.message]));}
  return {facts,brief,checks};}
 export function reportMarkdown(result,title){return `# ${title}\n\nScore: ${result.score}/100\n\n| Check | Result | Evidence |\n|---|---|---|\n${result.checks.map(c=>`| ${c.id} | ${c.status} | ${(c.issues?.join('; ')||c.reason||'Passed').replace(/\|/g,'\\|')} |`).join('\n')}\n\n${result.checks.find(c=>c.id==='V2')?.screen?.renderer||'No screen renderer'}\n`;}

@@ -1,0 +1,173 @@
+# Command reference
+
+Node >=20. ESM, no build. Install with `npm ci`, then run `node scripts/run.mjs
+COMMAND`. Commands run from the installed skill directory. Paths can be absolute.
+Use a trusted project: command execution uses disposable copies, not OS sandboxes.
+
+## Shared options and exit codes
+
+`--repo DIR` defaults to the current directory. `--work DIR` defaults to
+`~/.cache/readme-from-code/<repository-basename>/`. Distinct repositories with
+the same basename should use explicit work directories. `--brief FILE` selects
+brief.json; otherwise it is read from work. Commands never write target files
+except `art` when its output is explicitly selected in that target.
+
+Exit 0: command completed (audit may have findings). Exit 1: verification, art
+self-check, capture execution, or stranger score failed. Exit 2: invalid inputs,
+missing files, setup or unexpected command error. No command merges, publishes,
+changes settings or posts messages. The write workflow in SKILL.md is agent-led;
+there is no automatic `write` CLI command.
+
+| Command | Arguments | Outputs |
+|---|---|---|
+| doctor | none | Checks Node; installs Chromium when absent. |
+| scan | --repo DIR | facts.json; deterministic with identical repository and metadata. |
+| audit | --repo DIR [--online] [--local] [--deny-words FILE] | audit.json, audit.md, screen.html, first-screen.json and three screenshots. V2–V7 only; target untouched. |
+| capture | --repo DIR --id ID [--tty] -- 'COMMAND' | captures/ID.json. 60 second cap, separate home, closed stdin, no inherited credentials. |
+| art | --spec FILE [--out DIR] | PNGs and art-manifest.json; portable art.json and capture/screen inputs. Default out: target docs/readme. |
+| verify | --repo DIR [--plan FILE] [--online] [--local] [--deny-words FILE] | verify.json, verify.md, screenshots. V1–V9; any failure exits 1. |
+| stranger prepare | --repo DIR | stranger/first-screen-desktop.png, desktop-dark/mobile PNG, questions.md, result.json (not-run). |
+| stranger score | --answers FILE or --not-run 'reason' | stranger/result.json. Four independent checks; confusing[] is preserved. |
+| storefront | --repo DIR | storefront.md, social-light.png and storefront-art/. Suggestions only. |
+| report | --repo DIR [--before DIR] | pr-body.md. Before defaults to work/before; absent evidence is not-run. |
+
+`--online` checks HTTP(S) links with HEAD and a ten second timeout. Some sites
+reject HEAD; inspect such findings. Offline V3 checks local files and Markdown
+heading anchors using GitHub slug rules. External links are explicitly unchecked.
+`--local` forces marked rendering; otherwise GitHub Markdown API is tried first,
+with a documented fallback. The renderer adds a 72px header reserve. Desktop is
+1280×800 with 838px content; mobile is 390×844 and informational. Desktop dark
+uses the same dimensions. Remote image requests are blocked for reproducibility;
+keep evidence images local. Badges are checked as text/URLs, not network proof.
+
+## Facts and source evidence
+
+facts.json contains projectType, manifest, install, entries, testCommands, spdx,
+workflows, images, readmeTests, remote, optional metadata and facts. Each fact is
+`{id, claim, value, source: "relative/file:line"}`. Manifest fields, license,
+entrypoints, workflow paths, images and README-locking tests are discovered.
+Project types: cli, library, web-app, agent-skill, other. Unknown licenses have
+null SPDX; an agent must investigate instead of inventing a badge. v0.1 parses
+Node manifests; other language commands require agent-supplied sourced facts.
+readme-competitors.json may provide a string array of competitor terms. V6
+excludes manifest dependencies from this list; --deny-words always applies.
+
+Feature claims need agent inspection. Add `{id,claim,value,source}` to
+work/facts.json after checking the actual code. Verification rescans structural
+facts and also validates supplemental facts against their source file and line.
+claims.json in target docs/readme contains an array:
+
+```json
+[{"claim":"Every command runs in a disposable copy.","factIds":["copy-execution"]}]
+```
+
+A claim must be present in a README, and every fact ID must exist. This proves
+traceability; an agent must still review whether the cited line supports it.
+
+## Brief and gates
+
+```json
+{
+  "projectType":"agent-skill",
+  "audience":"repository maintainers",
+  "oneLiner":{"en":"Help maintainers write a README with evidence.","zh-CN":"帮助维护者写出有证据的项目介绍。"},
+  "keyTerms":["readme","maintainer"],
+  "install":{"command":"npx skills add bmdy6/skill-readme-from-code"},
+  "firstUse":"Write a source-backed README for this repository.",
+  "languages":["en","zh-CN"],
+  "accent":"#2f6f4e",
+  "wordBudget":400,
+  "allowNamedAlternatives":false,
+  "decidedBy":"agent",
+  "gates":{"G1":{"decidedBy":"agent","choice":"Evidence first","reason":"Noninteractive acceptance"},"G2":{"decidedBy":"agent","choice":"Approved","reason":"Inspected all three screenshots"}}
+}
+```
+
+Interactive G1 and G2 require user decisions. Noninteractive decisions must be
+recorded individually and appear in the report. Do not infer approval from time.
+
+## Command plans and captures
+
+work/command-plan.json contains `blocks`. Each rule selects exact `code` or an
+`index` (zero based); optional `file` distinguishes languages. `expectExit`
+defaults to 0. A `skip` string must explain why execution is unavailable. `tty`
+records that a real TTY is required but does not allocate one. No silent command
+rewrites, injected flags or success inferred from another command are allowed.
+
+```json
+{"blocks":[{"index":0,"expectExit":0},{"index":1,"skip":"Requires a user-owned test account."}]}
+```
+
+Bare, sh, bash, shell, console and zsh fenced blocks are executable examples.
+Temporary copies omit .git, node_modules, .env and cache directories;
+node_modules is separately copied if installed. No links point back to the
+source. The temporary copy is removed after success, error or timeout. The
+child process group is killed on timeout; output is capped at 2 MB per stream.
+Capture JSON keeps command, stdout/stderr (including ANSI), exitCode, signal,
+durationMs, timedOut, requiresTTY and a nonsecret environment summary. Do not
+capture secrets: inspect both the command and outputs before committing them.
+
+## Art data and reproduction
+
+A spec has accent and images. Each image has unique id, template, localized title
+and subtitle. Provide en and zh-CN for every authored text field. Terminal data
+must use captureId. Capture lookup checks work/captures then the spec's sibling
+captures directory. Art copies captures and screen inputs into its output.
+
+```json
+{"images":[{
+  "id":"hero","template":"hero-prompt",
+  "title":{"en":"Source-backed README","zh-CN":"有代码依据的项目介绍"},
+  "subtitle":{"en":"Inspect the repository before writing.","zh-CN":"先检查代码，再写介绍。"},
+  "prompt":{"en":"Write a README for this repo.","zh-CN":"给这个仓库写一份介绍。"},
+  "captureId":"demo"
+}]}
+```
+
+| Template | Extra data |
+|---|---|
+| hero-terminal | captureId required; command and stdout/stderr come from capture. |
+| hero-prompt | prompt plus captureId, or illustration:true and localized result. |
+| hero-code | captureId required; command → actual output. |
+| hero-screens | screens: two original local image paths (or language maps). |
+| strip-3 | steps: three localized strings; optional details of the same shape. |
+| social | captureId, or illustration:true plus localized result. |
+
+Pure diagrams require illustration:true and get a visible Illustration / 示意
+label. Original fictional examples use fixture:true so the manifest distinguishes
+fixture, real and illustration. Optional stats is an array of verify.json field
+paths: summary.pass, summary.fail, summary.skip; numbers cannot be handwritten.
+Screens are supplied assets, not browser captures. No external image downloads.
+
+Regular images use 900 CSS px at 2x; social is the explicit 1280×640 export
+exception. Naming: id-light.png, id-dark.png, id-light.zh-CN.png,
+id-dark.zh-CN.png. Every PNG must be <1 MB. Self-checks inspect DOM overflow,
+text >=13 CSS px, text contrast >=4.5, unresolved/missing fields and file size.
+Manifest records hashes, source category, theme/language and detailed findings.
+V9 checks the recorded passes and actual PNG hashes. It does not certify visual
+quality: inspect light/dark and localized images yourself. Rerender after edits.
+Reproduce gallery with `node scripts/gallery.mjs`.
+
+## Verification and limitations
+
+V1 executes every planned shell block in both languages. V2 measures the full
+name, one-liner, hero and install block. V3 checks links. V4 checks alt, widths,
+theme/language variants and orphaned docs/readme images. V5 checks placeholders,
+badges, license, installation identity and claim references. V6 checks word and
+sentence budgets, badges, emoji headings, superlatives and forbidden terms.
+V7 checks heading structure/order, identical commands and corresponding images.
+V8 runs discovered test commands in disposable copies; absent commands are skip.
+V9 checks art self-checks and hashes. Audit only runs V2–V7.
+
+V5 supports common SPDX licenses (MIT, Apache-2.0, GPL-3.0-only, BSD-3-Clause).
+A source citation is not a semantic proof. A desktop screenshot uses Markdown
+rendered with GitHub styling and geometry, not a claim about every live browser
+layout or authenticated repository UI. Test copies can use network; they are not
+a malware boundary. No GIF recording, automatic web-app capture, settings
+changes, publishing or CI drift checking are included in v0.1.
+
+Stranger scoring requires normalized firstCommand equality, >=1 keyTerms hit
+in both what and forWhom, and wouldTry exactly yes. It is a simple acceptance
+heuristic, not research on users' likelihood of starring. Keep the actual reader
+response and confusing[]; no response means not-run. Reports do not suppress
+failures or missing evidence.
