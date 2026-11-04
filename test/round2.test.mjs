@@ -28,3 +28,26 @@ for(const text of ['Help writers polish drafts.','A tool that writes a README.',
  const repo=await fs.mkdtemp(path.join(os.tmpdir(),'rfc-position-'));await write(path.join(repo,'README.md'),'# Moss\n\n'+text+'\n');
  const r=await staticChecks(repo,{facts:[],manifest:{},images:[],workflows:[]},{});assert.equal(r.find(c=>c.id==='V6').status,'fail');
 });
+import {retentionCheck} from '../scripts/lib/evidence.mjs';
+import {scan} from '../scripts/lib/scan.mjs';
+test('V11 catches a missing integration and old H2',async()=>{
+ const repo=await fs.mkdtemp(path.join(os.tmpdir(),'rfc-retain-'));await write(path.join(repo,'README.md'),'# Moss\n\nPolish a draft.\n');
+ await write(path.join(repo,'docs/readme/baseline.json'),{integrations:[{id:'agent-codex',kind:'integration',value:'Codex'}],readmes:[{file:'README.md',headings:['Supported tools']}]});
+ const r=await retentionCheck(repo,{});assert.equal(r.status,'fail');assert.equal(r.issues.length,2);
+ await write(path.join(repo,'docs/compatibility.md'),'## Supported tools\n\nCodex\n');
+ await write(path.join(repo,'README.md'),'# Moss\n\nPolish a draft.\n\n[Compatibility](docs/compatibility.md)\n');assert.equal((await retentionCheck(repo,{})).status,'pass');
+});
+test('V11 requires a reason for an intentional deletion',async()=>{
+ const repo=await fs.mkdtemp(path.join(os.tmpdir(),'rfc-delete-'));await write(path.join(repo,'README.md'),'# Moss\n');await write(path.join(repo,'docs/readme/baseline.json'),{integrations:[],readmes:[{file:'README.md',headings:['Alternatives']}]});
+ await write(path.join(repo,'docs/readme/retention.json'),{intentionalDeletions:[{id:'heading:README.md:Alternatives',reason:''}]});assert.equal((await retentionCheck(repo,{})).status,'fail');
+ await write(path.join(repo,'docs/readme/retention.json'),{intentionalDeletions:[{id:'heading:README.md:Alternatives',reason:'Remove unsupported competitor comparisons.'}]});assert.equal((await retentionCheck(repo,{})).status,'pass');
+});
+test('V6 allows integrations but rejects alternatives',async()=>{
+ const repo=await fs.mkdtemp(path.join(os.tmpdir(),'rfc-kinds-'));await write(path.join(repo,'README.md'),'# Moss\n\nPolish drafts with Codex.\n');
+ const f={facts:[{kind:'integration',value:'Codex'}],manifest:{},images:[],workflows:[]};assert.equal((await staticChecks(repo,f,{})).find(c=>c.id==='V6').status,'pass');
+ f.facts[0].kind='alternative';assert.equal((await staticChecks(repo,f,{})).find(c=>c.id==='V6').status,'fail');
+});
+test('scan keeps typed integration and H2 baseline evidence',async()=>{
+ const repo=await fs.mkdtemp(path.join(os.tmpdir(),'rfc-snapshot-'));await write(path.join(repo,'README.md'),'# Moss\n\nPolish drafts with Codex.\n\n## Supported tools\n\nClaude Code, Codex, Cursor, pi.\n');
+ const r=await scan(repo,{github:false});assert.ok(r.facts.some(f=>f.kind==='integration'&&f.value==='Codex'));assert.deepEqual(r.readmeSnapshot.readmes[0].headings,['Supported tools']);
+});

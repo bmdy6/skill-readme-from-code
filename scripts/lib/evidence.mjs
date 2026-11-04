@@ -30,3 +30,22 @@ export async function heroRelevance(repo,brief,facts){
  }
  return result('V10',issues);
 }
+
+export async function retentionCheck(repo,opts={}){
+ const baseline=await json(path.join(repo,'docs/readme/baseline.json'),opts.work?await json(path.join(opts.work,'baseline.json')):null);
+ if(!baseline)return {id:'V11',status:'skip',reason:'No pre-edit README snapshot supplied',issues:[]};
+ const decisions=await json(path.join(repo,'docs/readme/retention.json'),{intentionalDeletions:[]});
+ const {read}=await import('./io.mjs');const {headings,links}=await import('./markdown.mjs');
+ const issues=[],preserved=[],deleted=[];
+ const accounted=(id)=>{const d=decisions.intentionalDeletions?.find(d=>d.id===id&&typeof d.reason==='string'&&d.reason.trim());if(d)deleted.push(d);return !!d;};
+ const literal=(text,value)=>new RegExp(`(?<![\\p{L}\\p{N}_])${String(value).replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}(?![\\p{L}\\p{N}_])`,'iu').test(text);
+ for(const old of baseline.readmes||[]){
+  const md=await read(path.join(repo,old.file));const sources=[{file:old.file,text:md}];
+  for(const target of links(md)){const rel=target.split('#')[0];if(!/^docs\/.*\.md$/i.test(rel))continue;const full=path.resolve(repo,rel);if(!full.startsWith(path.resolve(repo)+path.sep))continue;sources.push({file:rel,text:await read(full)});}
+  for(const title of old.headings||[]){const id=`heading:${old.file}:${title}`;const found=sources.find(s=>headings(s.text).some(h=>h.depth===2&&h.text===title));if(found)preserved.push({id,in:found.file});else if(!accounted(id))issues.push(`Unaccounted old H2: ${old.file}: ${title}`);}
+  for(const fact of (baseline.integrations||[]).filter(f=>!f.readme||f.readme===old.file)){
+   const found=sources.find(s=>literal(s.text,fact.value));if(found)preserved.push({id:fact.id,in:found.file});else if(!accounted(fact.id))issues.push(`Unaccounted integration: ${fact.value}`);
+  }
+ }
+ return {...result('V11',issues),preserved,intentionalDeletions:deleted};
+}

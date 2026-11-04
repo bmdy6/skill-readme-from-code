@@ -6,7 +6,7 @@ import { scan } from "./scan.mjs";
 import { shellBlocks, headings, images, links, prose } from "./markdown.mjs";
 import { firstScreen } from "./screen.mjs";
 import { runCopy } from "./execute.mjs";
-import {heroRelevance} from "./evidence.mjs";
+import {heroRelevance,retentionCheck} from "./evidence.mjs";
 const check = (id, issues = [], extra = {}) => ({
   id,
   status: issues.length ? "fail" : "pass",
@@ -207,7 +207,7 @@ export async function staticChecks(repo, facts, brief = {}, opts = {}) {
   const terms = [
     ...denied,
     ...(!brief.allowNamedAlternatives
-      ? (facts.competitorTerms || []).filter(
+      ? (facts.facts || []).filter(f=>f.kind==="alternative").map(f=>f.value).filter(
           (t) =>
             !Object.keys({
               ...facts.manifest.dependencies,
@@ -448,6 +448,7 @@ export async function verify(opts) {
     }
   checks.push(check("V9", artIssues));
   checks.push(await heroRelevance(opts.repo,brief,facts));
+  checks.push(await retentionCheck(opts.repo,opts));
   checks.sort((a, b) => a.id.localeCompare(b.id));
   const r = {
     mode: "verify",
