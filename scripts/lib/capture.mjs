@@ -7,6 +7,8 @@ export async function capture(opts) {
   if (!opts.command) throw Error("capture requires -- followed by a command");
   const result = {
     id: opts.id,
+    kind: "command-run",
+    role: opts.role || "supporting",
     ...(await runCopy(opts.repo, opts.command, { tty: !!opts.tty })),
   };
   await write(path.join(opts.work, "captures", opts.id + ".json"), result);

@@ -6,6 +6,7 @@ import { scan } from "./scan.mjs";
 import { shellBlocks, headings, images, links, prose } from "./markdown.mjs";
 import { firstScreen } from "./screen.mjs";
 import { runCopy } from "./execute.mjs";
+import {heroRelevance} from "./evidence.mjs";
 const check = (id, issues = [], extra = {}) => ({
   id,
   status: issues.length ? "fail" : "pass",
@@ -443,6 +444,7 @@ export async function verify(opts) {
         artIssues.push(`Failed or absent self-check ${f.file}`);
     }
   checks.push(check("V9", artIssues));
+  checks.push(await heroRelevance(opts.repo,brief,facts));
   checks.sort((a, b) => a.id.localeCompare(b.id));
   const r = {
     mode: "verify",
