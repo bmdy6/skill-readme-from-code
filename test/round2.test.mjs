@@ -51,3 +51,10 @@ test('scan keeps typed integration and H2 baseline evidence',async()=>{
  const repo=await fs.mkdtemp(path.join(os.tmpdir(),'rfc-snapshot-'));await write(path.join(repo,'README.md'),'# Moss\n\nPolish drafts with Codex.\n\n## Supported tools\n\nClaude Code, Codex, Cursor, pi.\n');
  const r=await scan(repo,{github:false});assert.ok(r.facts.some(f=>f.kind==='integration'&&f.value==='Codex'));assert.deepEqual(r.readmeSnapshot.readmes[0].headings,['Supported tools']);
 });
+import {chromium} from 'playwright';
+import {inspectArt} from '../scripts/lib/art.mjs';
+test('R4 detects undersized primary text and a sparse fixed canvas',async()=>{
+ const browser=await chromium.launch();try{const page=await browser.newPage();await page.setContent('<style>.frame{width:900px;height:600px;padding:40px;background:white;color:black}p{font:15px sans-serif}</style><main class="frame"><p>Only a small result.</p></main>');
+ const r=await inspectArt(page);assert.equal(r.checks.mainText,'fail');assert.equal(r.checks.density,'fail');assert.ok(r.contentRatio<0.6);
+ }finally{await browser.close();}
+});

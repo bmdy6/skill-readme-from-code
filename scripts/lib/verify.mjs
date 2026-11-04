@@ -440,7 +440,7 @@ export async function verify(opts) {
         artIssues.push(`Hash mismatch ${f.file}`);
       if (
         !f.checks ||
-        ["overflow", "fontSize", "contrast", "fields", "size"].some(
+        ["overflow", "fontSize", "contrast", "fields", "size","mainText","density"].some(
           (k) => f.checks[k] !== "pass",
         )
       )
