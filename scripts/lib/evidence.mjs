@@ -34,7 +34,9 @@ export async function heroRelevance(repo, brief, facts) {
     capture?.audits ||
     capture?.measurements?.score !== undefined ||
     hero?.stats?.length ||
-    /\d+(?:\.\d+)?\s*(?:\/100|%)/.test(JSON.stringify(hero || {}));
+    /\d+(?:\.\d+)?\s*(?:\/100|%)/.test(
+      JSON.stringify(hero || {}) + "\n" + (capture?.stdout || ""),
+    );
   if (scored) {
     for (const file of ["README.md", "README.zh-CN.md"]) {
       const md = await read(path.join(repo, file));

@@ -76,3 +76,22 @@ test("F2 V10 keeps score-free heroes valid", async () => {
   );
   assert.equal((await heroRelevance(repo, brief)).status, "pass");
 });
+test("F2 V10 also detects a score printed directly by the core command", async () => {
+  const repo = await fixture();
+  const spec = {
+    images: [{ id: "hero", template: "hero-terminal", captureId: "core" }],
+  };
+  await write(path.join(repo, "docs/readme/art.json"), spec);
+  await write(path.join(repo, "docs/readme/captures/core.json"), {
+    role: "core",
+    command: "node index.mjs",
+    stdout: "Digest quality: 80/100",
+  });
+  await write(
+    path.join(repo, "README.md"),
+    `# Moss\n\n${image}\n\nActual output.\n`,
+  );
+  const r = await heroRelevance(repo, brief);
+  assert.equal(r.status, "fail");
+  assert.match(r.issues.join(" "), /score.*caption/i);
+});
