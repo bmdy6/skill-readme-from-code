@@ -1,0 +1,290 @@
+{
+  "images": [
+    {
+      "title": {
+        "en": "Moss daily digest",
+        "zh-CN": "青苔每日摘要"
+      },
+      "subtitle": {
+        "en": "Turn scattered notes into a daily digest.",
+        "zh-CN": "将零散笔记整理成每日摘要。"
+      },
+      "prompt": {
+        "en": "Organize these notes into a digest I can act on.",
+        "zh-CN": "把这些笔记整理成可付诸行动的摘要。"
+      },
+      "captureId": "moss",
+      "fixture": true,
+      "steps": [
+        {
+          "en": "Read the notes",
+          "zh-CN": "阅读笔记"
+        },
+        {
+          "en": "Choose a focus",
+          "zh-CN": "选择主题"
+        },
+        {
+          "en": "Save the digest",
+          "zh-CN": "保存摘要"
+        }
+      ],
+      "details": [
+        {
+          "en": "Keep the source with every idea.",
+          "zh-CN": "每个想法都保留来源。"
+        },
+        {
+          "en": "Group ideas around one topic.",
+          "zh-CN": "围绕主题归纳想法。"
+        },
+        {
+          "en": "Leave a clear next step.",
+          "zh-CN": "留下明确的下一步。"
+        }
+      ],
+      "id": "hero-terminal",
+      "template": "hero-terminal",
+      "illustration": false
+    },
+    {
+      "title": {
+        "en": "Moss daily digest",
+        "zh-CN": "青苔每日摘要"
+      },
+      "subtitle": {
+        "en": "Turn scattered notes into a daily digest.",
+        "zh-CN": "将零散笔记整理成每日摘要。"
+      },
+      "prompt": {
+        "en": "Organize these notes into a digest I can act on.",
+        "zh-CN": "把这些笔记整理成可付诸行动的摘要。"
+      },
+      "captureId": "moss",
+      "fixture": true,
+      "steps": [
+        {
+          "en": "Read the notes",
+          "zh-CN": "阅读笔记"
+        },
+        {
+          "en": "Choose a focus",
+          "zh-CN": "选择主题"
+        },
+        {
+          "en": "Save the digest",
+          "zh-CN": "保存摘要"
+        }
+      ],
+      "details": [
+        {
+          "en": "Keep the source with every idea.",
+          "zh-CN": "每个想法都保留来源。"
+        },
+        {
+          "en": "Group ideas around one topic.",
+          "zh-CN": "围绕主题归纳想法。"
+        },
+        {
+          "en": "Leave a clear next step.",
+          "zh-CN": "留下明确的下一步。"
+        }
+      ],
+      "id": "hero-prompt",
+      "template": "hero-prompt",
+      "illustration": false
+    },
+    {
+      "title": {
+        "en": "Moss daily digest",
+        "zh-CN": "青苔每日摘要"
+      },
+      "subtitle": {
+        "en": "Turn scattered notes into a daily digest.",
+        "zh-CN": "将零散笔记整理成每日摘要。"
+      },
+      "prompt": {
+        "en": "Organize these notes into a digest I can act on.",
+        "zh-CN": "把这些笔记整理成可付诸行动的摘要。"
+      },
+      "captureId": "moss",
+      "fixture": true,
+      "steps": [
+        {
+          "en": "Read the notes",
+          "zh-CN": "阅读笔记"
+        },
+        {
+          "en": "Choose a focus",
+          "zh-CN": "选择主题"
+        },
+        {
+          "en": "Save the digest",
+          "zh-CN": "保存摘要"
+        }
+      ],
+      "details": [
+        {
+          "en": "Keep the source with every idea.",
+          "zh-CN": "每个想法都保留来源。"
+        },
+        {
+          "en": "Group ideas around one topic.",
+          "zh-CN": "围绕主题归纳想法。"
+        },
+        {
+          "en": "Leave a clear next step.",
+          "zh-CN": "留下明确的下一步。"
+        }
+      ],
+      "id": "hero-code",
+      "template": "hero-code",
+      "illustration": false
+    },
+    {
+      "title": {
+        "en": "Moss daily digest",
+        "zh-CN": "青苔每日摘要"
+      },
+      "subtitle": {
+        "en": "Turn scattered notes into a daily digest.",
+        "zh-CN": "将零散笔记整理成每日摘要。"
+      },
+      "prompt": {
+        "en": "Organize these notes into a digest I can act on.",
+        "zh-CN": "把这些笔记整理成可付诸行动的摘要。"
+      },
+      "captureId": "moss",
+      "fixture": true,
+      "steps": [
+        {
+          "en": "Read the notes",
+          "zh-CN": "阅读笔记"
+        },
+        {
+          "en": "Choose a focus",
+          "zh-CN": "选择主题"
+        },
+        {
+          "en": "Save the digest",
+          "zh-CN": "保存摘要"
+        }
+      ],
+      "details": [
+        {
+          "en": "Keep the source with every idea.",
+          "zh-CN": "每个想法都保留来源。"
+        },
+        {
+          "en": "Group ideas around one topic.",
+          "zh-CN": "围绕主题归纳想法。"
+        },
+        {
+          "en": "Leave a clear next step.",
+          "zh-CN": "留下明确的下一步。"
+        }
+      ],
+      "id": "hero-screens",
+      "template": "hero-screens",
+      "illustration": true,
+      "screens": [
+        "gallery-input.svg",
+        "gallery-output.svg"
+      ]
+    },
+    {
+      "title": {
+        "en": "Moss daily digest",
+        "zh-CN": "青苔每日摘要"
+      },
+      "subtitle": {
+        "en": "Turn scattered notes into a daily digest.",
+        "zh-CN": "将零散笔记整理成每日摘要。"
+      },
+      "prompt": {
+        "en": "Organize these notes into a digest I can act on.",
+        "zh-CN": "把这些笔记整理成可付诸行动的摘要。"
+      },
+      "captureId": "moss",
+      "fixture": true,
+      "steps": [
+        {
+          "en": "Read the notes",
+          "zh-CN": "阅读笔记"
+        },
+        {
+          "en": "Choose a focus",
+          "zh-CN": "选择主题"
+        },
+        {
+          "en": "Save the digest",
+          "zh-CN": "保存摘要"
+        }
+      ],
+      "details": [
+        {
+          "en": "Keep the source with every idea.",
+          "zh-CN": "每个想法都保留来源。"
+        },
+        {
+          "en": "Group ideas around one topic.",
+          "zh-CN": "围绕主题归纳想法。"
+        },
+        {
+          "en": "Leave a clear next step.",
+          "zh-CN": "留下明确的下一步。"
+        }
+      ],
+      "id": "strip-3",
+      "template": "strip-3",
+      "illustration": true
+    },
+    {
+      "title": {
+        "en": "Moss daily digest",
+        "zh-CN": "青苔每日摘要"
+      },
+      "subtitle": {
+        "en": "Turn scattered notes into a daily digest.",
+        "zh-CN": "将零散笔记整理成每日摘要。"
+      },
+      "prompt": {
+        "en": "Organize these notes into a digest I can act on.",
+        "zh-CN": "把这些笔记整理成可付诸行动的摘要。"
+      },
+      "captureId": "moss",
+      "fixture": true,
+      "steps": [
+        {
+          "en": "Read the notes",
+          "zh-CN": "阅读笔记"
+        },
+        {
+          "en": "Choose a focus",
+          "zh-CN": "选择主题"
+        },
+        {
+          "en": "Save the digest",
+          "zh-CN": "保存摘要"
+        }
+      ],
+      "details": [
+        {
+          "en": "Keep the source with every idea.",
+          "zh-CN": "每个想法都保留来源。"
+        },
+        {
+          "en": "Group ideas around one topic.",
+          "zh-CN": "围绕主题归纳想法。"
+        },
+        {
+          "en": "Leave a clear next step.",
+          "zh-CN": "留下明确的下一步。"
+        }
+      ],
+      "id": "social",
+      "template": "social",
+      "illustration": false
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "id": "moss",
+  "command": "node example.mjs",
+  "stdout": "Read notes.md\nGrouped notes by topic\nWrote digest.md\n",
+  "stderr": "",
+  "exitCode": 0,
+  "signal": null,
+  "durationMs": 30,
+  "timedOut": false,
+  "requiresTTY": false,
+  "environment": {
+    "node": "v26.8.1",
+    "platform": "darwin",
+    "arch": "arm64",
+    "ci": true,
+    "stdin": "closed",
+    "isolation": "disposable copy; not an OS sandbox"
+  }
+}
