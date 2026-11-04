@@ -59,7 +59,7 @@ Do not use noninteractive mode to override a user who asked to choose.
 ## 3. Capture and design
 
 Run `capture --repo DIR --id ID -- 'COMMAND'` for genuine project output. It
-executes in a disposable copy with a separate home and no inherited credentials.
+executes in a disposable copy with a separate home and no inherited credentials by default.
 It is not an OS security sandbox: inspect commands first and run only authorized
 commands. Captures preserve ANSI, exits, elapsed time, environment and TTY needs.
 The execution limit is 60 seconds. A TTY-dependent command must be marked
@@ -114,7 +114,8 @@ caption so every generated image is reachable. Move long detail to reference.
 
 Write WORK/command-plan.json. Every shell block, in both languages, must have
 an exact code or index rule: run with expected exit code, or skip with a concrete
-reason. No command rewrites or append flags behind the reader's back.
+reason. Private clones may explicitly share the authorized gh identity via
+`shareGitHubAuth: true` in that block plan; disclose it. No command rewrites or append flags behind the reader's back.
 Run `node scripts/run.mjs verify --repo DIR`. V1–V9 must have no failures.
 Read the report and resolve failures. A skip is a disclosed limitation, not an
 executed check. Project test commands come from scan; document a missing one.

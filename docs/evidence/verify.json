@@ -1,0 +1,259 @@
+{
+  "mode": "verify",
+  "ok": true,
+  "checks": [
+    {
+      "id": "V1",
+      "status": "pass",
+      "issues": [],
+      "results": [
+        {
+          "index": 0,
+          "code": "gh repo clone bmdy6/skill-readme-from-code .agents/skills/readme-from-code -- --branch feat/v0.1",
+          "language": "sh",
+          "file": "README.md",
+          "command": "gh repo clone bmdy6/skill-readme-from-code .agents/skills/readme-from-code -- --branch feat/v0.1",
+          "stdout": "",
+          "stderr": "Cloning into '.agents/skills/readme-from-code'...\n",
+          "exitCode": 0,
+          "signal": null,
+          "durationMs": 6375,
+          "timedOut": false,
+          "requiresTTY": false,
+          "environment": {
+            "node": "v26.8.1",
+            "platform": "darwin",
+            "arch": "arm64",
+            "ci": true,
+            "sharedGitHubAuth": true,
+            "stdin": "closed",
+            "isolation": "disposable copy; not an OS sandbox"
+          },
+          "status": "pass"
+        },
+        {
+          "index": 0,
+          "code": "gh repo clone bmdy6/skill-readme-from-code .agents/skills/readme-from-code -- --branch feat/v0.1",
+          "language": "sh",
+          "file": "README.zh-CN.md",
+          "command": "gh repo clone bmdy6/skill-readme-from-code .agents/skills/readme-from-code -- --branch feat/v0.1",
+          "stdout": "",
+          "stderr": "Cloning into '.agents/skills/readme-from-code'...\n",
+          "exitCode": 0,
+          "signal": null,
+          "durationMs": 6230,
+          "timedOut": false,
+          "requiresTTY": false,
+          "environment": {
+            "node": "v26.8.1",
+            "platform": "darwin",
+            "arch": "arm64",
+            "ci": true,
+            "sharedGitHubAuth": true,
+            "stdin": "closed",
+            "isolation": "disposable copy; not an OS sandbox"
+          },
+          "status": "pass"
+        }
+      ]
+    },
+    {
+      "id": "V2",
+      "status": "pass",
+      "issues": [],
+      "screen": {
+        "renderer": "github-api",
+        "readme": "README.md",
+        "viewports": {
+          "desktop": {
+            "width": 1280,
+            "height": 800,
+            "items": {
+              "name": {
+                "top": 96,
+                "bottom": 146.59375,
+                "left": 221,
+                "right": 1059
+              },
+              "oneLiner": {
+                "top": 162.59375,
+                "bottom": 186.59375,
+                "left": 221,
+                "right": 1059
+              },
+              "hero": {
+                "top": 242.59375,
+                "bottom": 527.5,
+                "left": 221,
+                "right": 1059
+              },
+              "install": {
+                "top": 635.6875,
+                "bottom": 687.390625,
+                "left": 221,
+                "right": 1059
+              }
+            },
+            "checks": {
+              "name": true,
+              "oneLiner": true,
+              "hero": true,
+              "install": true
+            },
+            "install": "gh repo clone bmdy6/skill-readme-from-code .agents/skills/readme-from-code -- --branch feat/v0.1",
+            "contentWidth": 838,
+            "fold": 728,
+            "screenshot": "first-screen-desktop.png",
+            "pass": true
+          },
+          "desktop-dark": {
+            "width": 1280,
+            "height": 800,
+            "items": {
+              "name": {
+                "top": 96,
+                "bottom": 146.59375,
+                "left": 221,
+                "right": 1059
+              },
+              "oneLiner": {
+                "top": 162.59375,
+                "bottom": 186.59375,
+                "left": 221,
+                "right": 1059
+              },
+              "hero": {
+                "top": 242.59375,
+                "bottom": 527.5,
+                "left": 221,
+                "right": 1059
+              },
+              "install": {
+                "top": 635.6875,
+                "bottom": 687.390625,
+                "left": 221,
+                "right": 1059
+              }
+            },
+            "checks": {
+              "name": true,
+              "oneLiner": true,
+              "hero": true,
+              "install": true
+            },
+            "install": "gh repo clone bmdy6/skill-readme-from-code .agents/skills/readme-from-code -- --branch feat/v0.1",
+            "contentWidth": 838,
+            "fold": 728,
+            "screenshot": "first-screen-desktop-dark.png",
+            "pass": true
+          },
+          "mobile": {
+            "width": 390,
+            "height": 844,
+            "items": {
+              "name": {
+                "top": 88,
+                "bottom": 138.59375,
+                "left": 16,
+                "right": 374
+              },
+              "oneLiner": {
+                "top": 154.59375,
+                "bottom": 226.59375,
+                "left": 16,
+                "right": 374
+              },
+              "hero": {
+                "top": 282.59375,
+                "bottom": 404.3125,
+                "left": 16,
+                "right": 374
+              },
+              "install": {
+                "top": 536.5,
+                "bottom": 627.609375,
+                "left": 16,
+                "right": 374
+              }
+            },
+            "checks": {
+              "name": true,
+              "oneLiner": true,
+              "hero": true,
+              "install": true
+            },
+            "install": "gh repo clone bmdy6/skill-readme-from-code .agents/skills/readme-from-code -- --branch feat/v0.1",
+            "contentWidth": 358,
+            "fold": 772,
+            "screenshot": "first-screen-mobile.png",
+            "pass": true
+          }
+        }
+      }
+    },
+    {
+      "id": "V3",
+      "status": "pass",
+      "issues": [],
+      "externalLinks": "not checked; use --online"
+    },
+    {
+      "id": "V4",
+      "status": "pass",
+      "issues": []
+    },
+    {
+      "id": "V5",
+      "status": "pass",
+      "issues": []
+    },
+    {
+      "id": "V6",
+      "status": "pass",
+      "issues": [],
+      "wordCount": 216
+    },
+    {
+      "id": "V7",
+      "status": "pass",
+      "issues": []
+    },
+    {
+      "id": "V8",
+      "status": "pass",
+      "issues": [],
+      "results": [
+        {
+          "command": "npm test",
+          "stdout": "\n> readme-from-code@0.1.0 test\n> node --test test/*.test.mjs\n\n✔ terminal output cannot be handwritten (2.323208ms)\n✔ all six templates produce four checked variants (3709.679125ms)\n✔ stranger score requires all four independent checks (0.547166ms)\n✔ report names missing evidence and agent decisions (4.540708ms)\n✔ storefront makes valid topics and a small social image (974.132792ms)\n✔ scan cli-tool is deterministic and sourced (100.485292ms)\n✔ scan library is deterministic and sourced (41.332042ms)\n✔ scan web-app is deterministic and sourced (32.28825ms)\n✔ scan agent-skill is deterministic and sourced (31.55925ms)\n✔ scan clean is deterministic and sourced (28.347125ms)\n✔ detects tests locking README (19.788583ms)\n✔ skill names every command, gates and hard delivery boundaries (1.945625ms)\n✔ each project skeleton puts Quick start immediately after hero (1.39675ms)\n✔ shell fences include tilde and bare blocks (1.258917ms)\n✔ audit fixture cli-tool (664.981417ms)\n✔ audit fixture library (345.140875ms)\n✔ audit fixture web-app (312.9895ms)\n✔ audit fixture agent-skill (318.952125ms)\n✔ audit fixture clean (306.172625ms)\n✔ execution changes only a disposable copy (6.193917ms)\n✔ timeout is recorded (55.519375ms)\n✔ unplanned command fails V1 (439.624167ms)\n✔ Chinese anchors follow heading slugs (1.274042ms)\n✔ badge mismatch, claims and denied words fail independently (0.852125ms)\n✔ V9 rejects changed image bytes (414.769708ms)\n✔ commented examples are not broken links (0.524875ms)\n✔ translated headings in a different order fail V7 (0.798834ms)\n✔ one-liner and literal zero budgets are enforced (0.494125ms)\n✔ reference-style links and images are checked (0.788917ms)\nℹ tests 29\nℹ suites 0\nℹ pass 29\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 3894.361458\n",
+          "stderr": "",
+          "exitCode": 0,
+          "signal": null,
+          "durationMs": 4017,
+          "timedOut": false,
+          "requiresTTY": false,
+          "environment": {
+            "node": "v26.8.1",
+            "platform": "darwin",
+            "arch": "arm64",
+            "ci": true,
+            "sharedGitHubAuth": false,
+            "stdin": "closed",
+            "isolation": "disposable copy; not an OS sandbox"
+          }
+        }
+      ]
+    },
+    {
+      "id": "V9",
+      "status": "pass",
+      "issues": []
+    }
+  ],
+  "score": 100,
+  "summary": {
+    "pass": 9,
+    "fail": 0,
+    "skip": 0
+  }
+}

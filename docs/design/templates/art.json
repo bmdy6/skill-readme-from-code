@@ -188,8 +188,14 @@
       "template": "hero-screens",
       "illustration": true,
       "screens": [
-        "screens/gallery-input.svg",
-        "screens/gallery-output.svg"
+        {
+          "en": "screens/gallery-input.svg",
+          "zh-CN": "screens/gallery-input.zh-CN.svg"
+        },
+        {
+          "en": "screens/gallery-output.svg",
+          "zh-CN": "screens/gallery-output.zh-CN.svg"
+        }
       ]
     },
     {

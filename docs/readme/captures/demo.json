@@ -1,0 +1,20 @@
+{
+  "id": "demo",
+  "command": "node scripts/preview.mjs",
+  "stdout": "# readme-from-code\n## Quick start\ngh repo clone bmdy6/skill-readme-from-code .agents/skills/readme-from-code -- --branch feat/v0.1\n",
+  "stderr": "",
+  "exitCode": 0,
+  "signal": null,
+  "durationMs": 41,
+  "timedOut": false,
+  "requiresTTY": false,
+  "environment": {
+    "node": "v26.8.1",
+    "platform": "darwin",
+    "arch": "arm64",
+    "ci": true,
+    "sharedGitHubAuth": false,
+    "stdin": "closed",
+    "isolation": "disposable copy; not an OS sandbox"
+  }
+}

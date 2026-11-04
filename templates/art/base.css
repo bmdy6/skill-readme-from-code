@@ -1,5 +1,252 @@
-:root{--bg:#f6f6f3;--card:#fff;--line:#dedfd9;--ink:#1c1e1b;--mute:#586052;--soft:#e6f0ea;--term:#16181a;--terminal-ink:#e1e8df}
-.dark{--bg:#0f1110;--card:#171a18;--line:#3b423c;--ink:#e9ebe7;--mute:#afb7aa;--soft:#213329;--term:#090c0a}
-*{box-sizing:border-box}body{margin:0;font:18px/1.5 system-ui,-apple-system,"Noto Sans CJK SC",sans-serif;background:var(--bg);color:var(--ink)}
-.frame{width:900px;padding:28px;background:var(--bg)}.card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;min-width:0}.head{padding:12px 20px;border-bottom:1px solid var(--line);font-size:14px;font-weight:600;display:flex;justify-content:space-between;gap:16px}.head span:last-child{color:var(--mute);font-weight:400}.dots{display:flex;gap:6px;align-items:center}.dots i{width:9px;height:9px;background:var(--line);border-radius:50%}
-pre{margin:0;font:15px/1.7 ui-monospace,"DejaVu Sans Mono",monospace;white-space:pre-wrap;overflow-wrap:anywhere}.terminal{background:var(--term);color:var(--terminal-ink);padding:18px 22px;min-height:120px}.terminal .cmd{color:#a9d4b9}.caption{font-size:14px;color:var(--mute);margin:16px 0 0}.eyebrow{font-size:13px;color:var(--mute);letter-spacing:.07em;font-weight:600;margin-bottom:12px;text-transform:uppercase}h1,h2,p{margin:0}h1{font-size:28px;line-height:1.2;letter-spacing:-.035em}h2{font-size:22px;line-height:1.25}.row{display:flex;gap:20px;align-items:stretch}.left{width:340px;flex-shrink:0}.right{flex:1;min-width:0}.bubble{background:var(--soft);border-radius:14px;padding:20px;font-size:20px;line-height:1.45;border-left:3px solid var(--accent)}.arrow{align-self:center;color:var(--mute);font-size:28px}.pad{padding:20px}.sub{color:var(--mute);font-size:16px;margin-top:10px}.note{font-size:14px;color:var(--mute);margin-top:16px}.step{flex:1;padding:22px 18px;min-width:0}.number{display:inline-block;width:28px;height:28px;border-radius:50%;border:2px solid var(--accent);text-align:center;line-height:24px;margin-bottom:12px;font-size:14px;font-weight:700}.step p{font-size:16px;color:var(--mute);margin-top:10px}.screens img{display:block;width:100%;height:170px;object-fit:contain;background:var(--card)}.social{width:1280px;height:640px;padding:64px;display:flex;flex-direction:column;justify-content:center}.social h1{font-size:48px}.social .sub{font-size:24px;margin:18px 0 32px;max-width:1040px}.social .card{max-width:100%}.social .terminal{font-size:20px}.illustration{font-size:13px;font-weight:600;color:var(--mute);margin-top:14px}.strip{padding:32px 28px}.title{margin-bottom:20px}.mini-output{margin-top:16px}.rule{height:3px;width:44px;background:var(--accent);margin-bottom:18px}
+:root {
+  --bg: #f6f6f3;
+  --card: #fff;
+  --line: #dedfd9;
+  --ink: #1c1e1b;
+  --mute: #586052;
+  --soft: #e6f0ea;
+  --term: #16181a;
+  --terminal-ink: #e1e8df;
+}
+.dark {
+  --bg: #0f1110;
+  --card: #171a18;
+  --line: #3b423c;
+  --ink: #e9ebe7;
+  --mute: #afb7aa;
+  --soft: #213329;
+  --term: #090c0a;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  font:
+    18px/1.5 system-ui,
+    -apple-system,
+    "Noto Sans CJK SC",
+    sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+}
+.frame {
+  width: 900px;
+  padding: 28px;
+  background: var(--bg);
+}
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  overflow: hidden;
+  min-width: 0;
+}
+.head {
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--line);
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+.head span:last-child {
+  color: var(--mute);
+  font-weight: 400;
+}
+.dots {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.dots i {
+  width: 9px;
+  height: 9px;
+  background: var(--line);
+  border-radius: 50%;
+}
+pre {
+  margin: 0;
+  font:
+    15px/1.7 ui-monospace,
+    "DejaVu Sans Mono",
+    monospace;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.terminal {
+  background: var(--term);
+  color: var(--terminal-ink);
+  padding: 18px 22px;
+  min-height: 120px;
+}
+.terminal .cmd {
+  color: #a9d4b9;
+}
+.caption {
+  font-size: 14px;
+  color: var(--mute);
+  margin: 16px 0 0;
+}
+.eyebrow {
+  font-size: 13px;
+  color: var(--mute);
+  letter-spacing: 0.07em;
+  font-weight: 600;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+h1,
+h2,
+p {
+  margin: 0;
+}
+h1 {
+  font-size: 28px;
+  line-height: 1.2;
+  letter-spacing: -0.035em;
+}
+h2 {
+  font-size: 22px;
+  line-height: 1.25;
+}
+.row {
+  display: flex;
+  gap: 20px;
+  align-items: stretch;
+}
+.left {
+  width: 340px;
+  flex-shrink: 0;
+}
+.right {
+  flex: 1;
+  min-width: 0;
+}
+.bubble {
+  background: var(--soft);
+  border-radius: 14px;
+  padding: 20px;
+  font-size: 20px;
+  line-height: 1.45;
+  border-left: 3px solid var(--accent);
+}
+.arrow {
+  align-self: center;
+  color: var(--mute);
+  font-size: 28px;
+}
+.pad {
+  padding: 20px;
+}
+.sub {
+  color: var(--mute);
+  font-size: 16px;
+  margin-top: 10px;
+}
+.note {
+  font-size: 14px;
+  color: var(--mute);
+  margin-top: 16px;
+}
+.step {
+  flex: 1;
+  padding: 22px 18px;
+  min-width: 0;
+}
+.number {
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  text-align: center;
+  line-height: 24px;
+  margin-bottom: 12px;
+  font-size: 14px;
+  font-weight: 700;
+}
+.step p {
+  font-size: 16px;
+  color: var(--mute);
+  margin-top: 10px;
+}
+.screens img {
+  display: block;
+  width: 100%;
+  height: 170px;
+  object-fit: contain;
+  background: var(--card);
+}
+.social {
+  width: 1280px;
+  height: 640px;
+  padding: 64px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.social h1 {
+  font-size: 48px;
+}
+.social .sub {
+  font-size: 24px;
+  margin: 18px 0 32px;
+  max-width: 1040px;
+}
+.social .card {
+  max-width: 100%;
+}
+.social .terminal {
+  font-size: 20px;
+}
+.illustration {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--mute);
+  margin-top: 14px;
+}
+.strip {
+  padding: 32px 28px;
+}
+.title {
+  margin-bottom: 20px;
+}
+.mini-output {
+  margin-top: 16px;
+}
+.rule {
+  height: 3px;
+  width: 44px;
+  background: var(--accent);
+  margin-bottom: 18px;
+}
+.compact {
+  padding: 20px 28px;
+}
+.compact .terminal {
+  padding: 14px 18px;
+  min-height: 96px;
+  font:
+    15px/1.6 ui-monospace,
+    "DejaVu Sans Mono",
+    monospace;
+}
+.compact .pad {
+  padding: 16px;
+}
+.compact .mini-output {
+  margin-top: 12px;
+}
+.compact .bubble {
+  font-size: 18px;
+  padding: 16px;
+}
+.compact .head {
+  padding: 10px 16px;
+}
+.compact .note {
+  font-size: 14px;
+  margin-top: 12px;
+}

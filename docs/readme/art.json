@@ -1,0 +1,65 @@
+{
+  "accent": "#2f6f4e",
+  "images": [
+    {
+      "id": "hero",
+      "template": "hero-prompt",
+      "title": {
+        "en": "README.md · excerpt",
+        "zh-CN": "README.md · 实际片段"
+      },
+      "subtitle": {
+        "en": "An agent skill for maintainers. This is an excerpt of its own README.",
+        "zh-CN": "面向维护者的智能体技能，右侧摘自它自己的 README。"
+      },
+      "prompt": {
+        "en": "Write a README that maintainers can verify.",
+        "zh-CN": "给维护者写一份可以验证的项目介绍。"
+      },
+      "captureId": "demo",
+      "fixture": false,
+      "compact": true
+    },
+    {
+      "id": "workflow",
+      "template": "strip-3",
+      "title": {
+        "en": "How it works",
+        "zh-CN": "工作流程"
+      },
+      "subtitle": {
+        "en": "Help maintainers write a README with source-backed claims, tested commands, and readable images.",
+        "zh-CN": "帮助维护者写出有代码依据、命令实测和清晰配图的项目介绍。"
+      },
+      "illustration": true,
+      "steps": [
+        {
+          "en": "Read code",
+          "zh-CN": "阅读代码"
+        },
+        {
+          "en": "Preview the result",
+          "zh-CN": "预览效果"
+        },
+        {
+          "en": "Verify and deliver",
+          "zh-CN": "验证交付"
+        }
+      ],
+      "details": [
+        {
+          "en": "Trace each claim to its source.",
+          "zh-CN": "每条卖点都能追到代码。"
+        },
+        {
+          "en": "Choose the position and images.",
+          "zh-CN": "选定位，再看首屏和图片。"
+        },
+        {
+          "en": "Run commands and inspect the first screen.",
+          "zh-CN": "实跑命令，检查首屏。"
+        }
+      ]
+    }
+  ]
+}

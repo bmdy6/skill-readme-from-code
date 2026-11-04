@@ -23,7 +23,7 @@ there is no automatic `write` CLI command.
 | doctor | none | Checks Node; installs Chromium when absent. |
 | scan | --repo DIR | facts.json; deterministic with identical repository and metadata. |
 | audit | --repo DIR [--online] [--local] [--deny-words FILE] | audit.json, audit.md, screen.html, first-screen.json and three screenshots. V2–V7 only; target untouched. |
-| capture | --repo DIR --id ID [--tty] -- 'COMMAND' | captures/ID.json. 60 second cap, separate home, closed stdin, no inherited credentials. |
+| capture | --repo DIR --id ID [--tty] -- 'COMMAND' | captures/ID.json. 60 second cap, separate home, closed stdin, no inherited credentials by default. |
 | art | --spec FILE [--out DIR] | PNGs and art-manifest.json; portable art.json and capture/screen inputs. Default out: target docs/readme. |
 | verify | --repo DIR [--plan FILE] [--online] [--local] [--deny-words FILE] | verify.json, verify.md, screenshots. V1–V9; any failure exits 1. |
 | stranger prepare | --repo DIR | stranger/first-screen-desktop.png, desktop-dark/mobile PNG, questions.md, result.json (not-run). |
@@ -93,6 +93,10 @@ work/command-plan.json contains `blocks`. Each rule selects exact `code` or an
 defaults to 0. A `skip` string must explain why execution is unavailable. `tty`
 records that a real TTY is required but does not allocate one. No silent command
 rewrites, injected flags or success inferred from another command are allowed.
+An explicit rule with shareGitHubAuth:true shares the current gh identity for a
+private repository clone, through a temporary child environment and credential
+helper. The report records sharedGitHubAuth without persisting its token. Use
+this only when the user has authorized access to that private repository.
 
 ```json
 {"blocks":[{"index":0,"expectExit":0},{"index":1,"skip":"Requires a user-owned test account."}]}
@@ -160,7 +164,7 @@ V8 runs discovered test commands in disposable copies; absent commands are skip.
 V9 checks art self-checks and hashes. Audit only runs V2–V7.
 
 V5 supports common SPDX licenses (MIT, Apache-2.0, GPL-3.0-only, BSD-3-Clause).
-A source citation is not a semantic proof. A desktop screenshot uses Markdown
+V7 recognizes bilingual skeleton section names and checks other translated headings structurally. A source citation is not a semantic proof. A desktop screenshot uses Markdown
 rendered with GitHub styling and geometry, not a claim about every live browser
 layout or authenticated repository UI. Test copies can use network; they are not
 a malware boundary. No GIF recording, automatic web-app capture, settings
@@ -171,3 +175,12 @@ in both what and forWhom, and wouldTry exactly yes. It is a simple acceptance
 heuristic, not research on users' likelihood of starring. Keep the actual reader
 response and confusing[]; no response means not-run. Reports do not suppress
 failures or missing evidence.
+
+## Replaying the recorded acceptance
+
+The generated brief and command plan are committed in docs/readme. To replay,
+pass --brief TARGET/docs/readme/brief.json and --plan
+TARGET/docs/readme/command-plan.json to verify. The private clone plan explicitly
+shares the already-authorized gh identity; no token is stored in these files.
+Recorded reports are in docs/evidence. The self-install command intentionally
+pins feat/v0.1 because main does not contain the new skill until review/merge.

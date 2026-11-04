@@ -1,42 +1,175 @@
-import fs from 'node:fs/promises';
-import path from 'node:path';
-import {fileURLToPath,pathToFileURL} from 'node:url';
-import {execFileSync} from 'node:child_process';
-import {chromium} from 'playwright';
-import {marked} from 'marked';
-import GithubSlugger from 'github-slugger';
-import {read,write,escape} from './io.mjs';
-const root=fileURLToPath(new URL('../../',import.meta.url));
-export async function markdownHTML(md,{local=false}={}){
- if(!local)try{
-  const token=process.env.GITHUB_TOKEN||execFileSync('gh',['auth','token'],{encoding:'utf8',stdio:['ignore','pipe','ignore']}).trim();
-  const r=await fetch('https://api.github.com/markdown',{method:'POST',signal:AbortSignal.timeout(15000),headers:{Authorization:`Bearer ${token}`,'Content-Type':'application/json','User-Agent':'readme-from-code'},body:JSON.stringify({text:md,mode:'gfm'})});
-  if(!r.ok)throw Error(`HTTP ${r.status}`);return {html:await r.text(),renderer:'github-api'};
- }catch(e){return {...await markdownHTML(md,{local:true}),fallbackReason:e.message};}
- const slugger=new GithubSlugger();const renderer=new marked.Renderer();renderer.heading=({depth,text})=>`<h${depth} id="${escape(slugger.slug(text.replace(/<[^>]*>|[\*_`]/g,'')))}">${marked.parseInline(text)}</h${depth}>`;
- return {html:marked.parse(md,{renderer}),renderer:'local-marked',fallbackReason:local?'Local rendering requested':undefined};
+import fs from "node:fs/promises";
+import path from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
+import { execFileSync } from "node:child_process";
+import { chromium } from "playwright";
+import { marked } from "marked";
+import GithubSlugger from "github-slugger";
+import { read, write, escape } from "./io.mjs";
+const root = fileURLToPath(new URL("../../", import.meta.url));
+export async function markdownHTML(md, { local = false } = {}) {
+  if (!local)
+    try {
+      const token =
+        process.env.GITHUB_TOKEN ||
+        execFileSync("gh", ["auth", "token"], {
+          encoding: "utf8",
+          stdio: ["ignore", "pipe", "ignore"],
+        }).trim();
+      const r = await fetch("https://api.github.com/markdown", {
+        method: "POST",
+        signal: AbortSignal.timeout(15000),
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          "User-Agent": "readme-from-code",
+        },
+        body: JSON.stringify({ text: md, mode: "gfm" }),
+      });
+      if (!r.ok) throw Error(`HTTP ${r.status}`);
+      return { html: await r.text(), renderer: "github-api" };
+    } catch (e) {
+      return {
+        ...(await markdownHTML(md, { local: true })),
+        fallbackReason: e.message,
+      };
+    }
+  const slugger = new GithubSlugger();
+  const renderer = new marked.Renderer();
+  renderer.heading = ({ depth, text }) =>
+    `<h${depth} id="${escape(slugger.slug(text.replace(/<[^>]*>|[\*_`]/g, "")))}">${marked.parseInline(text)}</h${depth}>`;
+  return {
+    html: marked.parse(md, { renderer }),
+    renderer: "local-marked",
+    fallbackReason: local ? "Local rendering requested" : undefined,
+  };
 }
-export async function firstScreen({repo,work,readme='README.md',install,local=false}){
- const md=await read(path.join(repo,readme));const rendered=await markdownHTML(md,{local});const css=await read(path.join(root,'templates/github-markdown.css'));
- await fs.mkdir(work,{recursive:true});const htmlFile=path.join(work,'screen.html');
- await write(htmlFile,`<!doctype html><meta charset="utf-8"><base href="${escape(pathToFileURL(repo+path.sep).href)}"><style>${css}
- body{margin:0;background:#fff;padding-top:72px}.markdown-body{box-sizing:content-box;width:838px;margin:auto;padding:24px 32px;min-height:900px}img{max-width:100%}pre{white-space:pre-wrap;overflow-wrap:anywhere}body.dark{background:#0d1117}.dark .markdown-body{color:#e6edf3;background:#0d1117}.dark .markdown-body pre,.dark .markdown-body code{background:#161b22}.dark .markdown-body a{color:#79c0ff}
- @media(max-width:767px){.markdown-body{box-sizing:border-box;width:100%;padding:16px}}.sticky{height:72px;position:absolute;top:0;left:0;right:0;border-bottom:1px solid #8884;padding:24px;box-sizing:border-box;font:14px system-ui;color:#687078;background:inherit}</style><div class="sticky">README</div><article class="markdown-body">${rendered.html}</article>`);
- const browser=await chromium.launch();const viewports={};
- try{for(const [name,width,height,theme]of [['desktop',1280,800,'light'],['desktop-dark',1280,800,'dark'],['mobile',390,844,'light']]){
-  const page=await browser.newPage({viewport:{width,height},colorScheme:theme});await page.route('**/*',route=>/^https?:/.test(route.request().url())?route.abort():route.continue());
-  await page.goto(pathToFileURL(htmlFile).href,{waitUntil:'load'});await page.evaluate(t=>document.body.classList.toggle('dark',t==='dark'),theme);await page.evaluate(()=>document.fonts.ready);
-  const measured=await page.evaluate(({install,height})=>{
-   const root=document.querySelector('article');const box=e=>{if(!e)return null;const r=e.getBoundingClientRect();return {top:r.top,bottom:r.bottom,left:r.left,right:r.right};};
-   const imgs=[...root.querySelectorAll('img')].filter(i=>!(/badge|shields\.io|badgen/i.test(i.src))&&i.naturalHeight>40);
-   const heading=root.querySelector('h1');const banner=imgs.find(i=>!heading||(heading.compareDocumentPosition(i)&Node.DOCUMENT_POSITION_PRECEDING));
-   const title=banner||heading;const lead=[...root.querySelectorAll('p')].find(p=>p.textContent.trim().length>10&&!p.querySelector('img'));
-   const hero=imgs.find(i=>i!==banner&&i.naturalWidth>=400);const pre=[...root.querySelectorAll('pre')].find(p=>install?p.textContent.trim()===install.trim():/\b(npx|npm|pip|uv|cargo|git clone|brew|curl)\b/.test(p.textContent));
-   const items={name:box(title),oneLiner:box(lead),hero:hero?.complete&&hero.naturalWidth?box(hero):null,install:box(pre)};
-   const checks=Object.fromEntries(Object.entries(items).map(([k,r])=>[k,!!r&&r.top>=72&&r.bottom<=height&&r.left>=0&&r.right<=innerWidth]));
-   return {items,checks,install:pre?.textContent.trim()||null,contentWidth:root.clientWidth-parseFloat(getComputedStyle(root).paddingLeft)-parseFloat(getComputedStyle(root).paddingRight),fold:height-72};
-  },{install,height});
-  const file=`first-screen-${name}.png`;await page.screenshot({path:path.join(work,file)});viewports[name]={width,height,...measured,screenshot:file,pass:Object.values(measured.checks).every(Boolean)};await page.close();
- }}finally{await browser.close();}
- const result={renderer:rendered.renderer,fallbackReason:rendered.fallbackReason,readme,viewports};await write(path.join(work,'first-screen.json'),result);return result;
+export async function firstScreen({
+  repo,
+  work,
+  readme = "README.md",
+  install,
+  local = false,
+}) {
+  const md = await read(path.join(repo, readme));
+  const rendered = await markdownHTML(md, { local });
+  const css = await read(path.join(root, "templates/github-markdown.css"));
+  await fs.mkdir(work, { recursive: true });
+  const htmlFile = path.join(work, "screen.html");
+  await write(
+    htmlFile,
+    `<!doctype html><meta charset="utf-8"><base href="${escape(pathToFileURL(repo + path.sep).href)}"><style>${css}
+ body{margin:0;background:#fff;padding-top:72px}.markdown-body{box-sizing:content-box;width:838px;margin:auto;padding:24px 32px;min-height:900px}img{max-width:100%}pre{white-space:pre-wrap;overflow-wrap:anywhere}body.dark{background:#0d1117}.dark .markdown-body{color:#e6edf3;background:#0d1117}.dark .markdown-body pre,.dark .markdown-body code{background:#161b22}.dark .markdown-body a{color:#79c0ff}.dark .markdown-body pre,.dark .markdown-body pre code,.dark .markdown-body pre span{color:#e6edf3}.dark .markdown-body code{color:inherit}
+ @media(max-width:767px){.markdown-body{box-sizing:border-box;width:100%;padding:16px}}.sticky{height:72px;position:absolute;top:0;left:0;right:0;border-bottom:1px solid #8884;padding:24px;box-sizing:border-box;font:14px system-ui;color:#687078;background:inherit}</style><div class="sticky">README</div><article class="markdown-body">${rendered.html}</article>`,
+  );
+  const browser = await chromium.launch();
+  const viewports = {};
+  try {
+    for (const [name, width, height, theme] of [
+      ["desktop", 1280, 800, "light"],
+      ["desktop-dark", 1280, 800, "dark"],
+      ["mobile", 390, 844, "light"],
+    ]) {
+      const page = await browser.newPage({
+        viewport: { width, height },
+        colorScheme: theme,
+      });
+      await page.route("**/*", (route) =>
+        /^https?:/.test(route.request().url())
+          ? route.abort()
+          : route.continue(),
+      );
+      await page.goto(pathToFileURL(htmlFile).href, { waitUntil: "load" });
+      await page.evaluate(
+        (t) => document.body.classList.toggle("dark", t === "dark"),
+        theme,
+      );
+      await page.evaluate(() => document.fonts.ready);
+      const measured = await page.evaluate(
+        ({ install, height }) => {
+          const root = document.querySelector("article");
+          const box = (e) => {
+            if (!e) return null;
+            const r = e.getBoundingClientRect();
+            return {
+              top: r.top,
+              bottom: r.bottom,
+              left: r.left,
+              right: r.right,
+            };
+          };
+          const imgs = [...root.querySelectorAll("img")].filter(
+            (i) =>
+              !/badge|shields\.io|badgen/i.test(i.src) && i.naturalHeight > 40,
+          );
+          const heading = root.querySelector("h1");
+          const banner = imgs.find(
+            (i) =>
+              !heading ||
+              heading.compareDocumentPosition(i) &
+                Node.DOCUMENT_POSITION_PRECEDING,
+          );
+          const title = banner || heading;
+          const lead = [...root.querySelectorAll("p")].find(
+            (p) => p.textContent.trim().length > 10 && !p.querySelector("img"),
+          );
+          const hero = imgs.find((i) => i !== banner && i.naturalWidth >= 400);
+          const pre = [...root.querySelectorAll("pre")].find((p) =>
+            install
+              ? p.textContent.trim() === install.trim()
+              : /\b(npx|npm|pip|uv|cargo|git clone|brew|curl|python3?)\b/.test(
+                  p.textContent,
+                ),
+          );
+          const items = {
+            name: box(title),
+            oneLiner: box(lead),
+            hero: hero?.complete && hero.naturalWidth ? box(hero) : null,
+            install: box(pre),
+          };
+          const checks = Object.fromEntries(
+            Object.entries(items).map(([k, r]) => [
+              k,
+              !!r &&
+                r.top >= 72 &&
+                r.bottom <= height &&
+                r.left >= 0 &&
+                r.right <= innerWidth,
+            ]),
+          );
+          return {
+            items,
+            checks,
+            install: pre?.textContent.trim() || null,
+            contentWidth:
+              root.clientWidth -
+              parseFloat(getComputedStyle(root).paddingLeft) -
+              parseFloat(getComputedStyle(root).paddingRight),
+            fold: height - 72,
+          };
+        },
+        { install, height },
+      );
+      const file = `first-screen-${name}.png`;
+      await page.screenshot({ path: path.join(work, file) });
+      viewports[name] = {
+        width,
+        height,
+        ...measured,
+        screenshot: file,
+        pass: Object.values(measured.checks).every(Boolean),
+      };
+      await page.close();
+    }
+  } finally {
+    await browser.close();
+  }
+  const result = {
+    renderer: rendered.renderer,
+    fallbackReason: rendered.fallbackReason,
+    readme,
+    viewports,
+  };
+  await write(path.join(work, "first-screen.json"), result);
+  return result;
 }

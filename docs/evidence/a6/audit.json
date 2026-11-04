@@ -1,0 +1,171 @@
+{
+  "mode": "audit",
+  "checks": [
+    {
+      "id": "V2",
+      "status": "fail",
+      "issues": [
+        "install is not fully visible on desktop"
+      ],
+      "screen": {
+        "renderer": "github-api",
+        "readme": "README.md",
+        "viewports": {
+          "desktop": {
+            "width": 1280,
+            "height": 800,
+            "items": {
+              "name": {
+                "top": 96,
+                "bottom": 146.59375,
+                "left": 221,
+                "right": 1059
+              },
+              "oneLiner": {
+                "top": 162.59375,
+                "bottom": 186.59375,
+                "left": 221,
+                "right": 1059
+              },
+              "hero": {
+                "top": 290.59375,
+                "bottom": 527.09375,
+                "left": 221,
+                "right": 1059
+              },
+              "install": {
+                "top": 2118.140625,
+                "bottom": 2169.84375,
+                "left": 221,
+                "right": 1059
+              }
+            },
+            "checks": {
+              "name": true,
+              "oneLiner": true,
+              "hero": true,
+              "install": false
+            },
+            "install": "npx skills add bmdy6/skill-design-from-sites",
+            "contentWidth": 838,
+            "fold": 728,
+            "screenshot": "first-screen-desktop.png",
+            "pass": false
+          },
+          "desktop-dark": {
+            "width": 1280,
+            "height": 800,
+            "items": {
+              "name": {
+                "top": 96,
+                "bottom": 146.59375,
+                "left": 221,
+                "right": 1059
+              },
+              "oneLiner": {
+                "top": 162.59375,
+                "bottom": 186.59375,
+                "left": 221,
+                "right": 1059
+              },
+              "hero": {
+                "top": 290.59375,
+                "bottom": 527.09375,
+                "left": 221,
+                "right": 1059
+              },
+              "install": {
+                "top": 2118.140625,
+                "bottom": 2169.84375,
+                "left": 221,
+                "right": 1059
+              }
+            },
+            "checks": {
+              "name": true,
+              "oneLiner": true,
+              "hero": true,
+              "install": false
+            },
+            "install": "npx skills add bmdy6/skill-design-from-sites",
+            "contentWidth": 838,
+            "fold": 728,
+            "screenshot": "first-screen-desktop-dark.png",
+            "pass": false
+          },
+          "mobile": {
+            "width": 390,
+            "height": 844,
+            "items": {
+              "name": {
+                "top": 88,
+                "bottom": 138.59375,
+                "left": 16,
+                "right": 374
+              },
+              "oneLiner": {
+                "top": 154.59375,
+                "bottom": 202.59375,
+                "left": 16,
+                "right": 374
+              },
+              "hero": {
+                "top": 306.59375,
+                "bottom": 407.625,
+                "left": 16,
+                "right": 374
+              },
+              "install": {
+                "top": 1237.609375,
+                "bottom": 1309.015625,
+                "left": 16,
+                "right": 374
+              }
+            },
+            "checks": {
+              "name": true,
+              "oneLiner": true,
+              "hero": true,
+              "install": false
+            },
+            "install": "npx skills add bmdy6/skill-design-from-sites",
+            "contentWidth": 358,
+            "fold": 772,
+            "screenshot": "first-screen-mobile.png",
+            "pass": false
+          }
+        }
+      }
+    },
+    {
+      "id": "V3",
+      "status": "pass",
+      "issues": [],
+      "externalLinks": "not checked; use --online"
+    },
+    {
+      "id": "V4",
+      "status": "pass",
+      "issues": []
+    },
+    {
+      "id": "V5",
+      "status": "pass",
+      "issues": []
+    },
+    {
+      "id": "V6",
+      "status": "fail",
+      "issues": [
+        "Paragraph exceeds three sentences"
+      ],
+      "wordCount": 124
+    },
+    {
+      "id": "V7",
+      "status": "pass",
+      "issues": []
+    }
+  ],
+  "score": 67
+}

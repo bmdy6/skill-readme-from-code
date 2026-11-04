@@ -1,0 +1,36 @@
+{
+  "projectType": "agent-skill",
+  "audience": "repository maintainers",
+  "oneLiner": {
+    "en": "Help maintainers write a verifiable README with tested commands and clear images using an agent skill.",
+    "zh-CN": "用智能体技能，帮助维护者写出有依据、命令实测和配图清晰的项目介绍。"
+  },
+  "keyTerms": [
+    "readme",
+    "maintainer"
+  ],
+  "install": {
+    "command": "gh repo clone bmdy6/skill-readme-from-code .agents/skills/readme-from-code -- --branch feat/v0.1"
+  },
+  "firstUse": "Use SKILL.md to write a source-backed README for this repository.",
+  "languages": [
+    "en",
+    "zh-CN"
+  ],
+  "accent": "#2f6f4e",
+  "wordBudget": 400,
+  "allowNamedAlternatives": false,
+  "decidedBy": "agent",
+  "gates": {
+    "G1": {
+      "decidedBy": "agent",
+      "choice": "Evidence for maintainers",
+      "reason": "Noninteractive acceptance authorized by issue #1."
+    },
+    "G2": {
+      "decidedBy": "agent",
+      "choice": "Approved after screenshot inspection",
+      "reason": "Desktop light/dark show the entire command and hero; mobile recorded. Fixed dark code contrast before approval."
+    }
+  }
+}

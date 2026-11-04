@@ -1,0 +1,22 @@
+{
+  "status": "pass",
+  "checks": {
+    "what": true,
+    "forWhom": true,
+    "firstCommand": true,
+    "wouldTry": true
+  },
+  "answers": {
+    "what": "An agent skill called readme-from-code that helps write a verifiable README with tested commands and clear images.",
+    "forWhom": "Repository maintainers who use a skill-capable coding agent.",
+    "firstCommand": "gh repo clone bmdy6/skill-readme-from-code .agents/skills/readme-from-code -- --branch feat/v0.1",
+    "wouldTry": "yes",
+    "why": "Tested commands and source-backed documentation sound useful, and the screenshot shows a concrete README excerpt.",
+    "confusing": [
+      "It does not explain which agents support the skill or how they discover it after cloning.",
+      "The installation command targets a feature branch, which makes its stability unclear.",
+      "The example image mostly repeats the installation command instead of demonstrating verified results.",
+      "The prerequisites are cut off at the bottom of the screenshot."
+    ]
+  }
+}

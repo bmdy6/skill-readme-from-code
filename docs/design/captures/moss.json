@@ -13,6 +13,7 @@
     "platform": "darwin",
     "arch": "arm64",
     "ci": true,
+    "sharedGitHubAuth": false,
     "stdin": "closed",
     "isolation": "disposable copy; not an OS sandbox"
   }
