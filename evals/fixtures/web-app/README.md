@@ -61,3 +61,5 @@ npm install moss-web-app
 ## License
 
 MIT.
+
+[Setup guide](missing-guide.md)

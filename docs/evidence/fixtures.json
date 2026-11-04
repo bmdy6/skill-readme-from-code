@@ -26,10 +26,12 @@
   {
     "fixture": "web-app",
     "expected": [
-      "V2"
+      "V2",
+      "V3"
     ],
     "detected": [
-      "V2"
+      "V2",
+      "V3"
     ],
     "pass": true
   },
