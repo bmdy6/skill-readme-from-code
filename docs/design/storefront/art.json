@@ -1,0 +1,22 @@
+{
+  "accent": "#2f6f4e",
+  "images": [
+    {
+      "id": "social",
+      "template": "social",
+      "title": {
+        "en": "readme-from-code",
+        "zh-CN": "readme-from-code"
+      },
+      "subtitle": {
+        "en": "Help maintainers write a verifiable README with tested commands and clear images using an agent skill.",
+        "zh-CN": "用智能体技能，帮助维护者写出有依据、命令实测和配图清晰的项目介绍。"
+      },
+      "result": {
+        "en": "gh repo clone bmdy6/skill-readme-from-code .agents/skills/readme-from-code -- --branch feat/v0.1",
+        "zh-CN": "gh repo clone bmdy6/skill-readme-from-code .agents/skills/readme-from-code -- --branch feat/v0.1"
+      },
+      "illustration": true
+    }
+  ]
+}

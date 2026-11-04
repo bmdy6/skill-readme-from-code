@@ -250,3 +250,13 @@ h2 {
   font-size: 14px;
   margin-top: 12px;
 }
+.illustrated-result {
+  padding: 24px;
+  background: var(--soft);
+  color: var(--ink);
+  font:
+    20px/1.5 system-ui,
+    sans-serif;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}

@@ -53,11 +53,11 @@ export async function storefront(opts) {
     ...new Set(
       [
         brief.projectType,
-        "readme",
+        ...(facts.manifest.keywords || []),
+        ...(brief.keyTerms || []),
         "documentation",
         "developer-tools",
         "automation",
-        "markdown",
         "agent-skills",
       ].map((t) =>
         t

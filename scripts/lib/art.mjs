@@ -163,6 +163,7 @@ export async function renderArt({ spec, out, work }) {
                 : "Recorded run",
             promptLabel: zh ? "你告诉智能体" : "You tell your agent",
             resultLabel: zh ? "你得到" : "You get",
+            outputClass: capture ? "terminal" : "illustrated-result",
             terminalLabel: zh ? "终端记录" : "terminal capture",
             inputLabel: zh ? "输入" : "Input",
             command: escape(capture?.command || ""),
