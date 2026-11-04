@@ -1,0 +1,82 @@
+{
+  "id": "core",
+  "kind": "agent-run",
+  "role": "core",
+  "input": "Original CLI source, bundled notes.json and its flawed README.",
+  "agentStep": "Follow the supplied CLI skeleton and writing prompt to rewrite the Moss fixture; audit and render both actual versions.",
+  "usedFiles": [
+    {
+      "file": "inputs/fixture-index.mjs",
+      "sha256": "1df1bbf74724c275719ed4aa35fbf25e0fc3bb7d73dc1463964c9d43f0591e08"
+    },
+    {
+      "file": "inputs/fixture-notes.json",
+      "sha256": "012a42f4635348e7508602405f42f3f0637122779a896d18050fa8fd06307785"
+    },
+    {
+      "file": "inputs/fixture-before.md",
+      "sha256": "3fe9afcc7a030b664a65e6e5778a8b86d44c20be2f425ffdee44d2ec62881594"
+    },
+    {
+      "file": "inputs/write.md",
+      "sha256": "4891f3d60104a7bf207cb5309d9e1e5cc778165a932caf99e9f7d8e12adc261d"
+    },
+    {
+      "file": "inputs/cli-template.md",
+      "sha256": "a2c8a4348635f9627c63f79ed8255efea17f473763603570d6367512de3e6f8e"
+    },
+    {
+      "file": "runs/fixture-prompt.txt",
+      "sha256": "ea42655d697389d9f30352dc505033671ba1606393aa03207f6308d58fbb8d7a"
+    },
+    {
+      "file": "runs/audit-before.json",
+      "sha256": "d3f6410e2feb0066cad8d0fa365f854604286a714f29ff91f4cf57cd10097eb8"
+    },
+    {
+      "file": "runs/audit-after.json",
+      "sha256": "4dcf00aafcbaf2e4c3bdb0b501f669b12d18bd99f4e442bd0ebf7a4e455b3ede"
+    }
+  ],
+  "response": {
+    "file": "runs/fixture-response.json",
+    "sha256": "d5a791d4603442fb11390b14115c7bf637d4e814cf79b3ebfabf810096a0223f",
+    "outputKey": "readme"
+  },
+  "stdout": "# Moss\n\nTurn JSON notes into a daily Markdown digest.\n\n<picture>\n  <source media=\"(prefers-color-scheme: dark)\" srcset=\"assets/hero-dark.png\">\n  <img src=\"assets/hero-light.png\" width=\"838\" alt=\"Moss runs with the included notes and prints Read, Build, and Write summaries.\">\n</picture>\n\nMoss prints a summary after writing the digest.\n\n## Quick start\n\n```sh\nnode index.mjs\n```\n\nMoss reads the included `notes.json` and writes `digest.md` in your current directory.\n\nRequires Node.js 20 or later.\n\n## What you get\n\n- Notes sharing a topic appear together.\n- Markdown headings and bullet lists make the digest readable.\n- Console summaries show each topic and its notes.\n\n## How it works\n\n- Moss reads and parses the JSON source.\n- It groups each note’s `text` by its `topic`.\n- It writes the Markdown digest and prints summaries.\n\n## Options\n\n| Argument | Behavior |\n| --- | --- |\n| Source file | Pass a JSON path after `node index.mjs`. If omitted, Moss uses the included `notes.json`. |\n\nSee the [reference](docs/reference.md) for documentation.\n\n## FAQ and boundaries\n\n### What input does Moss expect?\n\nUse a JSON array of objects with `topic` and `text` fields, as shown in `notes.json`.\n\n### Does it run automatically each day?\n\nNo. Each command invocation creates a digest; the code includes no scheduler or date filtering.\n\n### Will it preserve an existing digest?\n\nNo. Each run overwrites `digest.md` in the current directory.\n\n## Contributing\n\nTest changes from the checkout with `node index.mjs`, then inspect `digest.md` and the console summaries.\n\n## License\n\nMoss uses the [MIT License](LICENSE).\n",
+  "artifacts": [
+    {
+      "file": "screens/before-full.png",
+      "sha256": "f6cf93587c0ab0b88a9b53e01efee2355004edd397c03ec8984987f9b381d50f"
+    },
+    {
+      "file": "screens/core-before.png",
+      "sha256": "d671c0e6a317666e81d434251ef44c7da1128d9d3bd3fb16c3aa4db58c644c95"
+    },
+    {
+      "file": "screens/after-full.png",
+      "sha256": "7b42f99f473edddc2e0718cc98c8f26125c003748dd4863b7e2c7b808926f690"
+    },
+    {
+      "file": "screens/core-after.png",
+      "sha256": "aec327a373406ebb01bdace1fba9b6f417f132e97587fc9c56dc3f020756b219"
+    }
+  ],
+  "audits": {
+    "before": {
+      "score": 60,
+      "file": "runs/audit-before.json"
+    },
+    "after": {
+      "score": 100,
+      "file": "runs/audit-after.json"
+    }
+  },
+  "previewCrop": {
+    "x": 221,
+    "y": 96,
+    "width": 838,
+    "height": 520
+  },
+  "producer": "Fresh ephemeral codex exec; original JSON response and full first screens retained."
+}

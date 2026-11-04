@@ -3,22 +3,20 @@
   "images": [
     {
       "id": "hero",
-      "template": "hero-prompt",
+      "template": "hero-screens",
       "title": {
-        "en": "README.md · excerpt",
-        "zh-CN": "README.md · 实际片段"
+        "en": "A README worth trying",
+        "zh-CN": "别人想试的 README"
       },
       "subtitle": {
-        "en": "An agent skill for maintainers. This is an excerpt of its own README.",
-        "zh-CN": "面向维护者的智能体技能，右侧摘自它自己的 README。"
+        "en": "A real fixture before and after",
+        "zh-CN": "真实样例的改写前后"
       },
-      "prompt": {
-        "en": "Write a README that maintainers can verify.",
-        "zh-CN": "给维护者写一份可以验证的项目介绍。"
-      },
-      "captureId": "demo",
-      "fixture": false,
-      "compact": true
+      "captureId": "core",
+      "screens": [
+        "screens/core-before.png",
+        "screens/core-after.png"
+      ]
     },
     {
       "id": "workflow",
@@ -28,8 +26,8 @@
         "zh-CN": "工作流程"
       },
       "subtitle": {
-        "en": "Help maintainers write a README with source-backed claims, tested commands, and readable images.",
-        "zh-CN": "帮助维护者写出有代码依据、命令实测和清晰配图的项目介绍。"
+        "en": "Turn code into a README people want to try, with tested commands and a checked first screen.",
+        "zh-CN": "把代码变成别人想试的 README：命令都跑过，第一屏都看过。"
       },
       "illustration": true,
       "steps": [

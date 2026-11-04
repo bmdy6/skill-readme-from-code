@@ -36,19 +36,21 @@
     ]
   },
   {
-    "claim": "Help maintainers write a verifiable README with tested commands and clear images using an agent skill.",
+    "claim": "Turn code into a README people want to try, with tested commands and a checked first screen.",
     "factIds": [
       "source-tracing",
       "copy-execution",
-      "art-variants"
+      "art-variants",
+      "core-readme-step"
     ]
   },
   {
-    "claim": "用智能体技能，帮助维护者写出有依据、命令实测和配图清晰的项目介绍。",
+    "claim": "把代码变成别人想试的 README：命令都跑过，第一屏都看过。",
     "factIds": [
       "source-tracing",
       "copy-execution",
-      "art-variants"
+      "art-variants",
+      "core-readme-step"
     ]
   }
 ]

@@ -1,0 +1,22 @@
+{
+  "id": "notes",
+  "kind": "command-run",
+  "role": "core",
+  "command": "node index.mjs",
+  "stdout": "digest.md written\nRead: Read one chapter tonight.\nBuild: Ship the small fix first.\nWrite: Keep one concrete example.\n",
+  "stderr": "",
+  "exitCode": 0,
+  "signal": null,
+  "durationMs": 41,
+  "timedOut": false,
+  "requiresTTY": false,
+  "environment": {
+    "node": "v26.8.1",
+    "platform": "darwin",
+    "arch": "arm64",
+    "ci": true,
+    "sharedGitHubAuth": false,
+    "stdin": "closed",
+    "isolation": "disposable copy; not an OS sandbox"
+  }
+}

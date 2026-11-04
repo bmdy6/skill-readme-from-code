@@ -1,15 +1,15 @@
 # readme-from-code
 
-用智能体技能，帮助维护者写出有依据、命令实测和配图清晰的项目介绍。
+把代码变成别人想试的 README：命令都跑过，第一屏都看过。
 
 [English](README.md) · [MIT](LICENSE)
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/readme/hero-dark.zh-CN.png">
-  <img src="docs/readme/hero-light.zh-CN.png" alt="用户请求与真实命令输出" width="838">
+  <img src="docs/readme/hero-light.zh-CN.png" alt="同一个 CLI 样例的改写前后" width="838">
 </picture>
 
-从本仓库真实 README 捕获的片段。
+同一个 CLI 样例的改写前后，分数来自真实审计。
 
 ## 快速开始
 
@@ -52,9 +52,11 @@ gh repo clone bmdy6/skill-readme-from-code .agents/skills/readme-from-code -- --
 
 **需要我做哪些决定？** 交互模式会让你选择一句话定位，并确认首屏预览。
 
-**图里的数据可信吗？** 终端文本来自真实 capture，流程示意会明确标注；本页展示的是真实 README 片段。
+**图里的数据可信吗？** 终端文本来自真实 capture，流程示意会明确标注；本页展示样例真实的改写前后首屏。
 
 **能直接在线安装吗？** 当前私有预览需要已认证的 gh，安装 feat/v0.1 分支；无凭据安装未验证。
+
+**审计分数代表什么？** 它统计 README 检查通过率，不是访客评分。
 
 <details><summary>使用边界</summary>
 

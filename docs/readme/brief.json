@@ -2,8 +2,8 @@
   "projectType": "agent-skill",
   "audience": "repository maintainers",
   "oneLiner": {
-    "en": "Help maintainers write a verifiable README with tested commands and clear images using an agent skill.",
-    "zh-CN": "用智能体技能，帮助维护者写出有依据、命令实测和配图清晰的项目介绍。"
+    "en": "Turn code into a README people want to try, with tested commands and a checked first screen.",
+    "zh-CN": "把代码变成别人想试的 README：命令都跑过，第一屏都看过。"
   },
   "keyTerms": [
     "readme",
@@ -24,13 +24,38 @@
   "gates": {
     "G1": {
       "decidedBy": "agent",
-      "choice": "Evidence for maintainers",
-      "reason": "Noninteractive acceptance authorized by issue #1."
+      "originalTagline": "Help maintainers write a verifiable README with tested commands and clear images using an agent skill.",
+      "candidates": [
+        "Turn code into a README people want to try, with tested commands and a checked first screen.",
+        "A source-backed README, with commands run and screenshots checked.",
+        "Give repository visitors a README they can understand and try."
+      ],
+      "adaptedFromOld": "A source-backed README, with commands run and screenshots checked.",
+      "choice": "Turn code into a README people want to try, with tested commands and a checked first screen.",
+      "reason": "Round 2 requires the project outcome and concrete output, with the useful original tagline preserved as a candidate."
     },
     "G2": {
       "decidedBy": "agent",
-      "choice": "Approved after screenshot inspection",
-      "reason": "Desktop light/dark show the entire command and hero; mobile recorded. Fixed dark code contrast before approval."
+      "choice": "Approved after round 2 core-output and baseline comparison review",
+      "reason": "Inspected actual input/output heroes at 900px, light/dark variants, desktop and mobile first screens; primary text and content bounds pass R4. Independent readers and randomized blind choice passed."
     }
+  },
+  "coreAction": {
+    "what": "Write a source-backed README for another repository",
+    "input": "evals/fixtures/cli-tool source, notes and its flawed README",
+    "agentStep": "Follow the CLI skeleton and writing prompt to rewrite the fixture, then render and audit its before/after first screens.",
+    "output": {
+      "description": "A rewritten README and before/after first-screen screenshots",
+      "keywords": [
+        "README",
+        "first screen",
+        "screenshot",
+        "before",
+        "after"
+      ]
+    },
+    "factIds": [
+      "core-readme-step"
+    ]
   }
 }

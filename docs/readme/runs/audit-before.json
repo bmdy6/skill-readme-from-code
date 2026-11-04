@@ -1,0 +1,172 @@
+{
+  "mode": "audit",
+  "checks": [
+    {
+      "id": "V2",
+      "status": "pass",
+      "issues": [],
+      "screen": {
+        "renderer": "github-api",
+        "readme": "README.md",
+        "viewports": {
+          "desktop": {
+            "width": 1280,
+            "height": 800,
+            "items": {
+              "name": {
+                "top": 96,
+                "bottom": 146.59375,
+                "left": 221,
+                "right": 1059
+              },
+              "oneLiner": {
+                "top": 162.59375,
+                "bottom": 186.59375,
+                "left": 221,
+                "right": 1059
+              },
+              "hero": {
+                "top": 202.59375,
+                "bottom": 388.8125,
+                "left": 221,
+                "right": 1058.984375
+              },
+              "install": {
+                "top": 473,
+                "bottom": 524.703125,
+                "left": 221,
+                "right": 1059
+              }
+            },
+            "checks": {
+              "name": true,
+              "oneLiner": true,
+              "hero": true,
+              "install": true
+            },
+            "install": "npm install moss-cli-tool",
+            "contentWidth": 838,
+            "fold": 728,
+            "screenshot": "first-screen-desktop.png",
+            "pass": true
+          },
+          "desktop-dark": {
+            "width": 1280,
+            "height": 800,
+            "items": {
+              "name": {
+                "top": 96,
+                "bottom": 146.59375,
+                "left": 221,
+                "right": 1059
+              },
+              "oneLiner": {
+                "top": 162.59375,
+                "bottom": 186.59375,
+                "left": 221,
+                "right": 1059
+              },
+              "hero": {
+                "top": 202.59375,
+                "bottom": 388.8125,
+                "left": 221,
+                "right": 1058.984375
+              },
+              "install": {
+                "top": 473,
+                "bottom": 524.703125,
+                "left": 221,
+                "right": 1059
+              }
+            },
+            "checks": {
+              "name": true,
+              "oneLiner": true,
+              "hero": true,
+              "install": true
+            },
+            "install": "npm install moss-cli-tool",
+            "contentWidth": 838,
+            "fold": 728,
+            "screenshot": "first-screen-desktop-dark.png",
+            "pass": true
+          },
+          "mobile": {
+            "width": 390,
+            "height": 844,
+            "items": {
+              "name": {
+                "top": 88,
+                "bottom": 138.59375,
+                "left": 16,
+                "right": 374
+              },
+              "oneLiner": {
+                "top": 154.59375,
+                "bottom": 178.59375,
+                "left": 16,
+                "right": 374
+              },
+              "hero": {
+                "top": 194.59375,
+                "bottom": 274.140625,
+                "left": 16,
+                "right": 373.953125
+              },
+              "install": {
+                "top": 358.328125,
+                "bottom": 410.03125,
+                "left": 16,
+                "right": 374
+              }
+            },
+            "checks": {
+              "name": true,
+              "oneLiner": true,
+              "hero": true,
+              "install": true
+            },
+            "install": "npm install moss-cli-tool",
+            "contentWidth": 358,
+            "fold": 772,
+            "screenshot": "first-screen-mobile.png",
+            "pass": true
+          }
+        }
+      }
+    },
+    {
+      "id": "V3",
+      "status": "fail",
+      "issues": [
+        "README.md: missing lost.md"
+      ],
+      "externalLinks": "not checked; use --online"
+    },
+    {
+      "id": "V4",
+      "status": "pass",
+      "issues": []
+    },
+    {
+      "id": "V5",
+      "status": "fail",
+      "issues": [
+        "Placeholder text"
+      ]
+    },
+    {
+      "id": "V6",
+      "status": "pass",
+      "issues": [],
+      "wordCount": 19
+    },
+    {
+      "id": "V7",
+      "status": "skip",
+      "reason": "Chinese README absent",
+      "issues": []
+    }
+  ],
+  "score": 60
+}

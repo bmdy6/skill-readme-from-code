@@ -1,0 +1,81 @@
+{
+  "readmes": [
+    {
+      "file": "README.md",
+      "headings": [
+        "Quick start",
+        "What you get",
+        "How it works",
+        "Options",
+        "FAQ and boundaries",
+        "Contributing",
+        "License"
+      ]
+    },
+    {
+      "file": "README.zh-CN.md",
+      "headings": [
+        "快速开始",
+        "你会得到什么",
+        "如何工作",
+        "选项",
+        "常见问题和边界",
+        "参与贡献",
+        "许可证"
+      ]
+    }
+  ],
+  "integrations": [
+    {
+      "id": "integration-en-node",
+      "claim": "Tool, platform or runtime mentioned in the README",
+      "value": "Node",
+      "source": "README.md:24",
+      "kind": "integration",
+      "readme": "README.md"
+    },
+    {
+      "id": "integration-en-chromium",
+      "claim": "Tool, platform or runtime mentioned in the README",
+      "value": "Chromium",
+      "source": "README.md:24",
+      "kind": "integration",
+      "readme": "README.md"
+    },
+    {
+      "id": "integration-en-gh",
+      "claim": "Tool, platform or runtime mentioned in the README",
+      "value": "gh",
+      "source": "README.md:9",
+      "kind": "integration",
+      "readme": "README.md"
+    },
+    {
+      "id": "integration-zh-node",
+      "claim": "Tool, platform or runtime mentioned in the README",
+      "value": "Node",
+      "source": "README.zh-CN.md:24",
+      "kind": "integration",
+      "readme": "README.zh-CN.md"
+    },
+    {
+      "id": "integration-zh-chromium",
+      "claim": "Tool, platform or runtime mentioned in the README",
+      "value": "Chromium",
+      "source": "README.zh-CN.md:24",
+      "kind": "integration",
+      "readme": "README.zh-CN.md"
+    },
+    {
+      "id": "integration-zh-gh",
+      "claim": "Tool, platform or runtime mentioned in the README",
+      "value": "gh",
+      "source": "README.zh-CN.md:9",
+      "kind": "integration",
+      "readme": "README.zh-CN.md"
+    }
+  ],
+  "sourceRevisions": [
+    "941a378bb017db2228aa8babe3644f0667ffb98f"
+  ]
+}

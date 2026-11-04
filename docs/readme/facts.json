@@ -3,7 +3,7 @@
     "id": "source-tracing",
     "claim": "source tracing",
     "value": "source: `${file}:${Math.max(1, (texts[file] || \"\").split(\"\\n\").findIndex((l) => l.includes(needle)) + 1)}`,",
-    "source": "scripts/lib/scan.mjs:28"
+    "source": "scripts/lib/scan.mjs:29"
   },
   {
     "id": "copy-execution",
@@ -15,12 +15,19 @@
     "id": "art-variants",
     "claim": "art variants",
     "value": "for (const lang of [\"en\", \"zh-CN\"])",
-    "source": "scripts/lib/art.mjs:149"
+    "source": "scripts/lib/art.mjs:220"
   },
   {
     "id": "verify-gates",
     "claim": "verify gates",
     "value": "checks.push(check(\"V9\", artIssues));",
-    "source": "scripts/lib/verify.mjs:445"
+    "source": "scripts/lib/verify.mjs:501"
+  },
+  {
+    "id": "core-readme-step",
+    "kind": "feature",
+    "claim": "Write a source-backed README for another repository",
+    "value": "Use the project-type skeleton. Write in this order: name; one complete benefit",
+    "source": "prompts/write.md:1"
   }
 ]

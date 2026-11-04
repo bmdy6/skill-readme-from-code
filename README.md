@@ -1,15 +1,15 @@
 # readme-from-code
 
-Help maintainers write a verifiable README with tested commands and clear images using an agent skill.
+Turn code into a README people want to try, with tested commands and a checked first screen.
 
 [简体中文](README.zh-CN.md) · [MIT](LICENSE)
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/readme/hero-dark.png">
-  <img src="docs/readme/hero-light.png" alt="An agent request beside actual command output" width="838">
+  <img src="docs/readme/hero-light.png" alt="One CLI fixture README before and after its rewrite" width="838">
 </picture>
 
-An actual README excerpt, captured from this repository.
+One CLI fixture, rewritten and audited before and after.
 
 ## Quick start
 
@@ -52,9 +52,11 @@ See the [command reference](docs/reference.md).
 
 **What do I decide?** Interactive runs ask you to choose a position and approve the first-screen preview.
 
-**Is image data real?** Terminal text comes from captures; diagrams are labeled illustrations. This hero shows an actual README excerpt.
+**Is image data real?** Terminal text comes from captures; diagrams are labeled illustrations. This hero shows the fixture’s actual before/after first screens.
 
 **Can I install remotely?** This private preview requires authenticated gh access and installs the feat/v0.1 branch; unauthenticated installation is unverified.
+
+**What do audit scores mean?** They count passed README checks, not ratings from visitors.
 
 <details><summary>Execution boundary</summary>
 
