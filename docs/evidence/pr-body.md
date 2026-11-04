@@ -2,17 +2,17 @@
 
 Before: 80/100. After: 100/100.
 
-![Before desktop](before/first-screen-desktop.png)
+![Before desktop](https://github.com/user-attachments/assets/45736f47-cdc9-43e0-a761-e48a817752df)
 
-![Before desktop-dark](before/first-screen-desktop-dark.png)
+![Before desktop-dark](https://github.com/user-attachments/assets/049fdb43-9c8a-48b8-acec-729d76832436)
 
-![Before mobile](before/first-screen-mobile.png)
+![Before mobile](https://github.com/user-attachments/assets/13d78fdb-1fca-497f-b536-4b06330fced0)
 
-![After desktop](./first-screen-desktop.png)
+![After desktop](https://github.com/user-attachments/assets/00a9130a-c1ce-47b6-b99c-2ade4f819020)
 
-![After desktop-dark](./first-screen-desktop-dark.png)
+![After desktop-dark](https://github.com/user-attachments/assets/f40e23bb-8713-4b4c-a190-c3593cb48035)
 
-![After mobile](./first-screen-mobile.png)
+![After mobile](https://github.com/user-attachments/assets/49485904-7c8b-4275-ae31-125f494a4e10)
 
 ## Verification
 
