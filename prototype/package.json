@@ -1,0 +1,9 @@
+{
+  "name": "repo-storefront",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "dependencies": { "playwright": "1.64.1" },
+  "license": "MIT"
+}
