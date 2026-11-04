@@ -25,7 +25,10 @@ test("terminal output cannot be handwritten", async () => {
 });
 test("all six templates produce four checked variants", async () => {
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), "rfc-six-"));
-  const capture = await runCopy("evals/fixtures/clean", "node index.mjs");
+  const capture = await runCopy("evals/fixtures/clean", `node index.mjs
+node -p "'Package: '+require('./package.json').name"
+node -p "'Version: '+require('./package.json').version"
+node -p "'License: '+require('./package.json').license"`);
   await write(path.join(dir, "captures/demo.json"), { id: "demo", ...capture });
   const item = {
     title: { en: "Moss daily notes", "zh-CN": "青苔每日笔记" },
