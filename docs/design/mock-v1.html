@@ -1,0 +1,63 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+:root{--bg:#f6f6f3;--card:#fff;--line:#e2e2dc;--ink:#1c1e1b;--mute:#62665f;--acc:#2f6f4e;--acc-soft:#e6f0ea;--term:#16181a;--mono:"DejaVu Sans Mono",ui-monospace,monospace;--sans:"Noto Sans CJK SC","DejaVu Sans",system-ui,sans-serif}
+.dark{--bg:#0f1110;--card:#171a18;--line:#2b302c;--ink:#e9ebe7;--mute:#9aa097;--acc:#6fbf94;--acc-soft:#1d2b23;--term:#0b0c0d}
+*{box-sizing:border-box;margin:0}body{font-family:var(--sans);background:#ddd;padding:24px;display:flex;flex-direction:column;gap:24px;width:948px}
+.frame{background:var(--bg);color:var(--ink);padding:28px;border-radius:6px;position:relative}
+.tag{position:absolute;top:-12px;left:16px;background:#c0392b;color:#fff;font:600 12px var(--sans);padding:3px 8px;border-radius:4px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.hd{padding:12px 16px;border-bottom:1px solid var(--line);font:600 14px var(--sans);display:flex;justify-content:space-between;align-items:center}
+.cap{color:var(--mute);font-size:14px;margin-top:14px}
+.term{background:var(--term);color:#d7dad6;font:14px/1.6 var(--mono);padding:16px 18px;border-radius:0 0 14px 14px}
+.dots span{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--line);margin-right:6px}
+.g{color:#7fd19b}.y{color:#e5c07b}.m{color:#8a8f88}
+.row{display:flex;gap:18px;align-items:stretch}.arrow{align-self:center;font-size:26px;color:var(--acc)}
+.bubble{background:var(--acc-soft);border-radius:14px;padding:16px 18px;font-size:16px;line-height:1.5}
+.who{font:600 12px var(--sans);color:var(--mute);letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px}
+.mini h4{font-size:20px;margin:4px 0 6px}.pill{display:inline-block;background:var(--acc);color:#fff;border-radius:999px;padding:3px 10px;font:600 12px var(--sans)}
+.dark .pill{color:#0f1110}
+.check{font:13px/1.9 var(--mono);color:var(--mute)}.check b{color:var(--acc)}
+.step{flex:1}.num{display:inline-flex;width:26px;height:26px;border-radius:50%;background:var(--acc);color:#fff;align-items:center;justify-content:center;font:600 14px var(--sans);margin-right:8px}
+.dark .num{color:#0f1110}
+.wire{font:13px/1.5 var(--sans);color:var(--mute)}
+.ok{color:var(--acc);font-weight:600}
+</style></head><body>
+
+<div class="frame"><div class="tag">图 1 · 生成的 README 首屏（桌面 1280 宽，GitHub 内容区约 838px）</div>
+<div style="font:700 30px var(--sans)">tidyfeed</div>
+<div style="font-size:17px;margin:8px 0 10px">Turn any messy RSS feed into a clean daily digest — one command, no account.</div>
+<div class="wire" style="margin-bottom:14px">[CI] [MIT] [v1.4.0] · 简体中文 &nbsp;&nbsp;<span class="ok">≤ 4 个徽章，徽章内容必须和仓库一致</span></div>
+<div class="card"><div class="hd"><span class="dots"><span></span><span></span><span></span></span><span style="color:var(--mute);font-weight:400">terminal</span></div>
+<div class="term"><span class="m">$</span> tidyfeed ./feeds.opml --since 1d<br><span class="g">✓</span> 42 feeds · 318 items · 291 duplicates removed<br><span class="g">✓</span> digest.md written <span class="m">(27 stories, 4 min read)</span><br><span class="y">!</span> 2 feeds timed out <span class="m">(listed in digest)</span></div></div>
+<div class="cap">Real output from <code>examples/feeds.opml</code>. 图注一句完整的话。</div>
+<div class="card" style="margin-top:16px"><div class="term" style="border-radius:14px"><span class="m">$</span> npm install -g tidyfeed</div></div>
+<div class="wire" style="margin-top:10px"><span class="ok">首屏四项：名字 · 一句话 · 效果图 · 安装命令</span> — 安装命令必须在首屏内（扣掉 GitHub 吸顶栏 72px），否则 verify 失败</div>
+</div>
+
+<div class="frame"><div class="tag">图 2 · hero 模板：agent-skill（你说什么 → 得到什么）</div>
+<div class="row">
+<div style="flex:0 0 300px"><div class="who">You tell your agent</div><div class="bubble">“Write a README for this repo that makes people want to try it.”</div>
+<div class="check" style="margin-top:16px"><b>✓</b> 9 facts traced to files<br><b>✓</b> 6/6 commands ran clean<br><b>✓</b> first screen 4/4<br><b>✓</b> stranger test 5/5</div></div>
+<div class="arrow">→</div>
+<div class="card" style="flex:1"><div class="hd">You get <span class="pill">PR ready</span></div>
+<div style="padding:16px" class="mini"><div class="who">README.md · first screen</div><h4>tidyfeed</h4><div style="font-size:14px;color:var(--mute)">Turn any messy RSS feed into a clean daily digest.</div>
+<div style="height:70px;margin:12px 0;border-radius:8px;background:var(--term)"></div>
+<div style="font:13px var(--mono);background:var(--acc-soft);padding:6px 10px;border-radius:6px">npm install -g tidyfeed</div></div></div>
+</div>
+<div class="cap">左边是用户原话，右边是真实产物缩略图；左下的数字来自 verify.json，不能手写。</div>
+</div>
+
+<div class="frame dark"><div class="tag">图 3 · 深色版 + 三步流程条（每张图都有 浅/深 × en/zh-CN 四份）</div>
+<div class="row">
+<div class="card step" style="padding:16px"><div><span class="num">1</span><b>读代码</b></div><div class="cap" style="margin-top:8px">每条事实都带 文件:行。</div></div>
+<div class="arrow">→</div>
+<div class="card step" style="padding:16px"><div><span class="num">2</span><b>选一句话</b></div><div class="cap" style="margin-top:8px">三条定位，你挑一条。</div></div>
+<div class="arrow">→</div>
+<div class="card step" style="padding:16px"><div><span class="num">3</span><b>跑一遍再交</b></div><div class="cap" style="margin-top:8px">命令、首屏、陌生人都过。</div></div>
+</div></div>
+
+<div class="frame" style="padding:0"><div class="tag" style="z-index:2">图 4 · social preview 1280×640（转发链接时显示）</div>
+<div style="aspect-ratio:2/1;display:flex;flex-direction:column;justify-content:center;padding:48px 56px;background:var(--bg)">
+<div style="font:700 44px var(--sans)">tidyfeed</div><div style="font-size:22px;color:var(--mute);margin:10px 0 26px;max-width:620px">Turn any messy RSS feed into a clean daily digest.</div>
+<div class="card" style="max-width:640px"><div class="term" style="border-radius:14px"><span class="m">$</span> tidyfeed ./feeds.opml --since 1d<br><span class="g">✓</span> 27 stories · 4 min read</div></div>
+<div style="position:absolute;right:56px;bottom:40px;color:var(--mute);font-size:16px">github.com/owner/tidyfeed</div></div></div>
+</body></html>
