@@ -1,0 +1,22 @@
+{
+  "accent": "#2f6f4e",
+  "images": [
+    {
+      "id": "social",
+      "template": "social",
+      "title": {
+        "en": "readme-from-code",
+        "zh-CN": "readme-from-code"
+      },
+      "subtitle": {
+        "en": "Turn code into a README people want to try, with tested commands and a checked first screen.",
+        "zh-CN": "把代码变成别人想试的 README：命令都跑过，第一屏都看过。"
+      },
+      "result": {
+        "en": "gh repo clone bmdy6/skill-readme-from-code .agents/skills/readme-from-code -- --branch feat/v0.1",
+        "zh-CN": "gh repo clone bmdy6/skill-readme-from-code .agents/skills/readme-from-code -- --branch feat/v0.1"
+      },
+      "illustration": true
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "sourceRevision": "47cea5009fa44ae46009103530d89c1a3e383f2c",
+  "verify": {
+    "pass": 11,
+    "fail": 0,
+    "skip": 0
+  },
+  "baselineAuditScore": 83,
+  "baselineBrief": "original docs/readme/brief.json from the pre-round snapshot",
+  "renderer": "github-api",
+  "blindDesktopImageHashesMatchFinalScreenshots": true,
+  "externalLinks": "not checked; --online not requested",
+  "externalModelReview": "not run; fresh image-only readers completed",
+  "screenshotUpload": "prior browser task space no longer exists; authorized committed docs/design fallback"
+}

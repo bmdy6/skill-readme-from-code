@@ -1,0 +1,158 @@
+{
+  "schemaVersion": 1,
+  "accent": "#2f6f4e",
+  "files": [
+    {
+      "file": "hero-light.png",
+      "template": "hero-terminal",
+      "theme": "light",
+      "language": "en",
+      "kind": "fixture",
+      "captureId": "notes",
+      "sha256": "e5349edf393bac791d0056def6e418ac9489f10a68c7062913ec9cdd8f10ccb8",
+      "bytes": 79617,
+      "cssWidth": 900,
+      "cssHeight": 430.078125,
+      "contentBounds": {
+        "left": 28,
+        "top": 41,
+        "right": 872,
+        "bottom": 388.078125
+      },
+      "contentRatio": 0.7567977394288021,
+      "checks": {
+        "overflow": "pass",
+        "fontSize": "pass",
+        "contrast": "pass",
+        "fields": "pass",
+        "mainText": "pass",
+        "density": "pass",
+        "size": "pass"
+      },
+      "problems": {
+        "overflow": [],
+        "fontSize": [],
+        "contrast": [],
+        "fields": [],
+        "mainText": [],
+        "density": []
+      },
+      "width": 900,
+      "height": 430.078125
+    },
+    {
+      "file": "hero-dark.png",
+      "template": "hero-terminal",
+      "theme": "dark",
+      "language": "en",
+      "kind": "fixture",
+      "captureId": "notes",
+      "sha256": "554359dff62b3a4a1bd8a085a9749079f8b85cee189c1f32638fb8a10077b49b",
+      "bytes": 79790,
+      "cssWidth": 900,
+      "cssHeight": 430.078125,
+      "contentBounds": {
+        "left": 28,
+        "top": 41,
+        "right": 872,
+        "bottom": 388.078125
+      },
+      "contentRatio": 0.7567977394288021,
+      "checks": {
+        "overflow": "pass",
+        "fontSize": "pass",
+        "contrast": "pass",
+        "fields": "pass",
+        "mainText": "pass",
+        "density": "pass",
+        "size": "pass"
+      },
+      "problems": {
+        "overflow": [],
+        "fontSize": [],
+        "contrast": [],
+        "fields": [],
+        "mainText": [],
+        "density": []
+      },
+      "width": 900,
+      "height": 430.078125
+    },
+    {
+      "file": "hero-light.zh-CN.png",
+      "template": "hero-terminal",
+      "theme": "light",
+      "language": "zh-CN",
+      "kind": "fixture",
+      "captureId": "notes",
+      "sha256": "f2400c972e62dca33111ef8f90456479fa1eafc53ffc4800d86ac218b315ad14",
+      "bytes": 77449,
+      "cssWidth": 900,
+      "cssHeight": 430.078125,
+      "contentBounds": {
+        "left": 28,
+        "top": 41,
+        "right": 872,
+        "bottom": 388.078125
+      },
+      "contentRatio": 0.7567977394288021,
+      "checks": {
+        "overflow": "pass",
+        "fontSize": "pass",
+        "contrast": "pass",
+        "fields": "pass",
+        "mainText": "pass",
+        "density": "pass",
+        "size": "pass"
+      },
+      "problems": {
+        "overflow": [],
+        "fontSize": [],
+        "contrast": [],
+        "fields": [],
+        "mainText": [],
+        "density": []
+      },
+      "width": 900,
+      "height": 430.078125
+    },
+    {
+      "file": "hero-dark.zh-CN.png",
+      "template": "hero-terminal",
+      "theme": "dark",
+      "language": "zh-CN",
+      "kind": "fixture",
+      "captureId": "notes",
+      "sha256": "251d1f010075e3e4a86b7f16eb80dd2520149c03c9d91f3946cf0001b7c7f00f",
+      "bytes": 77637,
+      "cssWidth": 900,
+      "cssHeight": 430.078125,
+      "contentBounds": {
+        "left": 28,
+        "top": 41,
+        "right": 872,
+        "bottom": 388.078125
+      },
+      "contentRatio": 0.7567977394288021,
+      "checks": {
+        "overflow": "pass",
+        "fontSize": "pass",
+        "contrast": "pass",
+        "fields": "pass",
+        "mainText": "pass",
+        "density": "pass",
+        "size": "pass"
+      },
+      "problems": {
+        "overflow": [],
+        "fontSize": [],
+        "contrast": [],
+        "fields": [],
+        "mainText": [],
+        "density": []
+      },
+      "width": 900,
+      "height": 430.078125
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "claim": "Each fact points to a source file and line.",
+    "factIds": [
+      "source-tracing"
+    ]
+  },
+  {
+    "claim": "README commands run in disposable copies of the project.",
+    "factIds": [
+      "copy-execution"
+    ]
+  },
+  {
+    "claim": "Render light, dark, English, and Chinese images with automated self-checks.",
+    "factIds": [
+      "art-variants"
+    ]
+  },
+  {
+    "claim": "每条事实都指向来源文件和行号。",
+    "factIds": [
+      "source-tracing"
+    ]
+  },
+  {
+    "claim": "在项目临时副本中运行 README 命令。",
+    "factIds": [
+      "copy-execution"
+    ]
+  },
+  {
+    "claim": "生成浅色、深色和中英文图片，并执行自动自检。",
+    "factIds": [
+      "art-variants"
+    ]
+  },
+  {
+    "claim": "Turn code into a README people want to try, with tested commands and a checked first screen.",
+    "factIds": [
+      "source-tracing",
+      "copy-execution",
+      "art-variants",
+      "core-readme-step"
+    ]
+  },
+  {
+    "claim": "把代码变成别人想试的 README：命令都跑过，第一屏都看过。",
+    "factIds": [
+      "source-tracing",
+      "copy-execution",
+      "art-variants",
+      "core-readme-step"
+    ]
+  },
+  {
+    "claim": "Tested with Codex; any agent that can read SKILL.md can follow the workflow.",
+    "factIds": [
+      "integration-codex-tested"
+    ]
+  },
+  {
+    "claim": "已在 Codex 上实测；任何能读 SKILL.md 的 agent 都可以按此流程使用。",
+    "factIds": [
+      "integration-codex-tested"
+    ]
+  }
+]

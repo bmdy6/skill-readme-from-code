@@ -1,0 +1,67 @@
+
+> readme-from-code@0.1.0 test
+> node --test test/*.test.mjs
+
+✔ terminal output cannot be handwritten (6.182792ms)
+✔ all six templates produce four checked variants (12455.590333ms)
+✔ stranger score requires all five independent checks (0.760292ms)
+✔ report names missing evidence and agent decisions (6.62925ms)
+✔ storefront makes valid topics and a small social image (2090.627ms)
+✔ V10 rejects installation (7.695625ms)
+✔ V10 rejects checks (2.383875ms)
+✔ V10 rejects README text (1.444125ms)
+✔ V10 rejects supporting capture (1.267959ms)
+✔ V10 accepts real core output (1.557042ms)
+✔ V6 rejects generic position: Help writers polish drafts. (13.293375ms)
+✔ V6 rejects generic position: A tool that writes a README. (1.427209ms)
+✔ V6 rejects generic position: An agent skill that writes a README. (1.147375ms)
+✔ V6 rejects generic position: This project writes a README. (1.226292ms)
+✔ V6 rejects generic position: 帮助你写 README。 (11.769ms)
+✔ V6 rejects generic position: 一个写 README 的工具。 (1.537375ms)
+✔ V6 rejects generic position: Get a README using an agent skill. (1.066667ms)
+✔ V6 rejects generic position: Work smarter every day. (0.906583ms)
+✔ V11 catches a missing integration and old H2 (3.558625ms)
+✔ V11 requires a reason for an intentional deletion (2.152042ms)
+✔ V6 allows integrations but rejects alternatives (1.620625ms)
+✔ scan keeps typed integration and H2 baseline evidence (26.139167ms)
+✔ R4 detects undersized primary text and a sparse fixed canvas (929.964ms)
+✔ R5 requires a recognizable output but only records the appeal answer (0.572875ms)
+✔ R5 preserves random labels and rejects a blind win for the old screen (8.237625ms)
+✔ R1 keeps declared screenshot inputs while detecting true orphan images (4.331042ms)
+✔ R2 output keywords do not turn a vague benefit into an artifact noun (2.260792ms)
+✔ F2 V10 rejects a scored hero without a calculation in its caption (6.722542ms)
+✔ F2 V10 accepts an immediate calculation caption and checks Chinese too (6.870917ms)
+✔ F2 V10 keeps score-free heroes valid (2.17525ms)
+✔ F2 V10 also detects a score printed directly by the core command (2.04525ms)
+✔ scan cli-tool is deterministic and sourced (101.834875ms)
+✔ scan library is deterministic and sourced (58.920042ms)
+✔ scan web-app is deterministic and sourced (53.742458ms)
+✔ scan agent-skill is deterministic and sourced (75.067917ms)
+✔ scan clean is deterministic and sourced (70.867167ms)
+✔ detects tests locking README (29.49725ms)
+✔ skill names every command, gates and hard delivery boundaries (1.87325ms)
+✔ each project skeleton puts Quick start immediately after hero (2.467ms)
+✔ shell fences include tilde and bare blocks (1.701959ms)
+✔ audit fixture cli-tool (1554.480541ms)
+✔ audit fixture library (1415.46425ms)
+✔ audit fixture web-app (2094.85ms)
+✔ audit fixture agent-skill (2311.368458ms)
+✔ audit fixture clean (1461.29075ms)
+✔ execution changes only a disposable copy (41.204792ms)
+✔ timeout is recorded (132.570125ms)
+✔ unplanned command fails V1 (2728.396208ms)
+✔ Chinese anchors follow heading slugs (15.31575ms)
+✔ badge mismatch, claims and denied words fail independently (6.637833ms)
+✔ V9 rejects changed image bytes (4434.7055ms)
+✔ commented examples are not broken links (3.764583ms)
+✔ translated headings in a different order fail V7 (5.109875ms)
+✔ one-liner and literal zero budgets are enforced (2.76775ms)
+✔ reference-style links and images are checked (5.011166ms)
+ℹ tests 55
+ℹ suites 0
+ℹ pass 55
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 16504.318708

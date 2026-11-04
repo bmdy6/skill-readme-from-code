@@ -1,0 +1,310 @@
+{
+  "schemaVersion": 1,
+  "accent": "#2f6f4e",
+  "files": [
+    {
+      "file": "hero-light.png",
+      "template": "hero-screens",
+      "theme": "light",
+      "language": "en",
+      "kind": "real",
+      "captureId": "core",
+      "sha256": "390aefee35a3bd6e846aefd6adbbf1085830577eee3a370ed0b17a538e75bd56",
+      "bytes": 102022,
+      "cssWidth": 900,
+      "cssHeight": 374.21875,
+      "contentBounds": {
+        "left": 28,
+        "top": 40,
+        "right": 872,
+        "bottom": 334.21875
+      },
+      "contentRatio": 0.7373008582695431,
+      "checks": {
+        "overflow": "pass",
+        "fontSize": "pass",
+        "contrast": "pass",
+        "fields": "pass",
+        "mainText": "pass",
+        "density": "pass",
+        "size": "pass"
+      },
+      "problems": {
+        "overflow": [],
+        "fontSize": [],
+        "contrast": [],
+        "fields": [],
+        "mainText": [],
+        "density": []
+      },
+      "width": 900,
+      "height": 374.21875
+    },
+    {
+      "file": "hero-dark.png",
+      "template": "hero-screens",
+      "theme": "dark",
+      "language": "en",
+      "kind": "real",
+      "captureId": "core",
+      "sha256": "22f1302a916d51bbe69f2a69af673b81c3835641adca3923d9c045648e47b157",
+      "bytes": 102888,
+      "cssWidth": 900,
+      "cssHeight": 374.21875,
+      "contentBounds": {
+        "left": 28,
+        "top": 40,
+        "right": 872,
+        "bottom": 334.21875
+      },
+      "contentRatio": 0.7373008582695431,
+      "checks": {
+        "overflow": "pass",
+        "fontSize": "pass",
+        "contrast": "pass",
+        "fields": "pass",
+        "mainText": "pass",
+        "density": "pass",
+        "size": "pass"
+      },
+      "problems": {
+        "overflow": [],
+        "fontSize": [],
+        "contrast": [],
+        "fields": [],
+        "mainText": [],
+        "density": []
+      },
+      "width": 900,
+      "height": 374.21875
+    },
+    {
+      "file": "hero-light.zh-CN.png",
+      "template": "hero-screens",
+      "theme": "light",
+      "language": "zh-CN",
+      "kind": "real",
+      "captureId": "core",
+      "sha256": "500d597f85e42fffdefce97c9c27d574937619ba474af294f86e0db596d358b1",
+      "bytes": 102820,
+      "cssWidth": 900,
+      "cssHeight": 374.21875,
+      "contentBounds": {
+        "left": 28,
+        "top": 40,
+        "right": 872,
+        "bottom": 334.21875
+      },
+      "contentRatio": 0.7373008582695431,
+      "checks": {
+        "overflow": "pass",
+        "fontSize": "pass",
+        "contrast": "pass",
+        "fields": "pass",
+        "mainText": "pass",
+        "density": "pass",
+        "size": "pass"
+      },
+      "problems": {
+        "overflow": [],
+        "fontSize": [],
+        "contrast": [],
+        "fields": [],
+        "mainText": [],
+        "density": []
+      },
+      "width": 900,
+      "height": 374.21875
+    },
+    {
+      "file": "hero-dark.zh-CN.png",
+      "template": "hero-screens",
+      "theme": "dark",
+      "language": "zh-CN",
+      "kind": "real",
+      "captureId": "core",
+      "sha256": "249f2f8331c1db3cc716bc0b39638201406467b211e6c464589a54189a1d06d5",
+      "bytes": 103687,
+      "cssWidth": 900,
+      "cssHeight": 374.21875,
+      "contentBounds": {
+        "left": 28,
+        "top": 40,
+        "right": 872,
+        "bottom": 334.21875
+      },
+      "contentRatio": 0.7373008582695431,
+      "checks": {
+        "overflow": "pass",
+        "fontSize": "pass",
+        "contrast": "pass",
+        "fields": "pass",
+        "mainText": "pass",
+        "density": "pass",
+        "size": "pass"
+      },
+      "problems": {
+        "overflow": [],
+        "fontSize": [],
+        "contrast": [],
+        "fields": [],
+        "mainText": [],
+        "density": []
+      },
+      "width": 900,
+      "height": 374.21875
+    },
+    {
+      "file": "workflow-light.png",
+      "template": "strip-3",
+      "theme": "light",
+      "language": "en",
+      "kind": "illustration",
+      "captureId": null,
+      "sha256": "0f64c1bca83bd3f64453f662b84f66aac8d3fbb8e8f72fd745c5ad628372462a",
+      "bytes": 53663,
+      "cssWidth": 900,
+      "cssHeight": 286,
+      "contentBounds": {
+        "left": 28,
+        "top": 40,
+        "right": 872,
+        "bottom": 243.5
+      },
+      "contentRatio": 0.6672649572649573,
+      "checks": {
+        "overflow": "pass",
+        "fontSize": "pass",
+        "contrast": "pass",
+        "fields": "pass",
+        "mainText": "pass",
+        "density": "pass",
+        "size": "pass"
+      },
+      "problems": {
+        "overflow": [],
+        "fontSize": [],
+        "contrast": [],
+        "fields": [],
+        "mainText": [],
+        "density": []
+      },
+      "width": 900,
+      "height": 286
+    },
+    {
+      "file": "workflow-dark.png",
+      "template": "strip-3",
+      "theme": "dark",
+      "language": "en",
+      "kind": "illustration",
+      "captureId": null,
+      "sha256": "fb86886b1902f04f5e011365f3b2ae59ff3ced82b8432123070beb1b0e875c8a",
+      "bytes": 54777,
+      "cssWidth": 900,
+      "cssHeight": 286,
+      "contentBounds": {
+        "left": 28,
+        "top": 40,
+        "right": 872,
+        "bottom": 243.5
+      },
+      "contentRatio": 0.6672649572649573,
+      "checks": {
+        "overflow": "pass",
+        "fontSize": "pass",
+        "contrast": "pass",
+        "fields": "pass",
+        "mainText": "pass",
+        "density": "pass",
+        "size": "pass"
+      },
+      "problems": {
+        "overflow": [],
+        "fontSize": [],
+        "contrast": [],
+        "fields": [],
+        "mainText": [],
+        "density": []
+      },
+      "width": 900,
+      "height": 286
+    },
+    {
+      "file": "workflow-light.zh-CN.png",
+      "template": "strip-3",
+      "theme": "light",
+      "language": "zh-CN",
+      "kind": "illustration",
+      "captureId": null,
+      "sha256": "0cd39a6fd1a01b6486dccbab2ab8ceb073e5d6311ce186f86a5d8234c803bd17",
+      "bytes": 51770,
+      "cssWidth": 900,
+      "cssHeight": 262,
+      "contentBounds": {
+        "left": 28,
+        "top": 40,
+        "right": 872,
+        "bottom": 219.5
+      },
+      "contentRatio": 0.6424851569126379,
+      "checks": {
+        "overflow": "pass",
+        "fontSize": "pass",
+        "contrast": "pass",
+        "fields": "pass",
+        "mainText": "pass",
+        "density": "pass",
+        "size": "pass"
+      },
+      "problems": {
+        "overflow": [],
+        "fontSize": [],
+        "contrast": [],
+        "fields": [],
+        "mainText": [],
+        "density": []
+      },
+      "width": 900,
+      "height": 262
+    },
+    {
+      "file": "workflow-dark.zh-CN.png",
+      "template": "strip-3",
+      "theme": "dark",
+      "language": "zh-CN",
+      "kind": "illustration",
+      "captureId": null,
+      "sha256": "f5eb23e72b7950da5f0d98f2ae3086054881f3a13c743330f8621e880143241b",
+      "bytes": 53050,
+      "cssWidth": 900,
+      "cssHeight": 262,
+      "contentBounds": {
+        "left": 28,
+        "top": 40,
+        "right": 872,
+        "bottom": 219.5
+      },
+      "contentRatio": 0.6424851569126379,
+      "checks": {
+        "overflow": "pass",
+        "fontSize": "pass",
+        "contrast": "pass",
+        "fields": "pass",
+        "mainText": "pass",
+        "density": "pass",
+        "size": "pass"
+      },
+      "problems": {
+        "overflow": [],
+        "fontSize": [],
+        "contrast": [],
+        "fields": [],
+        "mainText": [],
+        "density": []
+      },
+      "width": 900,
+      "height": 262
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "runner": "npm test (readme-from-code)",
+  "passed": 51,
+  "failed": 0,
+  "skipped": 0,
+  "build": "not required; ESM source",
+  "targetVerification": {
+    "pass": 11,
+    "fail": 0,
+    "skip": 0
+  }
+}

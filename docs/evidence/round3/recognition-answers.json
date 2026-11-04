@@ -1,0 +1,15 @@
+{
+  "what": "An agent skill that turns code into a README with tested commands and a checked first screen.",
+  "forWhom": "Developers using Codex or another agent that can follow SKILL.md instructions.",
+  "firstCommand": "gh repo clone bmdy6/skill-readme-from-code .agents/skills/readme-from-code -- --branch feat/v0.1",
+  "wouldTry": "yes",
+  "why": "The before-and-after example makes the improvement tangible, and testing the commands addresses a common README frustration.",
+  "whatOutput": "An improved README with a clearer description, quick-start instructions, and a visual example of actual output. The sample shows a terminal running a notes-to-Markdown digest command.",
+  "mostAppealing": "The promise of commands that have actually been tested.",
+  "confusing": [
+    "The agent prompt after installation is below the visible screen.",
+    "The 100/100 score lacks visible detail about which checks passed.",
+    "The example text is too small to assess the improvement closely.",
+    "It is unclear whether the workflow produces screenshots automatically or requires user involvement."
+  ]
+}

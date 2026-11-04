@@ -1,0 +1,63 @@
+{
+  "accent": "#2f6f4e",
+  "images": [
+    {
+      "id": "hero",
+      "template": "hero-screens",
+      "title": {
+        "en": "A README worth trying",
+        "zh-CN": "别人想试的 README"
+      },
+      "subtitle": {
+        "en": "A real fixture before and after",
+        "zh-CN": "真实样例的改写前后"
+      },
+      "captureId": "core",
+      "screens": [
+        "screens/core-before.png",
+        "screens/core-after.png"
+      ]
+    },
+    {
+      "id": "workflow",
+      "template": "strip-3",
+      "title": {
+        "en": "How it works",
+        "zh-CN": "工作流程"
+      },
+      "subtitle": {
+        "en": "Turn code into a README people want to try, with tested commands and a checked first screen.",
+        "zh-CN": "把代码变成别人想试的 README：命令都跑过，第一屏都看过。"
+      },
+      "illustration": true,
+      "steps": [
+        {
+          "en": "Read code",
+          "zh-CN": "阅读代码"
+        },
+        {
+          "en": "Preview the result",
+          "zh-CN": "预览效果"
+        },
+        {
+          "en": "Verify and deliver",
+          "zh-CN": "验证交付"
+        }
+      ],
+      "details": [
+        {
+          "en": "Trace each claim to its source.",
+          "zh-CN": "每条卖点都能追到代码。"
+        },
+        {
+          "en": "Choose the position and images.",
+          "zh-CN": "选定位，再看首屏和图片。"
+        },
+        {
+          "en": "Run commands and inspect the first screen.",
+          "zh-CN": "实跑命令，检查首屏。"
+        }
+      ]
+    }
+  ]
+}

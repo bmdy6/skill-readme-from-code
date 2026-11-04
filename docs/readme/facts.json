@@ -1,0 +1,40 @@
+[
+  {
+    "id": "source-tracing",
+    "claim": "source tracing",
+    "value": "source: `${file}:${Math.max(1, (texts[file] || \"\").split(\"\\n\").findIndex((l) => l.includes(needle)) + 1)}`,",
+    "source": "scripts/lib/scan.mjs:29"
+  },
+  {
+    "id": "copy-execution",
+    "claim": "copy execution",
+    "value": "const temp = await fs.mkdtemp(path.join(os.tmpdir(), \"readme-run-\"));",
+    "source": "scripts/lib/execute.mjs:11"
+  },
+  {
+    "id": "art-variants",
+    "claim": "art variants",
+    "value": "for (const lang of [\"en\", \"zh-CN\"])",
+    "source": "scripts/lib/art.mjs:220"
+  },
+  {
+    "id": "verify-gates",
+    "claim": "verify gates",
+    "value": "checks.push(check(\"V9\", artIssues));",
+    "source": "scripts/lib/verify.mjs:501"
+  },
+  {
+    "id": "core-readme-step",
+    "kind": "feature",
+    "claim": "Write a source-backed README for another repository",
+    "value": "Use the project-type skeleton. Write in this order: name; one complete benefit",
+    "source": "prompts/write.md:1"
+  },
+  {
+    "id": "integration-codex-tested",
+    "kind": "integration",
+    "claim": "Codex is the only tested agent; the workflow is available as SKILL.md instructions",
+    "value": "Codex is the only agent tested for this preview.",
+    "source": "docs/evidence/round3/agent-validation.md:3"
+  }
+]

@@ -1,0 +1,25 @@
+{
+  "status": "pass",
+  "winner": "after",
+  "answers": {
+    "choice": "A",
+    "why": "A explains what the 60/100 and 100/100 scores measure, making the improvement easier to interpret and trust before trying it.",
+    "confusing": [
+      "The specific README checks and whether the audit is independent are unclear."
+    ]
+  },
+  "randomization": {
+    "method": "crypto.randomInt(2)",
+    "draw": 1
+  },
+  "labels": {
+    "A": {
+      "source": "after",
+      "sha256": "eca29833a7ea7b88095396f030e49e3cda5178591ba915695365fe24eca0b9b8"
+    },
+    "B": {
+      "source": "before",
+      "sha256": "9b25a6e80be1cec6ee217a4771e7b629f9f834a9eff815310ade89445f27da40"
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "what": "readme-from-code is a tool or agent workflow for creating READMEs backed by source code, tested commands, and readable images.",
+  "forWhom": "Repository maintainers who want accurate READMEs they can verify.",
+  "firstCommand": "npm ci",
+  "wouldTry": "no",
+  "why": "The goal is useful, but the visible page does not explain how to obtain the project or invoke the workflow after installing dependencies.",
+  "confusing": [
+    "It is unclear whether this is a CLI, an agent skill, or a set of instructions.",
+    "The first command assumes an existing local checkout without showing how to get it.",
+    "The graphic is described as real CLI help output, but it looks like an illustrated workflow.",
+    "The screenshot cuts off before showing what to tell the agent.",
+    "It does not show a concrete README produced from an actual repository."
+  ]
+}

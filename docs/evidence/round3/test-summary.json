@@ -1,0 +1,34 @@
+{
+  "unitTests": {
+    "runner": "npm test in skill-readme-from-code",
+    "pass": 55,
+    "fail": 0,
+    "skip": 0
+  },
+  "verify": {
+    "pass": 11,
+    "fail": 0,
+    "skip": 0
+  },
+  "recognition": {
+    "status": "fail",
+    "pass": 4,
+    "fail": 1,
+    "checks": {
+      "what": true,
+      "forWhom": false,
+      "firstCommand": true,
+      "wouldTry": true,
+      "whatOutput": true
+    }
+  },
+  "blind": {
+    "status": "pass",
+    "choice": "A",
+    "winner": "after"
+  },
+  "limitations": [
+    "Recognition forWhom did not match the existing keyTerms. Original answer and score retained; no keyword or scoring changes made.",
+    "External links not checked with --online."
+  ]
+}

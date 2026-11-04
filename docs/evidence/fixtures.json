@@ -1,0 +1,56 @@
+[
+  {
+    "fixture": "cli-tool",
+    "expected": [
+      "V3",
+      "V5"
+    ],
+    "detected": [
+      "V3",
+      "V5"
+    ],
+    "pass": true
+  },
+  {
+    "fixture": "library",
+    "expected": [
+      "V5",
+      "V6"
+    ],
+    "detected": [
+      "V5",
+      "V6"
+    ],
+    "pass": true
+  },
+  {
+    "fixture": "web-app",
+    "expected": [
+      "V2",
+      "V3"
+    ],
+    "detected": [
+      "V2",
+      "V3"
+    ],
+    "pass": true
+  },
+  {
+    "fixture": "agent-skill",
+    "expected": [
+      "V4",
+      "V7"
+    ],
+    "detected": [
+      "V4",
+      "V7"
+    ],
+    "pass": true
+  },
+  {
+    "fixture": "clean",
+    "expected": [],
+    "detected": [],
+    "pass": true
+  }
+]
