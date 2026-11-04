@@ -1,0 +1,1 @@
+Only view the two supplied screenshots. The first is A, the second is B. Which would you rather try, and why? Do not use tools or read any files. Return only JSON: {"choice":"A or B","why":"reason","confusing":[]}.

@@ -2,7 +2,7 @@
 
 把代码变成别人想试的 README：命令都跑过，第一屏都看过。
 
-[English](README.md) · [MIT](LICENSE)
+[English](README.md) · [MIT](LICENSE) · 已在 Codex 上实测；任何能读 SKILL.md 的 agent 都可以按此流程使用。
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/readme/hero-dark.zh-CN.png">
@@ -22,8 +22,6 @@ gh repo clone bmdy6/skill-readme-from-code .agents/skills/readme-from-code -- --
 > 用 readme-from-code，为这个仓库写一份有代码依据的介绍。
 
 需要已认证的 gh、Node 20+、Chromium 和支持技能的智能体；安装需联网。
-
-已在 Codex 上实测；任何能读 SKILL.md 的 agent 都可以按此流程使用。
 
 ## 你会得到什么
 

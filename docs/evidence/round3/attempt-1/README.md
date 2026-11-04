@@ -1,0 +1,1 @@
+Initial root run, before moving the Codex/agent-interface text into the visible links line. Recognition passed 5/5 and the new version won the blind choice. The final run uses a changed screenshot, so its actual results in the parent directory take precedence, including its forWhom failure.

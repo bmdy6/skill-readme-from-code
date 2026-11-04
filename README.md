@@ -2,7 +2,7 @@
 
 Turn code into a README people want to try, with tested commands and a checked first screen.
 
-[简体中文](README.zh-CN.md) · [MIT](LICENSE)
+[简体中文](README.zh-CN.md) · [MIT](LICENSE) · Tested with Codex; any agent that can read SKILL.md can follow the workflow.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/readme/hero-dark.png">
@@ -22,8 +22,6 @@ Then tell your agent:
 > Use readme-from-code to write a source-backed README for this repo.
 
 Requires authenticated gh access, Node 20+, Chromium, and a skill-capable agent; network for setup.
-
-Tested with Codex; any agent that can read SKILL.md can follow the workflow.
 
 ## What you get
 

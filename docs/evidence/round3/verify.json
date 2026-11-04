@@ -1,0 +1,352 @@
+{
+  "mode": "verify",
+  "ok": true,
+  "checks": [
+    {
+      "id": "V1",
+      "status": "pass",
+      "issues": [],
+      "results": [
+        {
+          "index": 0,
+          "code": "gh repo clone bmdy6/skill-readme-from-code .agents/skills/readme-from-code -- --branch feat/v0.1",
+          "language": "sh",
+          "file": "README.md",
+          "command": "gh repo clone bmdy6/skill-readme-from-code .agents/skills/readme-from-code -- --branch feat/v0.1",
+          "stdout": "",
+          "stderr": "Cloning into '.agents/skills/readme-from-code'...\n",
+          "exitCode": 0,
+          "signal": null,
+          "durationMs": 4596,
+          "timedOut": false,
+          "requiresTTY": false,
+          "environment": {
+            "node": "v26.8.1",
+            "platform": "darwin",
+            "arch": "arm64",
+            "ci": true,
+            "sharedGitHubAuth": true,
+            "stdin": "closed",
+            "isolation": "disposable copy; not an OS sandbox"
+          },
+          "status": "pass"
+        },
+        {
+          "index": 0,
+          "code": "gh repo clone bmdy6/skill-readme-from-code .agents/skills/readme-from-code -- --branch feat/v0.1",
+          "language": "sh",
+          "file": "README.zh-CN.md",
+          "command": "gh repo clone bmdy6/skill-readme-from-code .agents/skills/readme-from-code -- --branch feat/v0.1",
+          "stdout": "",
+          "stderr": "Cloning into '.agents/skills/readme-from-code'...\n",
+          "exitCode": 0,
+          "signal": null,
+          "durationMs": 5991,
+          "timedOut": false,
+          "requiresTTY": false,
+          "environment": {
+            "node": "v26.8.1",
+            "platform": "darwin",
+            "arch": "arm64",
+            "ci": true,
+            "sharedGitHubAuth": true,
+            "stdin": "closed",
+            "isolation": "disposable copy; not an OS sandbox"
+          },
+          "status": "pass"
+        }
+      ]
+    },
+    {
+      "id": "V2",
+      "status": "pass",
+      "issues": [],
+      "screen": {
+        "renderer": "github-api",
+        "readme": "README.md",
+        "viewports": {
+          "desktop": {
+            "width": 1280,
+            "height": 800,
+            "items": {
+              "name": {
+                "top": 96,
+                "bottom": 146.59375,
+                "left": 221,
+                "right": 1059
+              },
+              "oneLiner": {
+                "top": 162.59375,
+                "bottom": 186.59375,
+                "left": 221,
+                "right": 1059
+              },
+              "hero": {
+                "top": 242.59375,
+                "bottom": 591.75,
+                "left": 221,
+                "right": 1059
+              },
+              "install": {
+                "top": 699.9375,
+                "bottom": 751.640625,
+                "left": 221,
+                "right": 1059
+              }
+            },
+            "checks": {
+              "name": true,
+              "oneLiner": true,
+              "hero": true,
+              "install": true
+            },
+            "install": "gh repo clone bmdy6/skill-readme-from-code .agents/skills/readme-from-code -- --branch feat/v0.1",
+            "contentWidth": 838,
+            "fold": 728,
+            "screenshot": "first-screen-desktop.png",
+            "pass": true
+          },
+          "desktop-dark": {
+            "width": 1280,
+            "height": 800,
+            "items": {
+              "name": {
+                "top": 96,
+                "bottom": 146.59375,
+                "left": 221,
+                "right": 1059
+              },
+              "oneLiner": {
+                "top": 162.59375,
+                "bottom": 186.59375,
+                "left": 221,
+                "right": 1059
+              },
+              "hero": {
+                "top": 242.59375,
+                "bottom": 591.75,
+                "left": 221,
+                "right": 1059
+              },
+              "install": {
+                "top": 699.9375,
+                "bottom": 751.640625,
+                "left": 221,
+                "right": 1059
+              }
+            },
+            "checks": {
+              "name": true,
+              "oneLiner": true,
+              "hero": true,
+              "install": true
+            },
+            "install": "gh repo clone bmdy6/skill-readme-from-code .agents/skills/readme-from-code -- --branch feat/v0.1",
+            "contentWidth": 838,
+            "fold": 728,
+            "screenshot": "first-screen-desktop-dark.png",
+            "pass": true
+          },
+          "mobile": {
+            "width": 390,
+            "height": 844,
+            "items": {
+              "name": {
+                "top": 88,
+                "bottom": 138.59375,
+                "left": 16,
+                "right": 374
+              },
+              "oneLiner": {
+                "top": 154.59375,
+                "bottom": 226.59375,
+                "left": 16,
+                "right": 374
+              },
+              "hero": {
+                "top": 306.59375,
+                "bottom": 455.75,
+                "left": 16,
+                "right": 374
+              },
+              "install": {
+                "top": 587.9375,
+                "bottom": 679.046875,
+                "left": 16,
+                "right": 374
+              }
+            },
+            "checks": {
+              "name": true,
+              "oneLiner": true,
+              "hero": true,
+              "install": true
+            },
+            "install": "gh repo clone bmdy6/skill-readme-from-code .agents/skills/readme-from-code -- --branch feat/v0.1",
+            "contentWidth": 358,
+            "fold": 772,
+            "screenshot": "first-screen-mobile.png",
+            "pass": true
+          }
+        }
+      }
+    },
+    {
+      "id": "V3",
+      "status": "pass",
+      "issues": [],
+      "externalLinks": "not checked; use --online"
+    },
+    {
+      "id": "V4",
+      "status": "pass",
+      "issues": []
+    },
+    {
+      "id": "V5",
+      "status": "pass",
+      "issues": []
+    },
+    {
+      "id": "V6",
+      "status": "pass",
+      "issues": [],
+      "wordCount": 252
+    },
+    {
+      "id": "V7",
+      "status": "pass",
+      "issues": []
+    },
+    {
+      "id": "V8",
+      "status": "pass",
+      "issues": [],
+      "results": [
+        {
+          "command": "npm test",
+          "stdout": "\n> readme-from-code@0.1.0 test\n> node --test test/*.test.mjs\n\n✔ terminal output cannot be handwritten (4.939542ms)\n✔ all six templates produce four checked variants (3806.201958ms)\n✔ stranger score requires all five independent checks (1.158417ms)\n✔ report names missing evidence and agent decisions (5.105542ms)\n✔ storefront makes valid topics and a small social image (1013.075334ms)\n✔ V10 rejects installation (6.3515ms)\n✔ V10 rejects checks (2.26775ms)\n✔ V10 rejects README text (1.511375ms)\n✔ V10 rejects supporting capture (1.628166ms)\n✔ V10 accepts real core output (1.548125ms)\n✔ V6 rejects generic position: Help writers polish drafts. (11.61925ms)\n✔ V6 rejects generic position: A tool that writes a README. (1.263792ms)\n✔ V6 rejects generic position: An agent skill that writes a README. (1.397ms)\n✔ V6 rejects generic position: This project writes a README. (1.025084ms)\n✔ V6 rejects generic position: 帮助你写 README。 (10.996417ms)\n✔ V6 rejects generic position: 一个写 README 的工具。 (1.79325ms)\n✔ V6 rejects generic position: Get a README using an agent skill. (1.073958ms)\n✔ V6 rejects generic position: Work smarter every day. (1.065083ms)\n✔ V11 catches a missing integration and old H2 (3.093042ms)\n✔ V11 requires a reason for an intentional deletion (1.772959ms)\n✔ V6 allows integrations but rejects alternatives (1.224292ms)\n✔ scan keeps typed integration and H2 baseline evidence (22.163459ms)\n✔ R4 detects undersized primary text and a sparse fixed canvas (444.897333ms)\n✔ R5 requires a recognizable output but only records the appeal answer (0.276084ms)\n✔ R5 preserves random labels and rejects a blind win for the old screen (2.373417ms)\n✔ R1 keeps declared screenshot inputs while detecting true orphan images (1.33125ms)\n✔ R2 output keywords do not turn a vague benefit into an artifact noun (0.780917ms)\n✔ F2 V10 rejects a scored hero without a calculation in its caption (7.698625ms)\n✔ F2 V10 accepts an immediate calculation caption and checks Chinese too (12.682875ms)\n✔ F2 V10 keeps score-free heroes valid (5.923416ms)\n✔ scan cli-tool is deterministic and sourced (159.101083ms)\n✔ scan library is deterministic and sourced (37.759333ms)\n✔ scan web-app is deterministic and sourced (32.475083ms)\n✔ scan agent-skill is deterministic and sourced (52.200959ms)\n✔ scan clean is deterministic and sourced (29.3775ms)\n✔ detects tests locking README (13.840125ms)\n✔ skill names every command, gates and hard delivery boundaries (2.182792ms)\n✔ each project skeleton puts Quick start immediately after hero (2.320084ms)\n✔ shell fences include tilde and bare blocks (1.604958ms)\n✔ audit fixture cli-tool (683.195834ms)\n✔ audit fixture library (358.322375ms)\n✔ audit fixture web-app (304.62025ms)\n✔ audit fixture agent-skill (351.461583ms)\n✔ audit fixture clean (322.022459ms)\n✔ execution changes only a disposable copy (6.380292ms)\n✔ timeout is recorded (54.789833ms)\n✔ unplanned command fails V1 (446.464208ms)\n✔ Chinese anchors follow heading slugs (1.380833ms)\n✔ badge mismatch, claims and denied words fail independently (0.999083ms)\n✔ V9 rejects changed image bytes (428.213167ms)\n✔ commented examples are not broken links (0.567375ms)\n✔ translated headings in a different order fail V7 (0.903417ms)\n✔ one-liner and literal zero budgets are enforced (0.501667ms)\n✔ reference-style links and images are checked (0.974458ms)\nℹ tests 54\nℹ suites 0\nℹ pass 54\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 4036.044209\n",
+          "stderr": "",
+          "exitCode": 0,
+          "signal": null,
+          "durationMs": 4208,
+          "timedOut": false,
+          "requiresTTY": false,
+          "environment": {
+            "node": "v26.8.1",
+            "platform": "darwin",
+            "arch": "arm64",
+            "ci": true,
+            "sharedGitHubAuth": false,
+            "stdin": "closed",
+            "isolation": "disposable copy; not an OS sandbox"
+          }
+        }
+      ]
+    },
+    {
+      "id": "V9",
+      "status": "pass",
+      "issues": []
+    },
+    {
+      "id": "V10",
+      "status": "pass",
+      "issues": []
+    },
+    {
+      "id": "V11",
+      "status": "pass",
+      "issues": [],
+      "preserved": [
+        {
+          "id": "heading:README.md:Quick start",
+          "in": "README.md"
+        },
+        {
+          "id": "heading:README.md:What you get",
+          "in": "README.md"
+        },
+        {
+          "id": "heading:README.md:How it works",
+          "in": "README.md"
+        },
+        {
+          "id": "heading:README.md:Options",
+          "in": "README.md"
+        },
+        {
+          "id": "heading:README.md:FAQ and boundaries",
+          "in": "README.md"
+        },
+        {
+          "id": "heading:README.md:Contributing",
+          "in": "README.md"
+        },
+        {
+          "id": "heading:README.md:License",
+          "in": "README.md"
+        },
+        {
+          "id": "integration-en-node",
+          "in": "README.md"
+        },
+        {
+          "id": "integration-en-chromium",
+          "in": "README.md"
+        },
+        {
+          "id": "integration-en-gh",
+          "in": "README.md"
+        },
+        {
+          "id": "heading:README.zh-CN.md:快速开始",
+          "in": "README.zh-CN.md"
+        },
+        {
+          "id": "heading:README.zh-CN.md:你会得到什么",
+          "in": "README.zh-CN.md"
+        },
+        {
+          "id": "heading:README.zh-CN.md:如何工作",
+          "in": "README.zh-CN.md"
+        },
+        {
+          "id": "heading:README.zh-CN.md:选项",
+          "in": "README.zh-CN.md"
+        },
+        {
+          "id": "heading:README.zh-CN.md:常见问题和边界",
+          "in": "README.zh-CN.md"
+        },
+        {
+          "id": "heading:README.zh-CN.md:参与贡献",
+          "in": "README.zh-CN.md"
+        },
+        {
+          "id": "heading:README.zh-CN.md:许可证",
+          "in": "README.zh-CN.md"
+        },
+        {
+          "id": "integration-zh-node",
+          "in": "README.zh-CN.md"
+        },
+        {
+          "id": "integration-zh-chromium",
+          "in": "README.zh-CN.md"
+        },
+        {
+          "id": "integration-zh-gh",
+          "in": "README.zh-CN.md"
+        }
+      ],
+      "intentionalDeletions": []
+    }
+  ],
+  "score": 100,
+  "summary": {
+    "pass": 11,
+    "fail": 0,
+    "skip": 0
+  }
+}
