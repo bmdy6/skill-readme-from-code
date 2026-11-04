@@ -52,5 +52,17 @@
       "art-variants",
       "core-readme-step"
     ]
+  },
+  {
+    "claim": "Tested with Codex; any agent that can read SKILL.md can follow the workflow.",
+    "factIds": [
+      "integration-codex-tested"
+    ]
+  },
+  {
+    "claim": "已在 Codex 上实测；任何能读 SKILL.md 的 agent 都可以按此流程使用。",
+    "factIds": [
+      "integration-codex-tested"
+    ]
   }
 ]

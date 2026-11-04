@@ -9,7 +9,7 @@
   <img src="docs/readme/hero-light.zh-CN.png" alt="同一个 CLI 样例的改写前后" width="838">
 </picture>
 
-同一个 CLI 样例的改写前后，分数来自真实审计。
+审计分 = README 检查通过项占比（同一 CLI 样例的改写前后）。
 
 ## 快速开始
 
@@ -22,6 +22,8 @@ gh repo clone bmdy6/skill-readme-from-code .agents/skills/readme-from-code -- --
 > 用 readme-from-code，为这个仓库写一份有代码依据的介绍。
 
 需要已认证的 gh、Node 20+、Chromium 和支持技能的智能体；安装需联网。
+
+已在 Codex 上实测；任何能读 SKILL.md 的 agent 都可以按此流程使用。
 
 ## 你会得到什么
 

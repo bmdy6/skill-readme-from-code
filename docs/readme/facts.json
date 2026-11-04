@@ -29,5 +29,12 @@
     "claim": "Write a source-backed README for another repository",
     "value": "Use the project-type skeleton. Write in this order: name; one complete benefit",
     "source": "prompts/write.md:1"
+  },
+  {
+    "id": "integration-codex-tested",
+    "kind": "integration",
+    "claim": "Codex is the only tested agent; the workflow is available as SKILL.md instructions",
+    "value": "Codex is the only agent tested for this preview.",
+    "source": "docs/evidence/round3/agent-validation.md:3"
   }
 ]

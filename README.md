@@ -9,7 +9,7 @@ Turn code into a README people want to try, with tested commands and a checked f
   <img src="docs/readme/hero-light.png" alt="One CLI fixture README before and after its rewrite" width="838">
 </picture>
 
-One CLI fixture, rewritten and audited before and after.
+Audit score = share of README checks passed (CLI fixture, before → after).
 
 ## Quick start
 
@@ -22,6 +22,8 @@ Then tell your agent:
 > Use readme-from-code to write a source-backed README for this repo.
 
 Requires authenticated gh access, Node 20+, Chromium, and a skill-capable agent; network for setup.
+
+Tested with Codex; any agent that can read SKILL.md can follow the workflow.
 
 ## What you get
 

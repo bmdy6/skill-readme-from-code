@@ -37,7 +37,7 @@
     "G2": {
       "decidedBy": "agent",
       "choice": "Approved after round 2 core-output and baseline comparison review",
-      "reason": "Inspected actual input/output heroes at 900px, light/dark variants, desktop and mobile first screens; primary text and content bounds pass R4. Independent readers and randomized blind choice passed."
+      "reason": "Round 3: inspect the actual score comparison, calculation caption and light/dark first screens before delivery."
     }
   },
   "coreAction": {
