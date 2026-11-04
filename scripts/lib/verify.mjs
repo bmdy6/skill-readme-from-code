@@ -173,6 +173,9 @@ export async function staticChecks(repo, facts, brief = {}, opts = {}) {
       )?.text;
     if (lead) {
       const plain = lead.replace(/[\*_`]/g, "");
+      if (/^(?:Help\s|A tool that\b|An agent skill that\b|This project\b|帮助|一个.*的工具)/i.test(plain)||/using an agent skill/i.test(plain))copy.push(`${file}: Generic one-liner`);
+      const nouns=[...(brief.coreAction?.output?.keywords||[]),'README','draft','text','digest','note','report','profile','image','package','文字','草稿','文风','档案','笔记','摘要','报告','图片'];
+      if(!nouns.some(n=>plain.toLowerCase().includes(n.toLowerCase())))copy.push(`${file}: One-liner needs a concrete artifact noun`);
       const count =
         lang === "en"
           ? (plain.match(/\b[\w'-]+\b/g) || []).length

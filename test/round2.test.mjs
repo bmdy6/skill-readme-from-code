@@ -23,3 +23,8 @@ for(const [name,capture,issue] of [
 test('V10 accepts real core output',async()=>{
  const r=await heroRelevance(await heroFixture({role:'core',command:'node index.mjs',stdout:'Daily digest written.'}),{coreAction:core});assert.equal(r.status,'pass');
 });
+import {staticChecks} from '../scripts/lib/verify.mjs';
+for(const text of ['Help writers polish drafts.','A tool that writes a README.','An agent skill that writes a README.','This project writes a README.','帮助你写 README。','一个写 README 的工具。','Get a README using an agent skill.','Work smarter every day.'])test(`V6 rejects generic position: ${text}`,async()=>{
+ const repo=await fs.mkdtemp(path.join(os.tmpdir(),'rfc-position-'));await write(path.join(repo,'README.md'),'# Moss\n\n'+text+'\n');
+ const r=await staticChecks(repo,{facts:[],manifest:{},images:[],workflows:[]},{});assert.equal(r.find(c=>c.id==='V6').status,'fail');
+});
