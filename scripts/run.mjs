@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import path from "node:path";
 import { scan } from "./lib/scan.mjs";
-import { write, workdir,exists } from "./lib/io.mjs";
+import { write, workdir, exists } from "./lib/io.mjs";
 const argv = process.argv.slice(2),
   command = argv.shift(),
   opts = {};
@@ -23,7 +23,8 @@ try {
   if (command === "scan") {
     const result = await scan(opts.repo);
     await write(path.join(opts.work, "facts.json"), result);
-    if(!await exists(path.join(opts.work,"baseline.json")))await write(path.join(opts.work,"baseline.json"),result.readmeSnapshot);
+    if (!(await exists(path.join(opts.work, "baseline.json"))))
+      await write(path.join(opts.work, "baseline.json"), result.readmeSnapshot);
     console.log(JSON.stringify(result, null, 2));
   } else if (!command || command === "help") {
     console.log(

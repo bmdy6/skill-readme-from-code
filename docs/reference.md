@@ -25,9 +25,9 @@ there is no automatic `write` CLI command.
 | audit | --repo DIR [--online] [--local] [--deny-words FILE] | audit.json, audit.md, screen.html, first-screen.json and three screenshots. V2–V7 only; target untouched. |
 | capture | --repo DIR --id ID [--tty] -- 'COMMAND' | captures/ID.json. 60 second cap, separate home, closed stdin, no inherited credentials by default. |
 | art | --spec FILE [--out DIR] | PNGs and art-manifest.json; portable art.json and capture/screen inputs. Default out: target docs/readme. |
-| verify | --repo DIR [--plan FILE] [--online] [--local] [--deny-words FILE] | verify.json, verify.md, screenshots. V1–V9; any failure exits 1. |
+| verify | --repo DIR [--plan FILE] [--online] [--local] [--deny-words FILE] | verify.json, verify.md, screenshots. V1–V11; any failure exits 1. |
 | stranger prepare | --repo DIR | stranger/first-screen-desktop.png, desktop-dark/mobile PNG, questions.md, result.json (not-run). |
-| stranger score | --answers FILE or --not-run 'reason' | stranger/result.json. Four independent checks; confusing[] is preserved. |
+| stranger score | --answers FILE or --not-run 'reason' | stranger/result.json. Five independent checks; confusing[] is preserved. |
 | storefront | --repo DIR | storefront.md, social-light.png and storefront-art/. Suggestions only. |
 | report | --repo DIR [--before DIR] | pr-body.md. Before defaults to work/before; absent evidence is not-run. |
 
@@ -184,3 +184,46 @@ TARGET/docs/readme/command-plan.json to verify. The private clone plan explicitl
 shares the already-authorized gh identity; no token is stored in these files.
 Recorded reports are in docs/evidence. The self-install command intentionally
 pins feat/v0.1 because main does not contain the new skill until review/merge.
+
+
+## Round 2 evidence contracts (R1–R6)
+
+brief.coreAction is {what,input,command|agentStep,output:{description,keywords},
+factIds}. The fact IDs identify the actual core operation. Hero capture role must
+be core. V10 rejects install/test/lint/check/verify commands, a supporting capture,
+and textual self-README previews. Core input → output must be a genuine run.
+For LLM output, the agent runs the project's own instructions on original input;
+kind: agent-run stores input, agentStep, usedFiles (file/sha256), response
+(file/sha256/outputKey), stdout copied verbatim from that raw JSON response,
+and optional measurements.score with a hashed measurements.source file.
+Fixture before/after audit scores are checked against the stored audit JSON.
+Use the explicit agent-generated caption; a mechanical style score is not a
+human judgment of editing quality. Inputs and raw replies travel with art.json.
+Screenshot artifact files explicitly referenced by the spec/capture are inputs,
+not orphaned generated artwork. Full screenshots accompany any preview crop.
+
+Facts have kind: integration for tools/platforms/runtimes and alternative for
+competitors. Only alternatives are denied by default. The first scan preserves
+baseline.json; commit it to docs/readme/baseline.json for portable V11 replay.
+V11 checks every old H2 and integration in the new README or linked docs. An
+intentional removal needs {id,reason} in retention.json intentionalDeletions;
+heading IDs are heading:README.md:Original title. Report prints every removal.
+A missing baseline is skip, never a claim of proven information retention.
+
+Art uses auto height, 40px top/bottom padding, primary text >=16px, labels >=13px,
+and content bounds >=60% of canvas area. Bounds include visible text, loaded
+images and nonempty semantic cards, not the whole frame or empty boxes. V9
+requires mainText and density passes in addition to the original checks.
+Short terminal/code examples use a narrower canvas; social stays 1280×640.
+The baseline comparison must be viewed at equal widths, including dark output.
+
+Stranger answers add whatOutput (a coreAction.output keyword must appear) and
+mostAppealing (recorded only). All five checks must pass. Use stranger
+blind-prepare --before FILE --after FILE to save neutral A/B image copies,
+questions, random order and hashes. The hidden mapping is in blind-manifest.json;
+never send that mapping to the reader. stranger blind-score --answers FILE saves
+the original answer and only passes if the new screenshot wins. Both modes need
+fresh ephemeral read-only readers, images and neutral questions only.
+
+Internal docs/superpowers material is excluded. The preview install stays pinned
+to feat/v0.1 until review; change it to main after merge, never merge automatically.

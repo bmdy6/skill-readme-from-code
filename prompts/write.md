@@ -10,3 +10,8 @@ printed. Keep the English body within brief.wordBudget and every paragraph
 within three sentences. Map every benefit sentence to a fact ID in claims.json.
 For agent skills follow installation with “Then tell your agent:” and quote a
 real request. Mirror structure, commands and images in Chinese; localize images.
+
+The hero shows coreAction's real input and output, never an install/check result
+or this project's own README text. Preserve integrations and old H2 information
+via the README, linked docs, or reasoned intentional deletion in the report.
+Compatible tools are not competitors. Keep their actual names and boundaries.

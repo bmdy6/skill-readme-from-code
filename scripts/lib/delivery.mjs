@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
-import {randomInt} from "node:crypto";
+import { randomInt } from "node:crypto";
 import path from "node:path";
-import { json, write, read,hash } from "./io.mjs";
+import { json, write, read, hash } from "./io.mjs";
 import { firstScreen } from "./screen.mjs";
 import { renderArt } from "./art.mjs";
 import { scan } from "./scan.mjs";
@@ -23,7 +23,11 @@ export function scoreAnswers(brief, answers) {
       !!brief.install?.command &&
       norm(answers.firstCommand) === norm(brief.install.command),
     wouldTry: answers.wouldTry === "yes",
-    whatOutput:(brief.coreAction?.output?.keywords||[]).some(t=>String(answers.whatOutput||'').toLowerCase().includes(t.toLowerCase())),
+    whatOutput: (brief.coreAction?.output?.keywords || []).some((t) =>
+      String(answers.whatOutput || "")
+        .toLowerCase()
+        .includes(t.toLowerCase()),
+    ),
   };
   return {
     status: Object.values(checks).every(Boolean) ? "pass" : "fail",
@@ -46,14 +50,50 @@ export async function prepareStranger(opts) {
   });
   return out;
 }
-export async function prepareBlind(opts){
- if(!opts.before||!opts.after)throw Error('blind-prepare needs --before and --after image files');
- const draw=randomInt(2),order=draw?['after','before']:['before','after'];const labels={};
- for(const [i,label]of ['A','B'].entries()){const source=order[i],bytes=await fs.readFile(opts[source]);labels[label]={source,sha256:hash(bytes)};await fs.mkdir(path.join(opts.work,'stranger/blind-input'),{recursive:true});await fs.writeFile(path.join(opts.work,'stranger/blind-input',label+'.png'),bytes);}
- const m={randomization:{method:'crypto.randomInt(2)',draw},labels};await write(path.join(opts.work,'stranger/blind-manifest.json'),m);
- await write(path.join(opts.work,'stranger/blind-input/questions.md'),'Only view the two supplied screenshots. The first is A, the second is B. Which would you rather try, and why? Do not use tools or read any files. Return only JSON: {"choice":"A or B","why":"reason","confusing":[]}.');return m;
+export async function prepareBlind(opts) {
+  if (!opts.before || !opts.after)
+    throw Error("blind-prepare needs --before and --after image files");
+  const draw = randomInt(2),
+    order = draw ? ["after", "before"] : ["before", "after"];
+  const labels = {};
+  for (const [i, label] of ["A", "B"].entries()) {
+    const source = order[i],
+      bytes = await fs.readFile(opts[source]);
+    labels[label] = { source, sha256: hash(bytes) };
+    await fs.mkdir(path.join(opts.work, "stranger/blind-input"), {
+      recursive: true,
+    });
+    await fs.writeFile(
+      path.join(opts.work, "stranger/blind-input", label + ".png"),
+      bytes,
+    );
+  }
+  const m = { randomization: { method: "crypto.randomInt(2)", draw }, labels };
+  await write(path.join(opts.work, "stranger/blind-manifest.json"), m);
+  await write(path.join(opts.work, "stranger/blind-result.json"), {
+    status: "not-run",
+    reason: "Waiting for a fresh independent blind choice",
+  });
+  await write(
+    path.join(opts.work, "stranger/blind-input/questions.md"),
+    'Only view the two supplied screenshots. The first is A, the second is B. Which would you rather try, and why? Do not use tools or read any files. Return only JSON: {"choice":"A or B","why":"reason","confusing":[]}.',
+  );
+  return m;
 }
-export async function scoreBlind(opts,answers){const m=await json(path.join(opts.work,'stranger/blind-manifest.json'));if(!m)throw Error('Missing blind manifest');const winner=m.labels?.[answers.choice]?.source;const r={status:winner==='after'?'pass':'fail',winner:winner||'invalid-label',answers,randomization:m.randomization,labels:m.labels};await write(path.join(opts.work,'stranger/blind-result.json'),r);return r;}
+export async function scoreBlind(opts, answers) {
+  const m = await json(path.join(opts.work, "stranger/blind-manifest.json"));
+  if (!m) throw Error("Missing blind manifest");
+  const winner = m.labels?.[answers.choice]?.source;
+  const r = {
+    status: winner === "after" ? "pass" : "fail",
+    winner: winner || "invalid-label",
+    answers,
+    randomization: m.randomization,
+    labels: m.labels,
+  };
+  await write(path.join(opts.work, "stranger/blind-result.json"), r);
+  return r;
+}
 export async function storefront(opts) {
   const brief = await json(opts.brief || path.join(opts.work, "brief.json"));
   if (!brief) throw Error("Missing brief.json");
@@ -130,15 +170,20 @@ export async function report(opts) {
           .map(([name, v]) => `![${label} ${name}](${dir}/${v.screenshot})`)
           .join("\n\n")
       : `${label}: not-run`;
-  const text = `# README delivery\n\nBefore: ${before?.score ?? "not-run"}/100. After: ${after?.score ?? "not-run"}/100.\n\n${screenshots("Before", screen(before), "before")}\n\n${screenshots("After", screen(after), ".")}\n\n## Verification\n\n| Check | Status | Evidence |\n|---|---|---|\n${(after?.checks || []).map((c) => `| ${c.id} | ${c.status} | ${(c.issues?.join("; ") || c.reason || "Passed").replace(/\|/g, "\\|")} |`).join("\n")}\n\n## Stranger\n\n${JSON.stringify(stranger, null, 2)}\n\n## Blind choice\n\n${JSON.stringify(await json(path.join(opts.work,"stranger/blind-result.json"),{status:"not-run"}),null,2)}\n\n## Images\n\n${art.files.map((f) => `- ${f.file}: ${f.kind}; ${Object.values(f.checks).every((s) => s === "pass") ? "self-check pass" : "self-check fail"}`).join("\n") || "not-run"}\n\n## Gates\n\nG1: ${brief.gates?.G1?.decidedBy || brief.decidedBy || "not recorded"}. G2: ${brief.gates?.G2?.decidedBy || brief.decidedBy || "not recorded"}.\n\n${JSON.stringify(brief.gates || {}, null, 2)}\n\n## Intentional deletions\n\n${JSON.stringify(after?.checks?.find(c=>c.id==="V11")?.intentionalDeletions||[],null,2)}\n\n## Not verified\n\n${[...(!after ? ["- Verification not-run"] : []), ...(!before ? ["- Before audit not-run"] : []), ...(after?.checks?.filter((c) => c.status !== "pass").map((c) => `- ${c.id}: ${c.status}; ${c.reason || c.issues?.join("; ")}`) || []), ...(stranger.status === "not-run" ? [`- Stranger not-run: ${stranger.reason}`] : []), "- External links only checked when --online was requested.", `- Renderer: ${screen(after)?.renderer || "not-run"}${screen(after)?.fallbackReason ? `; ${screen(after).fallbackReason}` : ""}.`].join("\n")}\n`;
+  const text = `# README delivery\n\nBefore: ${before?.score ?? "not-run"}/100. After: ${after?.score ?? "not-run"}/100.\n\n${screenshots("Before", screen(before), "before")}\n\n${screenshots("After", screen(after), ".")}\n\n## Verification\n\n| Check | Status | Evidence |\n|---|---|---|\n${(after?.checks || []).map((c) => `| ${c.id} | ${c.status} | ${(c.issues?.join("; ") || c.reason || "Passed").replace(/\|/g, "\\|")} |`).join("\n")}\n\n## Stranger\n\n${JSON.stringify(stranger, null, 2)}\n\n## Blind choice\n\n${JSON.stringify(await json(path.join(opts.work, "stranger/blind-result.json"), { status: "not-run" }), null, 2)}\n\n## Images\n\n${art.files.map((f) => `- ${f.file}: ${f.kind}; ${Object.values(f.checks).every((s) => s === "pass") ? "self-check pass" : "self-check fail"}`).join("\n") || "not-run"}\n\n## Gates\n\nG1: ${brief.gates?.G1?.decidedBy || brief.decidedBy || "not recorded"}. G2: ${brief.gates?.G2?.decidedBy || brief.decidedBy || "not recorded"}.\n\n${JSON.stringify(brief.gates || {}, null, 2)}\n\n## Intentional deletions\n\n${JSON.stringify(after?.checks?.find((c) => c.id === "V11")?.intentionalDeletions || [], null, 2)}\n\n## Not verified\n\n${[...(!after ? ["- Verification not-run"] : []), ...(!before ? ["- Before audit not-run"] : []), ...(after?.checks?.filter((c) => c.status !== "pass").map((c) => `- ${c.id}: ${c.status}; ${c.reason || c.issues?.join("; ")}`) || []), ...(stranger.status === "not-run" ? [`- Stranger not-run: ${stranger.reason}`] : []), "- External links only checked when --online was requested.", `- Renderer: ${screen(after)?.renderer || "not-run"}${screen(after)?.fallbackReason ? `; ${screen(after).fallbackReason}` : ""}.`].join("\n")}\n`;
   await write(path.join(opts.work, "pr-body.md"), text);
   return text;
 }
 export async function delivery(command, opts) {
   if (command === "stranger") {
-    if(opts.action==='blind-prepare')console.log(await prepareBlind(opts));
-    else if(opts.action==='blind-score'){if(!opts.answers)throw Error('blind-score needs --answers');const r=await scoreBlind(opts,await json(opts.answers));console.log(JSON.stringify(r,null,2));if(r.status==='fail')process.exitCode=1;}
-    else if (opts.action === "prepare") console.log(await prepareStranger(opts));
+    if (opts.action === "blind-prepare") console.log(await prepareBlind(opts));
+    else if (opts.action === "blind-score") {
+      if (!opts.answers) throw Error("blind-score needs --answers");
+      const r = await scoreBlind(opts, await json(opts.answers));
+      console.log(JSON.stringify(r, null, 2));
+      if (r.status === "fail") process.exitCode = 1;
+    } else if (opts.action === "prepare")
+      console.log(await prepareStranger(opts));
     else if (opts.action === "score") {
       let result;
       if (opts["not-run"])

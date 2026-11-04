@@ -1,7 +1,7 @@
 import path from "node:path";
 import { execFileSync } from "node:child_process";
 import { files, read, json } from "./io.mjs";
-import {headings} from "./markdown.mjs";
+import { headings } from "./markdown.mjs";
 export function gitRepo(repo) {
   try {
     return (
@@ -127,18 +127,67 @@ export async function scan(repo, { github = true } = {}) {
       /* Optional network metadata is not a code fact. */
     }
   }
-  const integrations=[];
-  const toolNames=['Claude Code','Codex','Cursor','pi','DeepSeek Harness','OpenCode','Gemini CLI','ChatGPT','Google Antigravity','Python','Node'];
-  const readmes=[];
-  for(const file of ['README.md','README.zh-CN.md'])if(texts[file]){
-    readmes.push({file,headings:headings(texts[file]).filter(h=>h.depth===2).map(h=>h.text)});
-    for(const name of toolNames){const rx=new RegExp(`(?<![\\p{L}\\p{N}_])${name}(?![\\p{L}\\p{N}_])`,'iu');if(rx.test(texts[file])){
-      const id=`integration-${file==='README.md'?'en':'zh'}-${name.toLowerCase().replace(/[^a-z0-9]+/g,'-')}`;
-      add(id,'Tool, platform or runtime mentioned in the README',name,file,name);facts.at(-1).kind='integration';integrations.push({...facts.at(-1),readme:file});
-    }}
+  const integrations = [];
+  const toolNames = [
+    "Claude Code",
+    "Codex",
+    "Cursor",
+    "pi",
+    "DeepSeek Harness",
+    "OpenCode",
+    "Gemini CLI",
+    "ChatGPT",
+    "Google Antigravity",
+    "Python",
+    "Node",
+    "Chromium",
+    "gh",
+    "JSONL",
+    "JSON",
+  ];
+  const readmes = [];
+  for (const file of ["README.md", "README.zh-CN.md"])
+    if (texts[file]) {
+      readmes.push({
+        file,
+        headings: headings(texts[file])
+          .filter((h) => h.depth === 2)
+          .map((h) => h.text),
+      });
+      for (const name of toolNames) {
+        const rx = new RegExp(
+          `(?<![\\p{L}\\p{N}_])${name}(?![\\p{L}\\p{N}_])`,
+          "iu",
+        );
+        const mention = rx.exec(texts[file]);
+        if (mention) {
+          const id = `integration-${file === "README.md" ? "en" : "zh"}-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
+          add(
+            id,
+            "Tool, platform or runtime mentioned in the README",
+            name,
+            file,
+            mention[0],
+          );
+          facts.at(-1).kind = "integration";
+          integrations.push({ ...facts.at(-1), readme: file });
+        }
+      }
+    }
+  const alternativeTerms = await json(
+    path.join(repo, "readme-competitors.json"),
+    [],
+  );
+  for (const [i, name] of alternativeTerms.entries()) {
+    add(
+      `alternative-${i}`,
+      "Named alternative",
+      name,
+      "readme-competitors.json",
+      name,
+    );
+    facts.at(-1).kind = "alternative";
   }
-  const alternativeTerms=await json(path.join(repo,'readme-competitors.json'),[]);
-  for(const [i,name]of alternativeTerms.entries()){add(`alternative-${i}`,'Named alternative',name,'readme-competitors.json',name);facts.at(-1).kind='alternative';}
   const install =
     manifest.name && !manifest.private
       ? `npm install ${manifest.name}`
@@ -159,7 +208,7 @@ export async function scan(repo, { github = true } = {}) {
     remote,
     metadata,
     competitorTerms: alternativeTerms,
-    readmeSnapshot:{readmes,integrations},
+    readmeSnapshot: { readmes, integrations },
     facts,
   };
 }

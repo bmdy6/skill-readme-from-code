@@ -23,8 +23,15 @@ function pick(value, lang, field) {
 }
 export async function inspectArt(page) {
   return page.evaluate(() => {
-    const problems = { overflow: [], fontSize: [], contrast: [], fields: [],mainText:[],density:[] };
-    const contentRects=[];
+    const problems = {
+      overflow: [],
+      fontSize: [],
+      contrast: [],
+      fields: [],
+      mainText: [],
+      density: [],
+    };
+    const contentRects = [];
     const rgb = (c) => {
       const ctx = document.createElement("canvas").getContext("2d");
       ctx.fillStyle = c;
@@ -57,8 +64,25 @@ export async function inspectArt(page) {
         continue;
       const cs = getComputedStyle(e);
       if (parseFloat(cs.fontSize) < 13) problems.fontSize.push(e.textContent);
-      if(!e.closest('.head,.eyebrow,.caption,.illustration,.number,[data-label]')&&parseFloat(cs.fontSize)<16)problems.mainText.push(e.textContent.slice(0,80));
-      for(const n of e.childNodes)if(n.nodeType===3&&n.textContent.trim()){const range=document.createRange();range.selectNodeContents(n);for(const r of range.getClientRects())contentRects.push({left:r.left,top:r.top,right:r.right,bottom:r.bottom});}
+      if (
+        !e.closest(
+          ".head,.eyebrow,.caption,.illustration,.number,[data-label]",
+        ) &&
+        parseFloat(cs.fontSize) < 16
+      )
+        problems.mainText.push(e.textContent.slice(0, 80));
+      for (const n of e.childNodes)
+        if (n.nodeType === 3 && n.textContent.trim()) {
+          const range = document.createRange();
+          range.selectNodeContents(n);
+          for (const r of range.getClientRects())
+            contentRects.push({
+              left: r.left,
+              top: r.top,
+              right: r.right,
+              bottom: r.bottom,
+            });
+        }
       let b = e,
         bg;
       while (b) {
@@ -78,19 +102,56 @@ export async function inspectArt(page) {
           problems.contrast.push(e.textContent.slice(0, 60));
       }
     }
-    for (const img of frame.querySelectorAll("img")){const r=img.getBoundingClientRect();contentRects.push({left:r.left,top:r.top,right:r.right,bottom:r.bottom});}
+    for (const img of frame.querySelectorAll("img")) {
+      const r = img.getBoundingClientRect();
+      contentRects.push({
+        left: r.left,
+        top: r.top,
+        right: r.right,
+        bottom: r.bottom,
+      });
+    }
     for (const img of frame.querySelectorAll("img"))
       if (!img.complete || !img.naturalWidth)
         problems.fields.push("Broken image");
     if (/undefined|\{\{/.test(frame.textContent) || !frame.textContent.trim())
       problems.fields.push("Empty or unresolved fields");
     // Designed panels are visual content too. Never count the canvas or empty boxes.
-    for(const panel of frame.querySelectorAll('.card,.bubble'))if(panel.textContent.trim()||[...panel.querySelectorAll('img')].some(i=>i.complete&&i.naturalWidth)){const r=panel.getBoundingClientRect();contentRects.push({left:r.left,top:r.top,right:r.right,bottom:r.bottom});}
-    const contentBounds=contentRects.length?{left:Math.min(...contentRects.map(r=>r.left)),top:Math.min(...contentRects.map(r=>r.top)),right:Math.max(...contentRects.map(r=>r.right)),bottom:Math.max(...contentRects.map(r=>r.bottom))}:null;
-    const contentRatio=contentBounds?((contentBounds.right-contentBounds.left)*(contentBounds.bottom-contentBounds.top))/(bounds.width*bounds.height):0;
-    if(contentRatio<0.6)problems.density.push(`Content bounds occupy ${(100*contentRatio).toFixed(1)}%; minimum 60%`);
+    for (const panel of frame.querySelectorAll(".card,.bubble"))
+      if (
+        panel.textContent.trim() ||
+        [...panel.querySelectorAll("img")].some(
+          (i) => i.complete && i.naturalWidth,
+        )
+      ) {
+        const r = panel.getBoundingClientRect();
+        contentRects.push({
+          left: r.left,
+          top: r.top,
+          right: r.right,
+          bottom: r.bottom,
+        });
+      }
+    const contentBounds = contentRects.length
+      ? {
+          left: Math.min(...contentRects.map((r) => r.left)),
+          top: Math.min(...contentRects.map((r) => r.top)),
+          right: Math.max(...contentRects.map((r) => r.right)),
+          bottom: Math.max(...contentRects.map((r) => r.bottom)),
+        }
+      : null;
+    const contentRatio = contentBounds
+      ? ((contentBounds.right - contentBounds.left) *
+          (contentBounds.bottom - contentBounds.top)) /
+        (bounds.width * bounds.height)
+      : 0;
+    if (contentRatio < 0.6)
+      problems.density.push(
+        `Content bounds occupy ${(100 * contentRatio).toFixed(1)}%; minimum 60%`,
+      );
     return {
-      contentBounds,contentRatio,
+      contentBounds,
+      contentRatio,
       checks: Object.fromEntries(
         Object.entries(problems).map(([k, v]) => [
           k,
@@ -163,7 +224,16 @@ export async function renderArt({ spec, out, work }) {
           const values = {
             title: text(item.title, "title"),
             subtitle: text(item.subtitle, "subtitle"),
-            prompt: capture?.role==="core"&&capture.input ? escape(typeof capture.input==="string"?capture.input:JSON.stringify(capture.input)) : item.prompt ? text(item.prompt, "prompt") : "",
+            prompt:
+              capture?.role === "core" && capture.input
+                ? escape(
+                    typeof capture.input === "string"
+                      ? capture.input
+                      : JSON.stringify(capture.input),
+                  )
+                : item.prompt
+                  ? text(item.prompt, "prompt")
+                  : "",
             label: item.illustration
               ? zh
                 ? "示意"
@@ -171,9 +241,28 @@ export async function renderArt({ spec, out, work }) {
               : zh
                 ? "真实运行"
                 : "Recorded run",
-            promptLabel: capture?.role==="core"?(zh?"原始草稿":"Original draft"):(zh?"你告诉智能体":"You tell your agent"),
-            resultLabel: capture?.role==="core"?(zh?"润色后":"Polished draft"):(zh?"你得到":"You get"),
-            outputClass: capture?.kind==="agent-run" ? "prose-output" : capture ? "terminal" : "illustrated-result",
+            promptLabel:
+              capture?.role === "core"
+                ? zh
+                  ? "原始草稿"
+                  : "Original draft"
+                : zh
+                  ? "你告诉智能体"
+                  : "You tell your agent",
+            resultLabel:
+              capture?.role === "core"
+                ? zh
+                  ? "润色后"
+                  : "Polished draft"
+                : zh
+                  ? "你得到"
+                  : "You get",
+            outputClass:
+              capture?.kind === "agent-run"
+                ? "prose-output"
+                : capture
+                  ? "terminal"
+                  : "illustrated-result",
             terminalLabel: zh ? "终端记录" : "terminal capture",
             inputLabel: zh ? "输入" : "Input",
             command: escape(capture?.command || ""),
@@ -187,7 +276,12 @@ export async function renderArt({ spec, out, work }) {
                   ? ""
                   : pick(item.result, lang, "result"),
             ),
-            scoreLabel: capture?.measurements?.score!==undefined ? `${zh?'风格检查':'Style check'} ${Number(capture.measurements.score)}/100` : (capture?.kind==='agent-run'?'Agent-run':''),
+            scoreLabel:
+              capture?.measurements?.score !== undefined
+                ? `${zh ? "风格检查" : "Style check"} ${Number(capture.measurements.score)}/100`
+                : capture?.kind === "agent-run"
+                  ? "Agent-run"
+                  : "",
             steps: "",
           };
           if (item.template === "strip-3") {
@@ -218,7 +312,13 @@ export async function renderArt({ spec, out, work }) {
                 `<img alt="${values.title}" src="data:image/${ext === "svg" ? "svg+xml" : ext};base64,${data.toString("base64")}">`;
             }
           }
-          if(item.template==='hero-screens'&&capture?.audits){values.inputLabel=(zh?'改前':'Before')+` · ${capture.audits.before.score}/100`;values.resultLabel=(zh?'改后':'After')+` · ${capture.audits.after.score}/100`;}
+          if (item.template === "hero-screens" && capture?.audits) {
+            values.inputLabel =
+              (zh ? "改前" : "Before") +
+              ` · ${capture.audits.before.score}/100`;
+            values.resultLabel =
+              (zh ? "改后" : "After") + ` · ${capture.audits.after.score}/100`;
+          }
           const template = await read(
             path.join(templateDir, item.template + ".html"),
           );
@@ -226,7 +326,11 @@ export async function renderArt({ spec, out, work }) {
             if (values[k] === undefined) throw Error(`Unknown slot ${k}`);
             return values[k];
           });
-          if(item.template!=='hero-prompt'&&capture?.measurements?.score!==undefined)content+=`<p class="capture-score" data-label>${zh?'实际风格检查':'Actual style check'}: ${Number(capture.measurements.score)}/100 · ${zh?'不代表改稿质量':'not a rewrite-quality score'}</p>`;
+          if (
+            item.template !== "hero-prompt" &&
+            capture?.measurements?.score !== undefined
+          )
+            content += `<p class="capture-score" data-label>${zh ? "实际风格检查" : "Actual style check"}: ${Number(capture.measurements.score)}/100 · ${zh ? "不代表改稿质量" : "not a rewrite-quality score"}</p>`;
           if (item.stats) {
             const verify = await json(path.join(cache, "verify.json"));
             content += `<p class="note">${item.stats.map((f) => `${escape(f)}: ${verify.summary[f.split(".")[1]]}`).join(" · ")}</p>`;
@@ -245,7 +349,18 @@ export async function renderArt({ spec, out, work }) {
             `<!doctype html><meta charset="utf-8"><style>${await read(path.join(templateDir, "base.css"))}:root{--accent:${accent}}</style><body class="${theme}"><main class="frame ${item.template === "social" ? "social" : item.template === "strip-3" ? "strip" : ""} ${item.compact ? "compact" : ""}">${content}</main></body>`,
           );
           await page.evaluate(() => document.fonts.ready);
-          if(item.template!=='social'&&['hero-terminal','hero-code','hero-prompt'].includes(item.template)&&capture?.kind!=='agent-run'&&(capture?.stdout||'').split('\n').filter(l=>l.trim()).length<4)await page.locator('.frame').evaluate(e=>e.style.width='640px');
+          if (
+            item.template !== "social" &&
+            ["hero-terminal", "hero-code", "hero-prompt"].includes(
+              item.template,
+            ) &&
+            capture?.kind !== "agent-run" &&
+            (capture?.stdout || "").split("\n").filter((l) => l.trim()).length <
+              4
+          )
+            await page
+              .locator(".frame")
+              .evaluate((e) => (e.style.width = "640px"));
           const inspected = await inspectArt(page);
           const file = `${item.id}-${theme}${zh ? ".zh-CN" : ""}.png`;
           await page
@@ -279,7 +394,20 @@ export async function renderArt({ spec, out, work }) {
   // Store every visual input beside the spec so regeneration survives cache deletion.
   const portable = structuredClone(cfg);
   for (const { item, capture } of prepared) {
-    if(capture?.kind==='agent-run')for(const source of [...(capture.usedFiles||[]),...(capture.response?[capture.response]:[]),...(capture.artifacts||[])]){const from=path.resolve(base,source.file),to=path.resolve(out,source.file);if(from!==to){await fs.mkdir(path.dirname(to),{recursive:true});await fs.copyFile(from,to);}}
+    if (capture?.kind === "agent-run")
+      for (const source of [
+        ...(capture.usedFiles || []),
+        ...(capture.response ? [capture.response] : []),
+        ...(capture.artifacts || []),
+        ...(capture.measurements?.source ? [capture.measurements.source] : []),
+      ]) {
+        const from = path.resolve(base, source.file),
+          to = path.resolve(out, source.file);
+        if (from !== to) {
+          await fs.mkdir(path.dirname(to), { recursive: true });
+          await fs.copyFile(from, to);
+        }
+      }
     if (capture)
       await write(
         path.join(out, "captures", item.captureId + ".json"),

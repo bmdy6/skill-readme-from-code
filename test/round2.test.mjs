@@ -261,7 +261,16 @@ test("R1 keeps declared screenshot inputs while detecting true orphan images", a
     "fail",
   );
 });
-test('R2 output keywords do not turn a vague benefit into an artifact noun',async()=>{
- const repo=await fs.mkdtemp(path.join(os.tmpdir(),'rfc-vague-'));await write(path.join(repo,'README.md'),'# Moss\n\nMake each day better.\n');
- const r=await staticChecks(repo,{facts:[],manifest:{},images:[],workflows:[]},{coreAction:{output:{keywords:['better']}}});assert.equal(r.find(c=>c.id==='V6').status,'fail');
+test("R2 output keywords do not turn a vague benefit into an artifact noun", async () => {
+  const repo = await fs.mkdtemp(path.join(os.tmpdir(), "rfc-vague-"));
+  await write(
+    path.join(repo, "README.md"),
+    "# Moss\n\nMake each day better.\n",
+  );
+  const r = await staticChecks(
+    repo,
+    { facts: [], manifest: {}, images: [], workflows: [] },
+    { coreAction: { output: { keywords: ["better"] } } },
+  );
+  assert.equal(r.find((c) => c.id === "V6").status, "fail");
 });

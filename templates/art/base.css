@@ -261,6 +261,52 @@ h2 {
   overflow-wrap: anywhere;
 }
 
-.note{font-size:16px}.prose-output{font:20px/1.55 system-ui,"Noto Sans CJK SC",sans-serif;padding:16px 0;white-space:pre-wrap;color:var(--ink)}.capture-score{font-size:14px;margin:16px 0 0;color:var(--mute)}.social .card{width:100%}.social .illustrated-result{font-size:26px}.screens .head{font-size:18px;font-weight:700}.screens .head span:last-child{color:var(--ink)}
+.note {
+  font-size: 16px;
+}
+.prose-output {
+  font:
+    20px/1.55 system-ui,
+    "Noto Sans CJK SC",
+    sans-serif;
+  padding: 16px 0;
+  white-space: pre-wrap;
+  color: var(--ink);
+}
+.capture-score {
+  font-size: 14px;
+  margin: 16px 0 0;
+  color: var(--mute);
+}
+.social .card {
+  width: 100%;
+}
+.social .illustrated-result {
+  font-size: 26px;
+}
+.screens .head {
+  font-size: 18px;
+  font-weight: 700;
+}
+.screens .head span:last-child {
+  color: var(--ink);
+}
 
-.input-copy,.prose-output{font:18px/1.6 system-ui,"Noto Sans CJK SC",sans-serif;padding:18px 20px;color:var(--ink)}.input-copy{background:var(--soft)}.result-copy{border-radius:0}.social .terminal{font-size:28px}
+.input-copy,
+.prose-output {
+  font:
+    18px/1.6 system-ui,
+    "Noto Sans CJK SC",
+    sans-serif;
+  padding: 18px 20px;
+  color: var(--ink);
+}
+.input-copy {
+  background: var(--soft);
+}
+.result-copy {
+  border-radius: 0;
+}
+.social .terminal {
+  font-size: 28px;
+}
