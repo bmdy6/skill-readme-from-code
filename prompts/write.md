@@ -15,3 +15,7 @@ The hero shows coreAction's real input and output, never an install/check result
 or this project's own README text. Preserve integrations and old H2 information
 via the README, linked docs, or reasoned intentional deletion in the report.
 Compatible tools are not competitors. Keep their actual names and boundaries.
+
+If the hero shows scores, its immediate caption must explain the calculation in
+one sentence (for example, Audit score = share of README checks passed). Keep
+the explanation in every README language; a FAQ alone does not satisfy V10.

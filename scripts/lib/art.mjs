@@ -278,7 +278,9 @@ export async function renderArt({ spec, out, work }) {
             ),
             scoreLabel:
               capture?.measurements?.score !== undefined
-                ? `${zh ? "风格检查" : "Style check"} ${Number(capture.measurements.score)}/100`
+                ? capture.measurements.before?.score !== undefined
+                  ? `${zh ? "原稿" : "Voice match"} ${Number(capture.measurements.before.score)} → ${zh ? "润色后 " : ""}${Number(capture.measurements.score)}`
+                  : `${zh ? "风格检查" : "Style check"} ${Number(capture.measurements.score)}/100`
                 : capture?.kind === "agent-run"
                   ? "Agent-run"
                   : "",
@@ -400,6 +402,9 @@ export async function renderArt({ spec, out, work }) {
         ...(capture.response ? [capture.response] : []),
         ...(capture.artifacts || []),
         ...(capture.measurements?.source ? [capture.measurements.source] : []),
+        ...(capture.measurements?.before?.source
+          ? [capture.measurements.before.source]
+          : []),
       ]) {
         const from = path.resolve(base, source.file),
           to = path.resolve(out, source.file);

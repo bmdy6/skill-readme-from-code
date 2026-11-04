@@ -1,6 +1,6 @@
 import path from "node:path";
 import fs from "node:fs/promises";
-import { json, hash } from "./io.mjs";
+import { json, hash, read } from "./io.mjs";
 const result = (id, issues) => ({
   id,
   status: issues.length ? "fail" : "pass",
@@ -30,6 +30,39 @@ export async function heroRelevance(repo, brief, facts) {
   const capture =
     hero?.captureId &&
     (await json(path.join(base, "captures", hero.captureId + ".json")));
+  const scored =
+    capture?.audits ||
+    capture?.measurements?.score !== undefined ||
+    hero?.stats?.length ||
+    /\d+(?:\.\d+)?\s*(?:\/100|%)/.test(JSON.stringify(hero || {}));
+  if (scored) {
+    for (const file of ["README.md", "README.zh-CN.md"]) {
+      const md = await read(path.join(repo, file));
+      if (!md && file !== "README.md") continue;
+      const image = [
+        ...md.matchAll(
+          /<picture\b[\s\S]*?<\/picture>|<img\b[^>]*>|!\[[^\]]*\]\([^\n)]+\)/gi,
+        ),
+      ].find((m) => /hero-(?:light|dark)(?:\.zh-CN)?\.png/.test(m[0]));
+      const caption = image
+        ? md
+            .slice(image.index + image[0].length)
+            .trimStart()
+            .split(/\n\s*\n/)[0]
+        : "";
+      const explains =
+        /\b(?:score|match)\s*=\s*[^\n.!?]*(?:share|percent|ratio|checks|minus|penalt|weighted)/i.test(
+          caption,
+        ) ||
+        /(?:分数|审计分|匹配度|评分)\s*[=＝]\s*[^\n。！？]*(?:占比|减去|扣分|加权|通过项)/.test(
+          caption,
+        );
+      if (!explains)
+        issues.push(
+          `${file}: Hero score needs a calculation in its immediate caption`,
+        );
+    }
+  }
   if (!capture) issues.push("Hero requires a core capture");
   else {
     if (typeof capture.stdout !== "string" || !capture.stdout.trim())
@@ -68,6 +101,9 @@ export async function heroRelevance(repo, brief, facts) {
           ...(capture.measurements?.source
             ? [capture.measurements.source]
             : []),
+          ...(capture.measurements?.before?.source
+            ? [capture.measurements.before.source]
+            : []),
         ]) {
           const p = path.resolve(base, used.file);
           if (!p.startsWith(path.resolve(base) + path.sep))
@@ -96,6 +132,15 @@ export async function heroRelevance(repo, brief, facts) {
           );
           if (score?.score !== capture.measurements.score)
             issues.push("Displayed score differs from actual check output");
+        }
+        if (capture.measurements?.before?.source) {
+          const before = await json(
+            path.join(base, capture.measurements.before.source.file),
+          );
+          if (before?.score !== capture.measurements.before.score)
+            issues.push(
+              "Displayed original score differs from actual check output",
+            );
         }
         try {
           const raw = await json(path.join(base, capture.response.file));

@@ -227,3 +227,12 @@ fresh ephemeral read-only readers, images and neutral questions only.
 
 Internal docs/superpowers material is excluded. The preview install stays pinned
 to feat/v0.1 until review; change it to main after merge, never merge automatically.
+
+### Score captions
+
+V10 requires an immediate README hero caption explaining any displayed score
+with a calculation (for example, `Audit score = share of README checks passed`).
+This applies to each README language, not only the FAQ. For agent-run voice
+comparisons, measurements.before is `{score,source:{file,sha256}}`, while
+measurements.score and source retain the actual polished score. Art shows
+`Voice match X → Y`; V10 checks both saved checker outputs and their hashes.
