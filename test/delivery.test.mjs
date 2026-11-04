@@ -12,9 +12,11 @@ const brief = {
   keyTerms: ["readme", "developer"],
   install: { command: "npx skills add moss/notes" },
   decidedBy: "agent",
+  coreAction:{output:{keywords:["README"]}},
 };
-test("stranger score requires all four independent checks", () => {
+test("stranger score requires all five independent checks", () => {
   const answers = {
+    whatOutput:"A README",mostAppealing:"Clear examples",
     what: "A README skill",
     forWhom: "developers",
     firstCommand: "npx  skills add moss/notes",
@@ -23,7 +25,7 @@ test("stranger score requires all four independent checks", () => {
     confusing: ["One unknown."],
   };
   assert.equal(scoreAnswers(brief, answers).status, "pass");
-  for (const key of ["what", "forWhom", "firstCommand", "wouldTry"])
+  for (const key of ["what", "forWhom", "firstCommand", "wouldTry","whatOutput"])
     assert.equal(
       scoreAnswers(brief, { ...answers, [key]: "wrong" }).status,
       "fail",

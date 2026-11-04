@@ -58,3 +58,14 @@ test('R4 detects undersized primary text and a sparse fixed canvas',async()=>{
  const r=await inspectArt(page);assert.equal(r.checks.mainText,'fail');assert.equal(r.checks.density,'fail');assert.ok(r.contentRatio<0.6);
  }finally{await browser.close();}
 });
+import {scoreAnswers,prepareBlind,scoreBlind} from '../scripts/lib/delivery.mjs';
+test('R5 requires a recognizable output but only records the appeal answer',()=>{
+ const b={keyTerms:['readme','maintainer'],install:{command:'npm ci'},coreAction:{output:{keywords:['screenshot','README']}}};
+ const a={what:'A README skill',forWhom:'maintainers',firstCommand:'npm ci',wouldTry:'yes',whatOutput:'A README and screenshot',mostAppealing:'Real examples',confusing:[]};
+ assert.equal(scoreAnswers(b,a).status,'pass');assert.equal(scoreAnswers(b,{...a,whatOutput:'Nothing clear'}).status,'fail');assert.equal(scoreAnswers(b,{...a,mostAppealing:''}).status,'pass');
+});
+test('R5 preserves random labels and rejects a blind win for the old screen',async()=>{
+ const work=await fs.mkdtemp(path.join(os.tmpdir(),'rfc-blind-'));const before=path.join(work,'old.png'),after=path.join(work,'new.png');await write(before,'old image');await write(after,'new image');
+ const m=await prepareBlind({work,before,after});assert.deepEqual(Object.keys(m.labels),['A','B']);const winner=Object.keys(m.labels).find(k=>m.labels[k].source==='after'),loser=winner==='A'?'B':'A';
+ assert.equal((await scoreBlind({work},{choice:loser,why:'Original answer'})).status,'fail');const r=await scoreBlind({work},{choice:winner,why:'Original answer'});assert.equal(r.status,'pass');assert.equal(r.answers.why,'Original answer');
+});
