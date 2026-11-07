@@ -61,7 +61,10 @@ Choose the main user action and a concrete output artifact. At least one G1
 candidate adapts the old tagline when it has a useful promise. Reject generic
 Help / A tool that / An agent skill that / This project / 帮助 / 一个…的工具
 openings and using an agent skill. Name the artifact the user gets.
-keyTerms must cover both what the tool does and its audience.
+Write keyTerms as {what: [...], audience: [...]} covering the tool and its readers.
+During G1, fill audience with context-appropriate synonyms and language variants
+(e.g. developers, engineers, programmers, 开发者, 程序员). Keep these in the
+brief; the scorer has no built-in synonym dictionary. Legacy arrays still work.
 
 For explicitly noninteractive work, select the recommended position yourself
 and record `decidedBy: "agent"` plus `gates.G1` with choice and reason.

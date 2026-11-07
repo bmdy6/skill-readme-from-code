@@ -14,7 +14,7 @@ Audit score = share of README checks passed (CLI fixture, before → after).
 ## Quick start
 
 ```sh
-gh repo clone bmdy6/skill-readme-from-code .agents/skills/readme-from-code -- --branch feat/v0.1
+gh repo clone bmdy6/skill-readme-from-code .agents/skills/readme-from-code
 ```
 
 Then tell your agent:
@@ -54,7 +54,7 @@ See the [command reference](docs/reference.md).
 
 **Is image data real?** Terminal text comes from captures; diagrams are labeled illustrations. This hero shows the fixture’s actual before/after first screens.
 
-**Can I install remotely?** This private preview requires authenticated gh access and installs the feat/v0.1 branch; unauthenticated installation is unverified.
+**Can I install remotely?** This private preview requires authenticated gh access and installs the main branch; unauthenticated installation is unverified.
 
 **What do audit scores mean?** They count passed README checks, not ratings from visitors.
 

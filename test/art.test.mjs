@@ -91,3 +91,33 @@ node -p "'License: '+require('./package.json').license"`,
     24,
   );
 });
+
+test("titles shrink to fit but retain overflow failures at the readable floor", async () => {
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "rfc-fit-"));
+  await write(path.join(dir, "art.json"), {
+    images: [
+      {
+        id: "fit",
+        template: "social",
+        title: { en: "M".repeat(40), "zh-CN": "宽".repeat(40) },
+        subtitle: { en: "Real output with readable titles.", "zh-CN": "标题保持可读，输出仍可检查。" },
+        illustration: true,
+        result: { en: "node index.mjs", "zh-CN": "node index.mjs" },
+      },
+      {
+        id: "too-wide",
+        template: "social",
+        title: { en: "M".repeat(500), "zh-CN": "M".repeat(500) },
+        subtitle: { en: "Still report overflow.", "zh-CN": "仍需报告溢出。" },
+        illustration: true,
+        result: { en: "node index.mjs", "zh-CN": "node index.mjs" },
+      },
+    ],
+  });
+  const r = await renderArt({ spec: path.join(dir, "art.json"), out: path.join(dir, "out") });
+  for (const f of r.files) {
+    assert.equal(f.checks.overflow, f.file.startsWith("fit-") ? "pass" : "fail", JSON.stringify(f));
+    assert.equal(f.checks.fontSize, "pass");
+    assert.equal(f.checks.mainText, "pass");
+  }
+});

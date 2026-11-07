@@ -363,6 +363,22 @@ export async function renderArt({ spec, out, work }) {
             await page
               .locator(".frame")
               .evaluate((e) => (e.style.width = "640px"));
+          // Measure after fonts and the final canvas width are ready. Preserve the
+          // normal wrapping; only shrink headings that still overflow their box.
+          await page.evaluate(() => {
+            for (const title of document.querySelectorAll(".frame h1,.frame h2")) {
+              const minimum = 16;
+              let size = parseFloat(getComputedStyle(title).fontSize);
+              while (
+                size > minimum &&
+                (title.scrollWidth > title.clientWidth + 1 ||
+                  title.scrollHeight > title.clientHeight + 1)
+              ) {
+                size = Math.max(minimum, size - 1);
+                title.style.fontSize = `${size}px`;
+              }
+            }
+          });
           const inspected = await inspectArt(page);
           const file = `${item.id}-${theme}${zh ? ".zh-CN" : ""}.png`;
           await page

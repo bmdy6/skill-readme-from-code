@@ -5,20 +5,25 @@ import { json, write, read, hash } from "./io.mjs";
 import { firstScreen } from "./screen.mjs";
 import { renderArt } from "./art.mjs";
 import { scan } from "./scan.mjs";
+// Legacy briefs used one shared array; new G1 briefs keep audience synonyms separate.
+function termsFor(brief, field) {
+  const terms = brief.keyTerms || [];
+  return Array.isArray(terms) ? terms : terms[field] || [];
+}
 export function scoreAnswers(brief, answers) {
   const norm = (s) =>
       String(s || "")
         .trim()
         .replace(/\s+/g, " "),
-    hit = (s) =>
-      (brief.keyTerms || []).some((t) =>
+    hit = (s, field) =>
+      termsFor(brief, field).some((t) =>
         String(s || "")
           .toLowerCase()
           .includes(t.toLowerCase()),
       );
   const checks = {
-    what: hit(answers.what),
-    forWhom: hit(answers.forWhom),
+    what: hit(answers.what, "what"),
+    forWhom: hit(answers.forWhom, "audience"),
     firstCommand:
       !!brief.install?.command &&
       norm(answers.firstCommand) === norm(brief.install.command),
@@ -104,7 +109,8 @@ export async function storefront(opts) {
       [
         brief.projectType,
         ...(facts.manifest.keywords || []),
-        ...(brief.keyTerms || []),
+        ...termsFor(brief, "what"),
+        ...termsFor(brief, "audience"),
         "documentation",
         "developer-tools",
         "automation",

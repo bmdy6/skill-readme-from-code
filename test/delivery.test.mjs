@@ -53,7 +53,10 @@ test("report names missing evidence and agent decisions", async () => {
 });
 test("storefront makes valid topics and a small social image", async () => {
   const work = await fs.mkdtemp(path.join(os.tmpdir(), "rfc-store-"));
-  await write(path.join(work, "brief.json"), brief);
+  await write(path.join(work, "brief.json"), {
+    ...brief,
+    keyTerms: { what: ["readme"], audience: ["developers", "engineers"] },
+  });
   const r = await storefront({
     repo: path.resolve("evals/fixtures/agent-skill"),
     work,
@@ -63,5 +66,34 @@ test("storefront makes valid topics and a small social image", async () => {
   assert.ok(r.topics.every((t) => /^[a-z0-9-]{1,50}$/.test(t)));
   assert.ok(
     (await fs.stat(path.join(work, "social-light.png"))).size < 1_000_000,
+  );
+});
+
+test("audience synonyms come from the brief and reject unrelated answers", () => {
+  const positioned = {
+    ...brief,
+    keyTerms: {
+      what: ["readme"],
+      audience: ["developers", "engineers", "programmers", "开发者", "程序员"],
+    },
+  };
+  for (const forWhom of positioned.keyTerms.audience) {
+    assert.equal(scoreAnswers(positioned, { forWhom }).checks.forWhom, true);
+  }
+  for (const forWhom of ["designers", "README writers"]) {
+    assert.equal(scoreAnswers(positioned, { forWhom }).checks.forWhom, false);
+  }
+  assert.equal(
+    scoreAnswers(positioned, { what: "A README skill" }).checks.what, true,
+  );
+  assert.equal(
+    scoreAnswers(positioned, { what: "engineers" }).checks.what, false,
+  );
+  assert.equal(
+    scoreAnswers(
+      { ...positioned, keyTerms: { what: ["readme"], audience: ["designers"] } },
+      { forWhom: "designers" },
+    ).checks.forWhom,
+    true,
   );
 });
