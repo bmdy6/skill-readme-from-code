@@ -727,3 +727,41 @@ h2 {
 .hero-link .line-number {
   line-height: 22px;
 }
+
+/* A quieter linked-source preview; retain the existing readable main-text floor. */
+.frame.hero-link {
+  padding: 12px;
+}
+.hero-link .link-panels {
+  gap: 40px;
+}
+.hero-link .head {
+  font-weight: 500;
+  padding: 8px 12px;
+}
+.hero-link .token-rows {
+  height: calc(100% - 35px);
+}
+.hero-link .link-item {
+  min-height: 44px;
+  padding: 4px 10px;
+  font-weight: 400;
+  line-height: 20px;
+}
+.hero-link .token-value {
+  font-weight: 400;
+  line-height: 20px;
+}
+.hero-link .source-line,
+.hero-link .line-number {
+  line-height: 24px;
+  font-weight: 400;
+}
+.hero-link .source-line {
+  letter-spacing: -0.3px;
+}
+.hero-link .link-status {
+  margin-top: 12px;
+  font-weight: 400;
+  font-size: 14px;
+}

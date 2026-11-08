@@ -201,7 +201,7 @@ export function linkHTML(data) {
     .map((i) =>
       i.gap
         ? '<div class="source-gap" data-label>⋯</div>'
-        : `<div class="source-line ${i.line === data.items[data.focus].line ? "cited focused-source" : i.highlight ? "cited" : ""}" data-line="${i.line}"><span class="line-number" data-label>${i.line}</span>${escape(i.text)}</div>`,
+        : `<div class="source-line ${i.line === data.items[data.focus].line ? "cited focused-source" : i.highlight ? "cited" : ""}" data-line="${i.line}"><span class="line-number" data-label>${i.line}</span>${escape(i.fullText?.trim().length <= 44 ? i.fullText.trim() : i.text)}</div>`,
     )
     .join("");
   return `<div class="link-panels"><section class="card output-panel"><div class="head">${escape(path.basename(data.output.file))}<span>${data.items.length} of ${data.total}</span></div><div class="token-rows">${rows}</div></section><section class="card source-panel"><div class="head">${escape(path.basename(data.source.file))}<span>source</span></div><div class="source-rows">${code}</div></section><svg class="link-lines" aria-hidden="true"></svg></div><p class="link-status ${data.status.verified ? "verified" : ""}" data-label>${escape(data.status.value)}</p>`;
