@@ -1,0 +1,33 @@
+{
+  "id": "core",
+  "kind": "command-run",
+  "role": "core",
+  "command": "node cli.js --no-whitespace docs/readme/config.jsonc",
+  "stdout": "{ \n  \"port\": 8080\n}\n\n",
+  "stderr": "",
+  "exitCode": 0,
+  "signal": null,
+  "durationMs": 53,
+  "timedOut": false,
+  "requiresTTY": false,
+  "environment": {
+    "node": "v20.19.2",
+    "platform": "darwin",
+    "arch": "arm64",
+    "ci": true,
+    "sharedGitHubAuth": false,
+    "stdin": "closed",
+    "isolation": "disposable copy; not an OS sandbox"
+  },
+  "input": "{ // local development\n  \"port\": 8080,\n}\n",
+  "inputFile": {
+    "file": "capture-inputs/core/config.jsonc",
+    "sha256": "59714d8007de4f464607b1f1299151bd27b46669c3ef3585b3e35e2d9000bf37"
+  },
+  "usedFiles": [
+    {
+      "file": "capture-inputs/core/config.jsonc",
+      "sha256": "59714d8007de4f464607b1f1299151bd27b46669c3ef3585b3e35e2d9000bf37"
+    }
+  ]
+}

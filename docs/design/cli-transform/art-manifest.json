@@ -1,0 +1,218 @@
+{
+  "schemaVersion": 1,
+  "accent": "#2f6f4e",
+  "files": [
+    {
+      "file": "hero-light.png",
+      "template": "hero-code",
+      "theme": "light",
+      "language": "en",
+      "kind": "fixture",
+      "captureId": "core",
+      "inputFile": {
+        "file": "capture-inputs/core/config.jsonc",
+        "sha256": "59714d8007de4f464607b1f1299151bd27b46669c3ef3585b3e35e2d9000bf37"
+      },
+      "labels": {
+        "result": "JSON"
+      },
+      "sha256": "fa81b37d99edac1c6f26a6717280e732fde1ccfbd760bfb9019e223592ac3591",
+      "bytes": 34607,
+      "cssWidth": 900,
+      "cssHeight": 267.171875,
+      "contentBounds": {
+        "left": 29,
+        "top": 41,
+        "right": 871,
+        "bottom": 226.171875
+      },
+      "contentRatio": 0.6097752792560969,
+      "contentArea": 146623.32421875,
+      "balanceRatio": 1,
+      "minMainFontSize": 24,
+      "endpoints": [],
+      "checks": {
+        "overflow": "pass",
+        "fontSize": "pass",
+        "contrast": "pass",
+        "fields": "pass",
+        "mainText": "pass",
+        "density": "pass",
+        "balance": "pass",
+        "links": "pass",
+        "size": "pass"
+      },
+      "problems": {
+        "overflow": [],
+        "fontSize": [],
+        "contrast": [],
+        "fields": [],
+        "mainText": [],
+        "density": [],
+        "balance": [],
+        "links": []
+      },
+      "width": 900,
+      "height": 267.171875
+    },
+    {
+      "file": "hero-dark.png",
+      "template": "hero-code",
+      "theme": "dark",
+      "language": "en",
+      "kind": "fixture",
+      "captureId": "core",
+      "inputFile": {
+        "file": "capture-inputs/core/config.jsonc",
+        "sha256": "59714d8007de4f464607b1f1299151bd27b46669c3ef3585b3e35e2d9000bf37"
+      },
+      "labels": {
+        "result": "JSON"
+      },
+      "sha256": "56fc0db9d98c3f922e5f7b181ea851e55899ff6dd97bad04d1ac5d7ff004cbb7",
+      "bytes": 34793,
+      "cssWidth": 900,
+      "cssHeight": 267.171875,
+      "contentBounds": {
+        "left": 29,
+        "top": 41,
+        "right": 871,
+        "bottom": 226.171875
+      },
+      "contentRatio": 0.6097752792560969,
+      "contentArea": 146623.32421875,
+      "balanceRatio": 1,
+      "minMainFontSize": 24,
+      "endpoints": [],
+      "checks": {
+        "overflow": "pass",
+        "fontSize": "pass",
+        "contrast": "pass",
+        "fields": "pass",
+        "mainText": "pass",
+        "density": "pass",
+        "balance": "pass",
+        "links": "pass",
+        "size": "pass"
+      },
+      "problems": {
+        "overflow": [],
+        "fontSize": [],
+        "contrast": [],
+        "fields": [],
+        "mainText": [],
+        "density": [],
+        "balance": [],
+        "links": []
+      },
+      "width": 900,
+      "height": 267.171875
+    },
+    {
+      "file": "hero-light.zh-CN.png",
+      "template": "hero-code",
+      "theme": "light",
+      "language": "zh-CN",
+      "kind": "fixture",
+      "captureId": "core",
+      "inputFile": {
+        "file": "capture-inputs/core/config.jsonc",
+        "sha256": "59714d8007de4f464607b1f1299151bd27b46669c3ef3585b3e35e2d9000bf37"
+      },
+      "labels": {
+        "result": "JSON"
+      },
+      "sha256": "4a29846d0f3fba8f18a6380cac4b58c8792e9cb08121511e05322cafc79d8a2c",
+      "bytes": 35172,
+      "cssWidth": 900,
+      "cssHeight": 267.171875,
+      "contentBounds": {
+        "left": 29,
+        "top": 41,
+        "right": 871,
+        "bottom": 226.171875
+      },
+      "contentRatio": 0.6097752792560969,
+      "contentArea": 146623.32421875,
+      "balanceRatio": 1,
+      "minMainFontSize": 24,
+      "endpoints": [],
+      "checks": {
+        "overflow": "pass",
+        "fontSize": "pass",
+        "contrast": "pass",
+        "fields": "pass",
+        "mainText": "pass",
+        "density": "pass",
+        "balance": "pass",
+        "links": "pass",
+        "size": "pass"
+      },
+      "problems": {
+        "overflow": [],
+        "fontSize": [],
+        "contrast": [],
+        "fields": [],
+        "mainText": [],
+        "density": [],
+        "balance": [],
+        "links": []
+      },
+      "width": 900,
+      "height": 267.171875
+    },
+    {
+      "file": "hero-dark.zh-CN.png",
+      "template": "hero-code",
+      "theme": "dark",
+      "language": "zh-CN",
+      "kind": "fixture",
+      "captureId": "core",
+      "inputFile": {
+        "file": "capture-inputs/core/config.jsonc",
+        "sha256": "59714d8007de4f464607b1f1299151bd27b46669c3ef3585b3e35e2d9000bf37"
+      },
+      "labels": {
+        "result": "JSON"
+      },
+      "sha256": "30f2f4d1cc19ec30decb588775d632629c44b106d299bfb49a9aca7c0dd31c4c",
+      "bytes": 35385,
+      "cssWidth": 900,
+      "cssHeight": 267.171875,
+      "contentBounds": {
+        "left": 29,
+        "top": 41,
+        "right": 871,
+        "bottom": 226.171875
+      },
+      "contentRatio": 0.6097752792560969,
+      "contentArea": 146623.32421875,
+      "balanceRatio": 1,
+      "minMainFontSize": 24,
+      "endpoints": [],
+      "checks": {
+        "overflow": "pass",
+        "fontSize": "pass",
+        "contrast": "pass",
+        "fields": "pass",
+        "mainText": "pass",
+        "density": "pass",
+        "balance": "pass",
+        "links": "pass",
+        "size": "pass"
+      },
+      "problems": {
+        "overflow": [],
+        "fontSize": [],
+        "contrast": [],
+        "fields": [],
+        "mainText": [],
+        "density": [],
+        "balance": [],
+        "links": []
+      },
+      "width": 900,
+      "height": 267.171875
+    }
+  ]
+}

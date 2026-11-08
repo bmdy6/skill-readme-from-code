@@ -1,0 +1,22 @@
+:root {
+  --color-primary: #2563eb;
+  --color-surface: #ffffff;
+  --color-text: #172033;
+}
+@font-face { font-family: "Fixture Sans"; src: url("/assets/demo.woff2"); font-weight: 400 700; }
+body { margin: 0; background: white; color: #172033; font: 16px/1.5 Arial, sans-serif; }
+main { padding: 32px; max-width: 960px; margin: auto; }
+h1 { font-size: 25.00px; line-height: 1.2; }
+h2 { font-size: 20.00px; }
+.btn-primary {
+  background-color: var(--color-primary);
+  color: white; padding: 12px 24px; border: 0; border-radius: 8px;
+}
+.card { padding: 16px; margin-top: 24px; border: 1px solid #dde1e8; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.1); }
+.near { background-color: #2564eb; padding: 16px; }
+.overlay { background: rgba(0, 0, 0, .5); padding: 8px; }
+.odd { font-size: 13px; }
+.muted { color: #bbbbbb; }
+.hero { background-image: url("/assets/back.jpg"); }
+@media (max-width: 600px) { main { padding: 16px; } }
+.font-demo { font-family: 'Fixture Sans', sans-serif; }

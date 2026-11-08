@@ -1,0 +1,24 @@
+{
+  "accent": "#2f6f4e",
+  "images": [
+    {
+      "id": "hero",
+      "template": "hero-code",
+      "captureId": "core",
+      "fixture": true,
+      "compact": true,
+      "title": {
+        "en": "Commented config → JSON",
+        "zh-CN": "带注释配置 → 纯 JSON"
+      },
+      "subtitle": {
+        "en": "Real CLI output; comments and trailing commas removed.",
+        "zh-CN": "真实命令输出：移除注释与尾随逗号。"
+      },
+      "resultLabel": {
+        "en": "JSON",
+        "zh-CN": "JSON"
+      }
+    }
+  ]
+}

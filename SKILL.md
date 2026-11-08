@@ -104,10 +104,12 @@ a running web app. Keep the result short enough to read at README width.
 Run `art --repo DIR --spec DIR/docs/readme/art.json --out DIR/docs/readme`.
 Every image gets light/dark × en/zh-CN variants and a self-check manifest.
 Keep 40px top/bottom air and let ordinary canvas height follow content. Primary
-text is >=16 CSS px; labels >=13. The union of actual text/image element rectangles (text, loaded images
-excluding container-only panels and empty boxes) must cover >=60%
-of the canvas area. Balance both sides. Terminal/code panels need four meaningful
-lines; use a narrower canvas for shorter runs. Social retains its required size.
+text is >=16 CSS px; labels >=13. The union of text-bearing element and
+loaded-image rectangles (excluding container-only panels and empty boxes) must
+cover >=60% of the canvas area. Balance both sides. Single terminal/code
+transcripts should show four meaningful lines when the actual output has them; use a narrower canvas for shorter runs. Short paired
+transformations use compact hero-code with a recorded input, not added wrapper
+text. Social retains its required size.
 For source-linked products, prefer hero-link (schema in reference.md): use real
 hashed capture outputs and source lines, never hand-authored rows. Keep the
 strongest existing promise; let the hero explain its benefit, not repeat it.

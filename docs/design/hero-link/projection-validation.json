@@ -1,0 +1,107 @@
+{
+  "round": 4,
+  "items": 25,
+  "mismatches": [],
+  "checks": [
+    {
+      "name": "color.text",
+      "match": true
+    },
+    {
+      "name": "color.surface",
+      "match": true
+    },
+    {
+      "name": "color.border",
+      "match": true
+    },
+    {
+      "name": "color.accent",
+      "match": true
+    },
+    {
+      "name": "color.subtle",
+      "match": true
+    },
+    {
+      "name": "fontFamily.body",
+      "match": true
+    },
+    {
+      "name": "shadow.card",
+      "match": true
+    },
+    {
+      "name": "spacing.1",
+      "match": true
+    },
+    {
+      "name": "spacing.2",
+      "match": true
+    },
+    {
+      "name": "spacing.3",
+      "match": true
+    },
+    {
+      "name": "spacing.4",
+      "match": true
+    },
+    {
+      "name": "spacing.5",
+      "match": true
+    },
+    {
+      "name": "spacing.6",
+      "match": true
+    },
+    {
+      "name": "fontSize.base",
+      "match": true
+    },
+    {
+      "name": "fontSize.lg",
+      "match": true
+    },
+    {
+      "name": "fontSize.xl",
+      "match": true
+    },
+    {
+      "name": "radius.sm",
+      "match": true
+    },
+    {
+      "name": "radius.md",
+      "match": true
+    },
+    {
+      "name": "radius.lg",
+      "match": true
+    },
+    {
+      "name": "maxWidth.1",
+      "match": true
+    },
+    {
+      "name": "lineHeight.1",
+      "match": true
+    },
+    {
+      "name": "lineHeight.2",
+      "match": true
+    },
+    {
+      "name": "lineHeight.3",
+      "match": true
+    },
+    {
+      "name": "fontWeight.1",
+      "match": true
+    },
+    {
+      "name": "fontWeight.2",
+      "match": true
+    }
+  ]
+}

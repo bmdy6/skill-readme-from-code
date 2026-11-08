@@ -1,0 +1,44 @@
+{
+  "id": "core",
+  "kind": "command-run",
+  "role": "core",
+  "command": "node docs/readme/demo.mjs",
+  "stdout": "tokens.json · 25 design tokens\ntokens.css · CSS variables emitted\nsources.json · selectors and CSS line:column\n10/10 sampled sources still match\n",
+  "stderr": "",
+  "exitCode": 0,
+  "signal": null,
+  "durationMs": 13510,
+  "timedOut": false,
+  "requiresTTY": false,
+  "environment": {
+    "node": "v20.19.2",
+    "platform": "darwin",
+    "arch": "arm64",
+    "ci": true,
+    "sharedGitHubAuth": false,
+    "stdin": "closed",
+    "isolation": "disposable copy; not an OS sandbox"
+  },
+  "outputs": [
+    {
+      "file": "capture-files/core/docs/readme/run/token-rows.json",
+      "sha256": "f1a31918391f255bcd801661ee7411bb692ec62a34087ec7f40ab6cfe1bc31db"
+    },
+    {
+      "file": "capture-files/core/docs/readme/run/tokens.json",
+      "sha256": "1b1e5eaa1a0fa4af7342371aac7161989dce96aed137b2db73ff04734b9d34cf"
+    },
+    {
+      "file": "capture-files/core/docs/readme/run/sources.json",
+      "sha256": "70b7ca868cede7ee26b9a599e5dbf614a337b8b127ed32385c48899b9f452742"
+    },
+    {
+      "file": "capture-files/core/docs/readme/run/tokens.css",
+      "sha256": "2264b339d94ae9012845fa396a573ae1feb6613133331f09f1824a04162b0e40"
+    },
+    {
+      "file": "capture-files/core/docs/readme/run/status.json",
+      "sha256": "2bdcd2f88060c49b489dbadf85170d6d6f59dd6a4c37cac6a20a0e778caa7082"
+    }
+  ]
+}

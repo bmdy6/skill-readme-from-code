@@ -1,0 +1,31 @@
+/**
+ * Do not edit directly, this file was auto-generated.
+ */
+
+:root {
+  --color-text: #172033;
+  --color-surface: #ffffff;
+  --color-border: #dde1e8;
+  --color-accent: #2564eb;
+  --color-subtle: #eef2fa;
+  --font-family-body: Arial, sans-serif;
+  --shadow-card: 0px 4px 16px 0px rgba(0, 0, 0, 0.1);
+  --spacing-1: 0px;
+  --spacing-2: 8px;
+  --spacing-3: 16px;
+  --spacing-4: 16.6px;
+  --spacing-5: 24px;
+  --spacing-6: 32px;
+  --font-size-base: 16px;
+  --font-size-lg: 20px;
+  --font-size-xl: 25px;
+  --radius-sm: 0px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --max-width-1: 960px;
+  --line-height-1: 19.5px;
+  --line-height-2: 24px;
+  --line-height-3: 30px;
+  --font-weight-1: 400;
+  --font-weight-2: 700;
+}

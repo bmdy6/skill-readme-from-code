@@ -47,7 +47,7 @@ workflows, images, readmeTests, remote, optional metadata and facts. Each fact i
 `{id, claim, value, source: "relative/file:line"}`. Manifest fields, license,
 entrypoints, workflow paths, images and README-locking tests are discovered.
 Project types: cli, library, web-app, agent-skill, other. Unknown licenses have
-null SPDX; an agent must investigate instead of inventing a badge. v0.1 parses
+null SPDX; an agent must investigate instead of inventing a badge. The scanner parses
 Node manifests; other language commands require agent-supplied sourced facts.
 readme-competitors.json may provide a string array of competitor terms. V6
 excludes manifest dependencies from this list; --deny-words always applies.
@@ -61,7 +61,7 @@ number. `id` and `claim` are nonempty strings; booleans, numbers, paraphrases,
 blank values, wrong lines and paths outside the repository are rejected.
 
 ```json
-[{"id":"copy-execution","claim":"Commands run in disposable copies.","value":"const temp = await fs.mkdtemp", "source":"scripts/lib/execute.mjs:11"}]
+[{"id":"copy-execution","claim":"Commands run in disposable copies.","value":"const temp = await fs.mkdtemp", "source":"scripts/lib/execute.mjs:17"}]
 ```
 
 claims.json in target docs/readme contains an array:
@@ -79,7 +79,7 @@ traceability; an agent must still review whether the cited line supports it.
 {
   "projectType":"agent-skill",
   "audience":"repository maintainers",
-  "oneLiner":{"en":"Help maintainers write a README with evidence.","zh-CN":"帮助维护者写出有证据的项目介绍。"},
+  "oneLiner":{"en":"Turn repository facts into a README maintainers can verify.","zh-CN":"把仓库事实变成维护者可核验的项目介绍。"},
   "keyTerms":{"what":["readme"],"audience":["maintainers","developers","engineers","programmers","开发者","程序员"]},
   "install":{"command":"npx skills add bmdy6/skill-readme-from-code"},
   "firstUse":"Write a source-backed README for this repository.",
@@ -126,8 +126,9 @@ capture secrets: inspect both the command and outputs before committing them.
 
 ## Art data and reproduction
 
-A spec has accent and images. Each image has unique id, template, localized title
-and subtitle. Provide en and zh-CN for every authored text field. Terminal data
+A spec has accent and images. Each image has unique id and template. Templates
+other than hero-link require localized title and subtitle; hero-link uses actual
+filenames and data instead. Provide en and zh-CN for every authored text field. Terminal data
 must use captureId. Capture lookup checks work/captures then the spec's sibling
 captures directory. Art copies captures and screen inputs into its output.
 
@@ -143,6 +144,7 @@ captures directory. Art copies captures and screen inputs into its output.
 
 | Template | Extra data |
 |---|---|
+| hero-link | captureId plus hashed JSON selectors and verified source lines; see the v0.2 schema below. |
 | hero-terminal | captureId required; command and stdout/stderr come from capture. |
 | hero-prompt | prompt plus captureId, or illustration:true and localized result. |
 | hero-code | captureId required; command → actual output. |
@@ -173,15 +175,16 @@ theme/language variants and orphaned docs/readme images. V5 checks placeholders,
 badges, license, installation identity and claim references. V6 checks word and
 sentence budgets, badges, emoji headings, superlatives and forbidden terms.
 V7 checks heading structure/order, identical commands and corresponding images.
-V8 runs discovered test commands in disposable copies; absent commands are skip.
-V9 checks art self-checks and hashes. Audit only runs V2–V7.
+V8 runs discovered or explicitly selected project test commands in disposable
+copies; absent commands and explicit projectTests.skip are reported as skip.
+V9 checks art self-checks, hashes and desktop display-scaled primary fonts. Audit only runs V2–V7.
 
 V5 supports common SPDX licenses (MIT, Apache-2.0, GPL-3.0-only, BSD-3-Clause).
 V7 recognizes bilingual skeleton section names and checks other translated headings structurally. A source citation is not a semantic proof. A desktop screenshot uses Markdown
 rendered with GitHub styling and geometry, not a claim about every live browser
 layout or authenticated repository UI. Test copies can use network; they are not
 a malware boundary. No GIF recording, automatic web-app capture, settings
-changes, publishing or CI drift checking are included in v0.1.
+changes, publishing or CI drift checking are included in v0.2.
 
 Stranger scoring requires normalized firstCommand equality, >=1 keyTerms.what hit
 in what, >=1 keyTerms.audience hit in forWhom, and wouldTry exactly yes.
@@ -191,13 +194,15 @@ It is a simple acceptance heuristic, not research on users' likelihood of starri
 response and confusing[]; no response means not-run. Reports do not suppress
 failures or missing evidence.
 
-## Replaying the recorded acceptance
+## Replaying the historical acceptance
 
 The generated brief and command plan are committed in docs/readme. To replay,
 pass --brief TARGET/docs/readme/brief.json and --plan
 TARGET/docs/readme/command-plan.json to verify. The private clone plan explicitly
 shares the already-authorized gh identity; no token is stored in these files.
-Recorded reports are in docs/evidence. The self-install command installs main.
+Historical v0.1 reports are in docs/evidence and remain unchanged. The self-install
+command installs main. Current portable v0.2 examples are in docs/design/hero-link
+and docs/design/cli-transform; their READMEs provide regeneration commands.
 
 
 ## Round 2 evidence contracts (R1–R6)
@@ -225,9 +230,10 @@ heading IDs are heading:README.md:Original title. Report prints every removal.
 A missing baseline is skip, never a claim of proven information retention.
 
 Art uses auto height, 40px top/bottom padding, primary text >=16px, labels >=13px,
-and content bounds >=60% of canvas area. Bounds include visible text, loaded
-images and nonempty semantic cards, not the whole frame or empty boxes. V9
-requires mainText and density passes in addition to the original checks.
+and actual content area >=60% of canvas area. The union includes text-bearing
+element and loaded-image rectangles, excluding container-only cards and empty
+boxes. V9 requires mainText, density and balance passes, plus links for hero-link,
+in addition to the original checks.
 Short terminal/code examples use a narrower canvas; social stays 1280×640.
 The baseline comparison must be viewed at equal widths, including dark output.
 
