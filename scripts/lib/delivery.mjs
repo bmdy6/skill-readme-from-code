@@ -195,6 +195,44 @@ export async function report(opts) {
       path.join(opts.repo || ".", "docs/readme/art-manifest.json"),
       { files: [] },
     );
+  const blind = await json(
+    opts["blind-results"] || path.join(opts.work, "stranger/blind-result.json"),
+    { status: "not-run" },
+  );
+  const readers = blind.readers || [];
+  const complete =
+    readers.length === 3 &&
+    readers.every(
+      (r) =>
+        ["before", "after"].includes(r.winner) &&
+        r.status === (r.winner === "after" ? "pass" : "fail") &&
+        ["A", "B"].includes(r.answers?.choice) &&
+        typeof r.answers?.why === "string" &&
+        r.answers.why.trim(),
+    );
+  const wins = readers.filter((r) => r.winner === "after").length;
+  const won = complete && wins >= 2;
+  const replaceReadme = won && after?.ok === true;
+  const outcome = {
+    status: complete ? (won ? "pass" : "fail") : "not-run",
+    wins,
+    readers: readers.length,
+    replaceReadme,
+    conclusion:
+      complete && !won
+        ? "保留现有 README"
+        : replaceReadme
+          ? "新版赢得盲选，可提交替换 PR 供审查"
+          : "交付待验证，保留现有 README",
+    action: replaceReadme
+      ? "With user authorization, open a replacement PR for review."
+      : "Do not open a replacement PR.",
+  };
+  await write(path.join(opts.work, "delivery.json"), outcome);
+  const decision = `${outcome.conclusion}\n\nBlind choice: ${complete ? `${wins}/3` : "not-run (requires exactly three valid fresh readers)"}. ${outcome.action}`;
+  const improvements =
+    (blind.improvements || []).map((s) => `- ${s}`).join("\n") ||
+    "No improvement points recorded; review the verbatim reader feedback above.";
   const screen = (r) => r?.checks?.find((c) => c.id === "V2")?.screen;
   const screenshots = (label, screen, dir) =>
     screen
@@ -202,7 +240,7 @@ export async function report(opts) {
           .map(([name, v]) => `![${label} ${name}](${dir}/${v.screenshot})`)
           .join("\n\n")
       : `${label}: not-run`;
-  const text = `# README delivery\n\nBefore: ${before?.score ?? "not-run"}/100. After: ${after?.score ?? "not-run"}/100.\n\n${screenshots("Before", screen(before), "before")}\n\n${screenshots("After", screen(after), ".")}\n\nRemote images: before=${screen(before)?.remoteImages || "not-recorded"}; after=${screen(after)?.remoteImages || "not-recorded"}. neutral-placeholder means all remote images use the same neutral placeholder (--offline).\n\n## Verification\n\n| Check | Status | Evidence |\n|---|---|---|\n${(after?.checks || []).map((c) => `| ${c.id} | ${c.status} | ${(c.issues?.join("; ") || c.reason || c.warnings?.join("; ") || "Passed").replace(/\|/g, "\\|")} |`).join("\n")}\n\n## Stranger\n\n${JSON.stringify(stranger, null, 2)}\n\n## Blind choice\n\n${JSON.stringify(await json(path.join(opts.work, "stranger/blind-result.json"), { status: "not-run" }), null, 2)}\n\n## Images\n\n${art.files.map((f) => `- ${f.file}: ${f.kind}; ${Object.values(f.checks).every((s) => s === "pass") ? "self-check pass" : "self-check fail"}`).join("\n") || "not-run"}\n\n## Gates\n\nG1: ${brief.gates?.G1?.decidedBy || brief.decidedBy || "not recorded"}. G2: ${brief.gates?.G2?.decidedBy || brief.decidedBy || "not recorded"}.\n\n${JSON.stringify(brief.gates || {}, null, 2)}\n\n## Intentional deletions\n\n${JSON.stringify(after?.checks?.find((c) => c.id === "V11")?.intentionalDeletions || [], null, 2)}\n\n## Not verified\n\n${[...(!after ? ["- Verification not-run"] : []), ...(!before ? ["- Before audit not-run"] : []), ...(after?.checks?.filter((c) => c.status !== "pass").map((c) => `- ${c.id}: ${c.status}; ${c.reason || c.issues?.join("; ")}`) || []), ...(stranger.status === "not-run" ? [`- Stranger not-run: ${stranger.reason}`] : []), "- External links only checked when --online was requested.", `- Renderer: ${screen(after)?.renderer || "not-run"}${screen(after)?.fallbackReason ? `; ${screen(after).fallbackReason}` : ""}.`].join("\n")}\n`;
+  const text = `# README delivery\n\n${decision}\n\nBefore: ${before?.score ?? "not-run"}/100. After: ${after?.score ?? "not-run"}/100.\n\n${screenshots("Before", screen(before), "before")}\n\n${screenshots("After", screen(after), ".")}\n\nRemote images: before=${screen(before)?.remoteImages || "not-recorded"}; after=${screen(after)?.remoteImages || "not-recorded"}. neutral-placeholder means all remote images use the same neutral placeholder (--offline).\n\n## Verification\n\n| Check | Status | Evidence |\n|---|---|---|\n${(after?.checks || []).map((c) => `| ${c.id} | ${c.status} | ${(c.issues?.join("; ") || c.reason || c.warnings?.join("; ") || "Passed").replace(/\|/g, "\\|")} |`).join("\n")}\n\n## Stranger\n\n${JSON.stringify(stranger, null, 2)}\n\n## Blind choice\n\n${JSON.stringify(blind, null, 2)}\n\n## Improvements to borrow\n\n${improvements}\n\n## Images\n\n${art.files.map((f) => `- ${f.file}: ${f.kind}; ${Object.values(f.checks).every((s) => s === "pass") ? "self-check pass" : "self-check fail"}`).join("\n") || "not-run"}\n\n## Gates\n\nG1: ${brief.gates?.G1?.decidedBy || brief.decidedBy || "not recorded"}. G2: ${brief.gates?.G2?.decidedBy || brief.decidedBy || "not recorded"}.\n\n${JSON.stringify(brief.gates || {}, null, 2)}\n\n## Intentional deletions\n\n${JSON.stringify(after?.checks?.find((c) => c.id === "V11")?.intentionalDeletions || [], null, 2)}\n\n## Not verified\n\n${[...(!after ? ["- Verification not-run"] : []), ...(!before ? ["- Before audit not-run"] : []), ...(after?.checks?.filter((c) => c.status !== "pass").map((c) => `- ${c.id}: ${c.status}; ${c.reason || c.issues?.join("; ")}`) || []), ...(stranger.status === "not-run" ? [`- Stranger not-run: ${stranger.reason}`] : []), "- External links only checked when --online was requested.", `- Renderer: ${screen(after)?.renderer || "not-run"}${screen(after)?.fallbackReason ? `; ${screen(after).fallbackReason}` : ""}.`].join("\n")}\n`;
   await write(path.join(opts.work, "pr-body.md"), text);
   return text;
 }

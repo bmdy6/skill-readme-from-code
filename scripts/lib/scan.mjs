@@ -1,7 +1,7 @@
 import path from "node:path";
 import { execFileSync } from "node:child_process";
-import { files, read, json } from "./io.mjs";
-import { headings } from "./markdown.mjs";
+import { files, read, json, hash } from "./io.mjs";
+import { headings, badges } from "./markdown.mjs";
 export function gitRepo(repo) {
   try {
     return (
@@ -127,7 +127,8 @@ export async function scan(repo, { github = true } = {}) {
       /* Optional network metadata is not a code fact. */
     }
   }
-  const integrations = [];
+  const integrations = [],
+    readmeBadges = [];
   const toolNames = [
     "Claude Code",
     "Codex",
@@ -148,6 +149,22 @@ export async function scan(repo, { github = true } = {}) {
   const readmes = [];
   for (const file of ["README.md", "README.zh-CN.md"])
     if (texts[file]) {
+      const counts = new Map();
+      for (const badge of badges(texts[file])) {
+        const key = hash(JSON.stringify([badge.src, badge.href])).slice(0, 16);
+        const n = (counts.get(key) || 0) + 1;
+        counts.set(key, n);
+        const id = `badge:${file}:${key}:${n}`;
+        add(id, "Existing README status badge", badge, file, badge.src);
+        facts.at(-1).kind = "badge";
+        readmeBadges.push({
+          ...badge,
+          id,
+          kind: "badge",
+          readme: file,
+          source: facts.at(-1).source,
+        });
+      }
       readmes.push({
         file,
         headings: headings(texts[file])
@@ -208,7 +225,7 @@ export async function scan(repo, { github = true } = {}) {
     remote,
     metadata,
     competitorTerms: alternativeTerms,
-    readmeSnapshot: { readmes, integrations },
+    readmeSnapshot: { readmes, integrations, badges: readmeBadges },
     facts,
   };
 }

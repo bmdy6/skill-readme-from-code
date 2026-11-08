@@ -191,7 +191,7 @@ export async function retentionCheck(repo, opts = {}) {
     intentionalDeletions: [],
   });
   const { read } = await import("./io.mjs");
-  const { headings, links } = await import("./markdown.mjs");
+  const { headings, links, badges } = await import("./markdown.mjs");
   const issues = [],
     preserved = [],
     deleted = [];
@@ -209,6 +209,21 @@ export async function retentionCheck(repo, opts = {}) {
     ).test(text);
   for (const old of baseline.readmes || []) {
     const md = await read(path.join(repo, old.file));
+    const remaining = badges(md);
+    for (const badge of (baseline.badges || []).filter(
+      (b) => b.readme === old.file,
+    )) {
+      const index = remaining.findIndex(
+        (b) => b.src === badge.src && b.href === badge.href,
+      );
+      if (index >= 0) {
+        remaining.splice(index, 1);
+        preserved.push({ id: badge.id, in: old.file });
+      } else if (!accounted(badge.id))
+        issues.push(
+          `Unaccounted badge: ${old.file}: ${badge.alt || badge.src} (${badge.id})`,
+        );
+    }
     const sources = [{ file: old.file, text: md }];
     for (const target of links(md)) {
       const rel = target.split("#")[0];

@@ -34,12 +34,15 @@ path before making a claim. Inspect readmeTests: preserve their guarantee when
 rewriting README content. Code facts have stable IDs and `file:line` sources.
 Add specific feature facts only after reading and checking that source line.
 GitHub About/topics are optional context, not source-code evidence.
-Keep the first scan's baseline.json: it snapshots old H2 headings and integration
-facts. Facts with kind integration describe compatible tools/platforms/runtimes;
+Keep the first scan's baseline.json: it snapshots old H2 headings, integration
+facts and each status badge (image URL, target URL, source and stable ID).
+Facts with kind integration describe compatible tools/platforms/runtimes;
 kind alternative describes competitors. Never remove compatibility names merely
 to avoid naming alternatives. V11 accounts for every old H2 and integration:
 keep it, move it to a docs page linked by the README, or record its ID and a
-concrete reason in docs/readme/retention.json intentionalDeletions. Report them.
+concrete reason in docs/readme/retention.json intentionalDeletions. Each old badge
+must stay in its README or have its ID and a specific deletion reason there
+(e.g. dead status endpoint or a false claim). Report every deletion.
 
 Run `node scripts/run.mjs audit --repo DIR --work WORK/before` before editing.
 Keep the old score and desktop light/dark and mobile screenshots. Do not remove
@@ -183,7 +186,11 @@ appeals most (record only). Score its JSON with stranger score; all five checks
 must pass. Also run stranger blind-prepare --before OLD --after NEW: A/B labels
 are randomized and the mapping is kept outside the reader's image directory.
 Give a fresh reader only A.png, B.png and questions.md; never reveal old/new.
-Run stranger blind-score --answers FILE. The new version must win. Preserve
+Run stranger blind-score --answers FILE for each of exactly three fresh readers.
+The new version wins only with at least 2/3 choices. If it wins fewer than two,
+the delivery conclusion is "保留现有 README": keep the existing README and do
+not open a replacement PR. Report readers' verbatim words and improvements to
+borrow. Do not add readers or rerun rounds to overturn a loss. Preserve
 random labels, hashes, original answers and failed attempts; never answer or
 edit the stranger's choice. Preserve confusing[] verbatim. If an independent reader cannot run,
 use `stranger score --not-run 'specific reason'` and disclose this in the PR.
@@ -193,9 +200,16 @@ use `stranger score --not-run 'specific reason'` and disclose this in the PR.
 Run `storefront --repo DIR` for suggested About (<=120 characters), 5–8 topics
 and a 1280×640 social image; apply no settings. Run `report --repo DIR` for a
 PR body with before/after scores/screenshots, verify, stranger result, image
-provenance, gate decisions and unverified areas. Link screenshots in the PR.
+provenance, gate decisions and unverified areas. Aggregate the three untouched
+blind-score results as {readers: [RESULT1, RESULT2, RESULT3], improvements: [...]}
+in WORK/stranger/blind-result.json (or pass --blind-results FILE). report writes
+delivery.json and pr-body.md for either outcome, including "保留现有 README"
+when the new version wins fewer than 2/3. This is a completed delivery: return
+the report, verbatim reader feedback and improvements; do not open a replacement
+PR. Missing/invalid blind evidence remains not-run and cannot authorize replacement.
+Link screenshots in a replacement PR only when the new version wins and verify passes.
 
-With user authorization, create `readme/YYYYMMDD`, inspect the diff, run any
-user-supplied private/denied word scan, commit and open a PR when gh and remote
+After a blind win and passing verify, with user authorization, create
+`readme/YYYYMMDD`, inspect the diff, run any user-supplied private/denied word scan, commit and open a PR when gh and remote
 are available. Existing authorized branches may be reused. Never merge. Keep
 unrelated work and private inputs out of the diff. Report the PR and limitations.

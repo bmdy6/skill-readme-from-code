@@ -50,3 +50,10 @@ Retain concise original navigation when it helps readers explore before installi
 For dense source lines, use the template's explicit single-line excerpts; preserve
 full source files and all citation checks. A cluttered preview is not stronger
 proof. Keep ellipses visible and make the recorded run/full source reachable.
+
+Preserve truthful existing status badges (CI, version, license and runtime) by
+default, directly below the one-sentence introduction. Account for every badge
+from baseline.json: retain its image and destination, or record its stable ID
+and a specific reason in docs/readme/retention.json intentionalDeletions (e.g.
+the status endpoint is dead or the claim is false). Removing badges for visual
+simplicity is not the default. V11 fails unaccounted badge deletions.

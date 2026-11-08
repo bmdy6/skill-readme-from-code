@@ -29,7 +29,7 @@ there is no automatic `write` CLI command.
 | stranger prepare | --repo DIR [--local] [--offline] | stranger/first-screen-desktop.png, desktop-dark/mobile PNG, questions.md, result.json (not-run). |
 | stranger score | --answers FILE or --not-run 'reason' | stranger/result.json. Five independent checks; confusing[] is preserved. |
 | storefront | --repo DIR | storefront.md, social-light.png and storefront-art/. Suggestions only. |
-| report | --repo DIR [--before DIR] | pr-body.md. Before defaults to work/before; absent evidence is not-run. |
+| report | --repo DIR [--before DIR] [--blind-results FILE] | pr-body.md and delivery.json. Before defaults to work/before; absent evidence is not-run. |
 
 `--online` checks HTTP(S) links with HEAD and a ten second timeout. Some sites
 reject HEAD; inspect such findings. Offline V3 checks local files and Markdown
@@ -234,7 +234,23 @@ baseline.json; commit it to docs/readme/baseline.json for portable V11 replay.
 V11 checks every old H2 and integration in the new README or linked docs. An
 intentional removal needs {id,reason} in retention.json intentionalDeletions;
 heading IDs are heading:README.md:Original title. Report prints every removal.
+The snapshot also records each detected status badge with stable ID, source,
+image URL and destination URL. Markdown (including reference images) and HTML
+badges using shields.io, badgen.net or badge asset paths are recognized. V11
+checks each badge in its original README; changed destinations, plain URLs and
+code examples do not preserve a badge. Use its ID and a specific reason in
+intentionalDeletions to remove it. Legacy baselines without badges cannot prove
+badge retention; keep/augment the snapshot from the actual old README.
 A missing baseline is skip, never a claim of proven information retention.
+
+For report, save {readers: [RESULT1, RESULT2, RESULT3], improvements: ["..."]}
+to WORK/stranger/blind-result.json or --blind-results FILE. Each RESULT is an
+untouched blind-score result from a fresh reader; do not change the questions
+or scoring. At least 2/3 after wins are required. Fewer wins completes delivery
+with "保留现有 README" and no replacement PR, with verbatim feedback and points
+to borrow in pr-body.md. delivery.json records the conclusion and replaceReadme.
+Missing/incomplete/invalid readers are not-run; replacement also requires verify
+ok=true. report exits normally for a losing but successfully generated report.
 
 Art uses auto height, 40px top/bottom padding, primary text >=16px, labels >=13px,
 and actual content area >=60% of canvas area. The union includes text-bearing
