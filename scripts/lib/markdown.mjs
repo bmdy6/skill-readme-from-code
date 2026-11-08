@@ -41,6 +41,47 @@ export function images(md) {
   });
   return out;
 }
+// Parse rendered Markdown (including reference images), not examples in fences.
+// Badge endpoints and explicitly named local badge assets are status signals.
+export function badges(md) {
+  const out = [];
+  const add = (src, alt, href = null) => {
+    if (
+      src &&
+      /(?:shields\.io\/|badgen\.net\/|(?:travis-ci\.(?:org|com)|circleci\.com|codecov\.io|coveralls\.io)\/|\/badge(?:[/.?_-]|$)|(?:^|[/_-])badge[s]?[._-])/i.test(
+        src,
+      )
+    )
+      out.push({ src, alt: alt || "", href });
+  };
+  const visit = (list, href = null) => {
+    const parentHref = href;
+    for (const t of list) {
+      if (t.type === "image") add(t.href, t.text, href);
+      else if (t.type === "html") {
+        let anchor = href;
+        const attr = (tag, name) =>
+          tag
+            .match(new RegExp(`\\b${name}\\s*=\\s*["']([^"']*)["']`, "i"))?.[1]
+            ?.replace(/&amp;/g, "&");
+        for (const m of t.text.matchAll(
+          /<(?:a|img)\b(?:"[^"]*"|'[^']*'|[^'">])*>|<\/a\s*>/gi,
+        )) {
+          if (/^<a\b/i.test(m[0])) anchor = attr(m[0], "href") || null;
+          else if (/^<\/a/i.test(m[0])) anchor = parentHref;
+          else add(attr(m[0], "src"), attr(m[0], "alt"), anchor);
+        }
+        // Inline HTML links and images can be separate lexer tokens.
+        href = anchor;
+      } else if (t.type !== "code" && t.type !== "codespan") {
+        if (t.tokens) visit(t.tokens, t.type === "link" ? t.href : href);
+        if (t.items) for (const item of t.items) visit(item.tokens, href);
+      }
+    }
+  };
+  visit(tokens(md));
+  return out;
+}
 export function links(md) {
   const out = images(md)
     .map((i) => i.src)
@@ -60,3 +101,32 @@ export const prose = (md) =>
     .replace(/^.*\|.*$/gm, "")
     .replace(/<picture>[\s\S]*?<\/picture>/gi, "")
     .replace(/!\[[^\]]*\]\([^)]*\)|<[^>]*>|https?:\/\/\S+/g, "");
+
+// Keep list items independent; a list marker is structure, never a sentence.
+export function proseParagraphs(md) {
+  const out = [];
+  const visit = (list) => {
+    for (const t of list) {
+      if (t.type === "list") for (const item of t.items) visit(item.tokens);
+      else if (t.type === "blockquote") visit(t.tokens);
+      else if (t.type === "paragraph" || t.type === "text")
+        out.push(prose(t.text));
+    }
+  };
+  visit(tokens(md));
+  return out;
+}
+
+// Use the same visible lead forms as firstScreen; captions are not taglines.
+export function leadText(md) {
+  for (const t of tokens(md)) {
+    if (t.type === "html") {
+      const lead = t.text.match(/<(h[23]|blockquote)\b[^>]*>([\s\S]*?)<\/\1>/i);
+      if (lead) return lead[2].replace(/<[^>]*>/g, "").trim();
+    }
+    if (t.type === "heading" && [2, 3].includes(t.depth)) return t.text;
+    if (t.type === "blockquote") return prose(t.text).trim();
+    if (t.type === "paragraph" && !/^!?\[/.test(t.text) && !/^</.test(t.text))
+      return t.text;
+  }
+}

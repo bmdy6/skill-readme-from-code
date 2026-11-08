@@ -1,3 +1,4 @@
+import { prepareLink } from "./art-link.mjs";
 import path from "node:path";
 import fs from "node:fs/promises";
 import { json, hash, read } from "./io.mjs";
@@ -63,6 +64,19 @@ export async function heroRelevance(repo, brief, facts) {
         issues.push(
           `${file}: Hero score needs a calculation in its immediate caption`,
         );
+    }
+  }
+  if (hero?.template === "hero-link" && capture) {
+    try {
+      const link = await prepareLink(hero, capture, base, base);
+      const manifest = await json(path.join(base, "art-manifest.json"));
+      for (const f of manifest?.files?.filter(
+        (f) => f.captureId === hero.captureId && f.template === "hero-link",
+      ) || [])
+        if (f.link?.source?.sha256 !== link.source.sha256)
+          issues.push("hero-link source changed since rendering");
+    } catch (e) {
+      issues.push(e.message);
     }
   }
   if (!capture) issues.push("Hero requires a core capture");
@@ -177,7 +191,7 @@ export async function retentionCheck(repo, opts = {}) {
     intentionalDeletions: [],
   });
   const { read } = await import("./io.mjs");
-  const { headings, links } = await import("./markdown.mjs");
+  const { headings, links, badges } = await import("./markdown.mjs");
   const issues = [],
     preserved = [],
     deleted = [];
@@ -195,6 +209,21 @@ export async function retentionCheck(repo, opts = {}) {
     ).test(text);
   for (const old of baseline.readmes || []) {
     const md = await read(path.join(repo, old.file));
+    const remaining = badges(md);
+    for (const badge of (baseline.badges || []).filter(
+      (b) => b.readme === old.file,
+    )) {
+      const index = remaining.findIndex(
+        (b) => b.src === badge.src && b.href === badge.href,
+      );
+      if (index >= 0) {
+        remaining.splice(index, 1);
+        preserved.push({ id: badge.id, in: old.file });
+      } else if (!accounted(badge.id))
+        issues.push(
+          `Unaccounted badge: ${old.file}: ${badge.alt || badge.src} (${badge.id})`,
+        );
+    }
     const sources = [{ file: old.file, text: md }];
     for (const target of links(md)) {
       const rel = target.split("#")[0];

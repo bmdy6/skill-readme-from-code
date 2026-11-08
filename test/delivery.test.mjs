@@ -84,16 +84,127 @@ test("audience synonyms come from the brief and reject unrelated answers", () =>
     assert.equal(scoreAnswers(positioned, { forWhom }).checks.forWhom, false);
   }
   assert.equal(
-    scoreAnswers(positioned, { what: "A README skill" }).checks.what, true,
+    scoreAnswers(positioned, { what: "A README skill" }).checks.what,
+    true,
   );
   assert.equal(
-    scoreAnswers(positioned, { what: "engineers" }).checks.what, false,
+    scoreAnswers(positioned, { what: "engineers" }).checks.what,
+    false,
   );
   assert.equal(
     scoreAnswers(
-      { ...positioned, keyTerms: { what: ["readme"], audience: ["designers"] } },
+      {
+        ...positioned,
+        keyTerms: { what: ["readme"], audience: ["designers"] },
+      },
       { forWhom: "designers" },
     ).checks.forWhom,
     true,
   );
+});
+
+test("P12 report discloses each side's remote image policy", async (t) => {
+  const work = await fs.mkdtemp(path.join(os.tmpdir(), "rfc-report-images-"));
+  t.after(() => fs.rm(work, { recursive: true, force: true }));
+  const screen = { remoteImages: "neutral-placeholder", viewports: {} };
+  await write(path.join(work, "before/audit.json"), {
+    score: 80,
+    checks: [{ id: "V2", screen }],
+  });
+  await write(path.join(work, "verify.json"), {
+    score: 90,
+    checks: [{ id: "V2", screen }],
+  });
+  const text = await report({ work });
+  assert.match(text, /before=neutral-placeholder; after=neutral-placeholder/);
+  assert.match(text, /same neutral placeholder \(--offline\)/);
+});
+
+for (const wins of [0, 1, 2, 3])
+  test(`report completes delivery with ${wins}/3 blind wins`, async (t) => {
+    const work = await fs.mkdtemp(path.join(os.tmpdir(), "rfc-outcome-"));
+    t.after(() => fs.rm(work, { recursive: true, force: true }));
+    await write(path.join(work, "verify.json"), {
+      ok: true,
+      score: 100,
+      checks: [],
+    });
+    const readers = Array.from({ length: 3 }, (_, i) => ({
+      status: i < wins ? "pass" : "fail",
+      winner: i < wins ? "after" : "before",
+      answers: {
+        choice: "B",
+        why: `Reader ${i + 1}: clearer source links.`,
+        confusing: ["What does 10/10 cover?"],
+      },
+    }));
+    await write(path.join(work, "stranger/blind-result.json"), {
+      readers,
+      improvements: ["Clarify the sampled-source scope."],
+    });
+    const text = await report({ work });
+    assert.match(text, new RegExp(`${wins}/3`));
+    for (const r of readers) assert.ok(text.includes(r.answers.why));
+    assert.match(text, /Clarify the sampled-source scope/);
+    const outcome = JSON.parse(
+      await fs.readFile(path.join(work, "delivery.json"), "utf8"),
+    );
+    assert.equal(outcome.replaceReadme, wins >= 2);
+    if (wins < 2) {
+      assert.match(text, /保留现有 README/);
+      assert.match(text, /Do not open a replacement PR/);
+      assert.equal(outcome.conclusion, "保留现有 README");
+    }
+  });
+test("report never recommends replacement from a single, missing or invalid blind reader", async (t) => {
+  const work = await fs.mkdtemp(path.join(os.tmpdir(), "rfc-pending-"));
+  t.after(() => fs.rm(work, { recursive: true, force: true }));
+  for (const blind of [
+    { status: "pass", winner: "after" },
+    { readers: [] },
+    {
+      readers: [
+        { winner: "after" },
+        { winner: "after" },
+        { winner: "invalid-label" },
+      ],
+    },
+  ]) {
+    await write(path.join(work, "stranger/blind-result.json"), blind);
+    await report({ work });
+    const outcome = JSON.parse(
+      await fs.readFile(path.join(work, "delivery.json"), "utf8"),
+    );
+    assert.equal(outcome.replaceReadme, false);
+    assert.equal(outcome.status, "not-run");
+  }
+});
+
+test("report CLI accepts explicit blind evidence and completes a losing delivery with exit 0", async (t) => {
+  const { execFileSync } = await import("node:child_process");
+  const work = await fs.mkdtemp(path.join(os.tmpdir(), "rfc-report-cli-"));
+  t.after(() => fs.rm(work, { recursive: true, force: true }));
+  const readers = ["after", "before", "before"].map((winner) => ({
+    status: winner === "after" ? "pass" : "fail",
+    winner,
+    answers: { choice: "A", why: "Original wording.", confusing: [] },
+  }));
+  const input = path.join(work, "blind.json");
+  await write(input, { readers, improvements: ["Keep clear labels."] });
+  const text = execFileSync(
+    process.execPath,
+    ["scripts/run.mjs", "report", "--work", work, "--blind-results", input],
+    { encoding: "utf8" },
+  );
+  assert.match(text, /保留现有 README/);
+  assert.match(text, /1\/3/);
+  await write(path.join(work, "verify.json"), { ok: false, checks: [] });
+  await write(input, {
+    readers: readers.map((r) => ({ ...r, winner: "after", status: "pass" })),
+  });
+  await report({ work, "blind-results": input });
+  const outcome = JSON.parse(
+    await fs.readFile(path.join(work, "delivery.json"), "utf8"),
+  );
+  assert.equal(outcome.replaceReadme, false);
 });

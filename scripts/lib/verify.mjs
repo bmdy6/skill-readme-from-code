@@ -1,9 +1,16 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { marked } from "marked";
 import { read, json, write, exists, hash } from "./io.mjs";
 import { scan } from "./scan.mjs";
-import { shellBlocks, headings, images, links, prose } from "./markdown.mjs";
+import {
+  shellBlocks,
+  headings,
+  images,
+  links,
+  prose,
+  proseParagraphs,
+  leadText,
+} from "./markdown.mjs";
 import { firstScreen } from "./screen.mjs";
 import { runCopy } from "./execute.mjs";
 import { heroRelevance, retentionCheck } from "./evidence.mjs";
@@ -154,7 +161,9 @@ export async function staticChecks(repo, facts, brief = {}, opts = {}) {
       truth.push(`Unknown CI workflow ${workflow}`);
   }
   for (const b of shellBlocks(md)) {
-    const pkg = b.code.match(/npm (?:install|i)(?: -g)? ([\w@/.-]+)/)?.[1];
+    const pkg = b.code.match(
+      /npm (?:install|i)(?: (?:-g|--global))? ([\w@/.-]+)/,
+    )?.[1];
     if (pkg && pkg !== facts.manifest.name && !["--"].includes(pkg))
       truth.push(`Install package differs from manifest: ${pkg}`);
     const remote = b.code
@@ -183,12 +192,7 @@ export async function staticChecks(repo, facts, brief = {}, opts = {}) {
     ["README.md", md, "en"],
     ...(zh ? [["README.zh-CN.md", zh, "zh-CN"]] : []),
   ]) {
-    const lead = marked
-      .lexer(text)
-      .find(
-        (t) =>
-          t.type === "paragraph" && !/^!?\[/.test(t.text) && !/^</.test(t.text),
-      )?.text;
+    const lead = leadText(text);
     if (lead) {
       const plain = lead.replace(/[\*_`]/g, "");
       if (
@@ -198,26 +202,38 @@ export async function staticChecks(repo, facts, brief = {}, opts = {}) {
         /using an agent skill/i.test(plain)
       )
         copy.push(`${file}: Generic one-liner`);
-      const nouns = [
-        "README",
-        "draft",
-        "text",
-        "digest",
-        "note",
-        "report",
-        "profile",
-        "image",
-        "package",
-        "文字",
-        "草稿",
-        "文风档案",
-        "档案",
-        "笔记",
-        "摘要",
-        "报告",
-        "图片",
-      ];
-      if (!nouns.some((n) => plain.toLowerCase().includes(n.toLowerCase())))
+      const nouns = brief.coreAction?.output?.keywords?.length
+        ? brief.coreAction.output.keywords
+        : [
+            "README",
+            "draft",
+            "text",
+            "digest",
+            "note",
+            "report",
+            "profile",
+            "image",
+            "package",
+            "文字",
+            "草稿",
+            "文风档案",
+            "档案",
+            "笔记",
+            "摘要",
+            "报告",
+            "图片",
+          ];
+      if (
+        !nouns
+          .filter(
+            (n) =>
+              typeof n === "string" &&
+              !/^(?:better|best|easy|fast|powerful|seamless|更好|强大)$/i.test(
+                n,
+              ),
+          )
+          .some((n) => plain.toLowerCase().includes(n.toLowerCase()))
+      )
         copy.push(`${file}: One-liner needs a concrete artifact noun`);
       const count =
         lang === "en"
@@ -232,7 +248,7 @@ export async function staticChecks(repo, facts, brief = {}, opts = {}) {
   const words = prose(md).match(/\b[\w'-]+\b/g) || [];
   if (words.length > (brief.wordBudget ?? 400))
     copy.push(`Word budget: ${words.length} > ${brief.wordBudget ?? 400}`);
-  for (const para of prose(md).split(/\n\s*\n/))
+  for (const para of proseParagraphs(md))
     if ((para.match(/[.!?。！？](?:\s|$)/g) || []).length > 3)
       copy.push("Paragraph exceeds three sentences");
   if (
@@ -334,6 +350,15 @@ async function base(opts) {
   for (const f of Array.isArray(supplements)
     ? supplements
     : supplements.facts || []) {
+    if (
+      typeof f.id !== "string" ||
+      !f.id.trim() ||
+      typeof f.claim !== "string" ||
+      !f.claim.trim()
+    ) {
+      sourceIssues.push(`Invalid supplemental fact fields: ${f.id}`);
+      continue;
+    }
     if (facts.facts.some((x) => x.id === f.id)) continue;
     const match =
       typeof f.source === "string" && f.source.match(/^(.+):(\d+)$/);
@@ -373,7 +398,7 @@ async function base(opts) {
   return { facts, brief, checks };
 }
 export function reportMarkdown(result, title) {
-  return `# ${title}\n\nScore: ${result.score}/100\n\n| Check | Result | Evidence |\n|---|---|---|\n${result.checks.map((c) => `| ${c.id} | ${c.status} | ${(c.issues?.join("; ") || c.reason || "Passed").replace(/\|/g, "\\|")} |`).join("\n")}\n\n${result.checks.find((c) => c.id === "V2")?.screen?.renderer || "No screen renderer"}\n`;
+  return `# ${title}\n\nScore: ${result.score}/100\n\n| Check | Result | Evidence |\n|---|---|---|\n${result.checks.map((c) => `| ${c.id} | ${c.status} | ${(c.issues?.join("; ") || c.reason || c.warnings?.join("; ") || "Passed").replace(/\|/g, "\\|")} |`).join("\n")}\n\n${result.checks.find((c) => c.id === "V2")?.screen?.renderer || "No screen renderer"}\n`;
 }
 export async function audit(opts) {
   const { checks } = await base(opts);
@@ -429,12 +454,40 @@ export async function verify(opts) {
         tty: rule.tty,
         shareGitHubAuth: rule.shareGitHubAuth === true,
       });
+      let stdoutMatches = true,
+        reason;
+      try {
+        if (rule.expectStdout !== undefined) {
+          if (typeof rule.expectStdout !== "string")
+            throw Error("expectStdout must be a regex string");
+          stdoutMatches = new RegExp(rule.expectStdout).test(run.stdout);
+          if (!stdoutMatches) reason = "stdout did not match expectStdout";
+        }
+      } catch (e) {
+        stdoutMatches = false;
+        reason = `Invalid expectStdout: ${e.message}`;
+      }
+      const interactive =
+        /^\s*\?\s/m.test(run.stdout) ||
+        /\bGlobal\b[\s\S]*\bProject\b/i.test(run.stdout);
+      const receipt = rule.expectStdout !== undefined && stdoutMatches;
+      const warnings =
+        interactive && !receipt
+          ? [
+              "Interactive selection without a matched completion receipt; exit 0 does not prove installation.",
+            ]
+          : [];
       commandResults.push({
         ...b,
         file,
         ...run,
+        reason,
+        stdoutMatches,
+        warnings,
         status:
-          !run.timedOut && run.exitCode === (rule.expectExit ?? 0)
+          !run.timedOut &&
+          run.exitCode === (rule.expectExit ?? 0) &&
+          stdoutMatches
             ? "pass"
             : "fail",
       });
@@ -448,10 +501,35 @@ export async function verify(opts) {
           (r) =>
             `${r.file} block ${r.index}: ${r.reason || `exit ${r.exitCode}`}`,
         ),
-      { results: commandResults },
+      {
+        results: commandResults,
+        warnings: commandResults.flatMap((r) =>
+          (r.warnings || []).map((w) => `${r.file} block ${r.index}: ${w}`),
+        ),
+      },
     ),
   );
-  if (!facts.testCommands.length)
+  const projectTests = plan.projectTests;
+  const invalidProjectTests =
+    projectTests &&
+    ((projectTests.skip !== undefined && projectTests.command !== undefined) ||
+      ![projectTests.skip, projectTests.command].some(
+        (v) => typeof v === "string" && v.trim(),
+      ));
+  if (invalidProjectTests)
+    checks.push(
+      check("V8", [
+        "projectTests needs exactly one nonempty skip reason or command",
+      ]),
+    );
+  else if (projectTests?.skip)
+    checks.push({
+      id: "V8",
+      status: "skip",
+      reason: projectTests.skip,
+      issues: [],
+    });
+  else if (!projectTests?.command && !facts.testCommands.length)
     checks.push({
       id: "V8",
       status: "skip",
@@ -460,7 +538,9 @@ export async function verify(opts) {
     });
   else {
     const results = [];
-    for (const cmd of facts.testCommands)
+    for (const cmd of projectTests?.command
+      ? [projectTests.command]
+      : facts.testCommands)
       results.push(await runCopy(opts.repo, cmd));
     checks.push(
       check(
@@ -494,10 +574,47 @@ export async function verify(opts) {
           "size",
           "mainText",
           "density",
+          "balance",
+          ...(f.template === "hero-link" ? ["links"] : []),
         ].some((k) => f.checks[k] !== "pass")
       )
         artIssues.push(`Failed or absent self-check ${f.file}`);
     }
+  // Measure the actual README rendering, including picture-selected dark variants.
+  if (manifest?.files?.length) {
+    for (const readme of [
+      "README.md",
+      ...((await exists(path.join(opts.repo, "README.zh-CN.md")))
+        ? ["README.zh-CN.md"]
+        : []),
+    ]) {
+      const screens =
+        readme === "README.md"
+          ? checks.find((c) => c.id === "V2")?.screen
+          : await firstScreen({
+              ...opts,
+              readme,
+              work: path.join(opts.work, "zh-screen"),
+            });
+      for (const [viewport, screen] of Object.entries(
+        screens?.viewports || {},
+      )) {
+        if (viewport === "mobile") continue; // informational viewport, as in V2
+        for (const image of screen.images || []) {
+          const f = manifest.files.find((f) =>
+            image.src.endsWith("/docs/readme/" + f.file),
+          );
+          if (!f) continue;
+          const scaled =
+            f.minMainFontSize * Math.min(1, image.width / f.cssWidth);
+          if (!Number.isFinite(scaled) || scaled < 13)
+            artIssues.push(
+              `${readme} ${viewport}: display-scaled primary font below 13px in ${f.file} (${scaled.toFixed(2)}px)`,
+            );
+        }
+      }
+    }
+  }
   checks.push(check("V9", artIssues));
   checks.push(await heroRelevance(opts.repo, brief, facts));
   checks.push(await retentionCheck(opts.repo, opts));

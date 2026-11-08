@@ -1,0 +1,958 @@
+{
+  "schemaVersion": 1,
+  "accent": "#2563eb",
+  "files": [
+    {
+      "file": "hero-light.png",
+      "template": "hero-link",
+      "theme": "light",
+      "language": "en",
+      "kind": "fixture",
+      "captureId": "core",
+      "inputFile": null,
+      "labels": {
+        "result": "Output"
+      },
+      "link": {
+        "output": {
+          "file": "capture-files/core/docs/readme/run/token-rows.json",
+          "sha256": "f1a31918391f255bcd801661ee7411bb692ec62a34087ec7f40ab6cfe1bc31db"
+        },
+        "excerpts": [
+          {
+            "line": 6,
+            "text": "@font-face { font-family: \"Fixture Sans…",
+            "highlight": false,
+            "fullText": "@font-face { font-family: \"Fixture Sans\"; src: url(\"/assets/demo.woff2\"); font-weight: 400 700; }"
+          },
+          {
+            "line": 7,
+            "text": "…color: #172033;…",
+            "highlight": true,
+            "fullText": "body { margin: 0; background: white; color: #172033; font: 16px/1.5 Arial, sans-serif; }"
+          },
+          {
+            "line": 8,
+            "text": "main { padding: 32px; max-width: 960px;…",
+            "highlight": false,
+            "fullText": "main { padding: 32px; max-width: 960px; margin: auto; }"
+          },
+          {
+            "line": 9,
+            "text": "…font-size: 25.00px;…",
+            "highlight": true,
+            "fullText": "h1 { font-size: 25.00px; line-height: 1.2; }"
+          },
+          {
+            "line": 10,
+            "text": "h2 { font-size: 20.00px; }",
+            "highlight": false,
+            "fullText": "h2 { font-size: 20.00px; }"
+          },
+          {
+            "line": 11,
+            "text": ".btn-primary {",
+            "highlight": false,
+            "fullText": ".btn-primary {"
+          },
+          {
+            "line": 12,
+            "text": "background-color: var(--color-primary);",
+            "highlight": true,
+            "fullText": "  background-color: var(--color-primary);"
+          },
+          {
+            "line": 13,
+            "text": "color: white; padding: 12px 24px; borde…",
+            "highlight": false,
+            "fullText": "  color: white; padding: 12px 24px; border: 0; border-radius: 8px;"
+          },
+          {
+            "line": 14,
+            "text": "}",
+            "highlight": false,
+            "fullText": "}"
+          },
+          {
+            "line": 15,
+            "text": "…border: 1px solid #dde1e8;…",
+            "highlight": true,
+            "fullText": ".card { padding: 16px; margin-top: 24px; border: 1px solid #dde1e8; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.1); }"
+          },
+          {
+            "line": 16,
+            "text": ".near { background-color: #2564eb; padd…",
+            "highlight": false,
+            "fullText": ".near { background-color: #2564eb; padding: 16px; }"
+          }
+        ],
+        "source": {
+          "file": "inputs/main.css",
+          "sha256": "df38676e232e1e11574e4c337e5d59f8db2359733ea93c221894a927389fca45"
+        },
+        "inputs": [
+          {
+            "file": "capture-files/core/docs/readme/run/token-rows.json",
+            "sha256": "f1a31918391f255bcd801661ee7411bb692ec62a34087ec7f40ab6cfe1bc31db"
+          },
+          {
+            "file": "inputs/main.css",
+            "sha256": "df38676e232e1e11574e4c337e5d59f8db2359733ea93c221894a927389fca45"
+          },
+          {
+            "file": "capture-files/core/docs/readme/run/status.json",
+            "sha256": "2bdcd2f88060c49b489dbadf85170d6d6f59dd6a4c37cac6a20a0e778caa7082"
+          }
+        ],
+        "items": [
+          {
+            "index": 3,
+            "name": "color.accent",
+            "value": "#2564eb",
+            "line": 12,
+            "evidence": "var(--color-primary)"
+          },
+          {
+            "index": 0,
+            "name": "color.text",
+            "value": "#172033",
+            "line": 7,
+            "evidence": "#172033"
+          },
+          {
+            "index": 2,
+            "name": "color.border",
+            "value": "#dde1e8",
+            "line": 15,
+            "evidence": "1px solid #dde1e8"
+          },
+          {
+            "index": 15,
+            "name": "fontSize.xl",
+            "value": "25px",
+            "line": 9,
+            "evidence": "25.00px"
+          },
+          {
+            "index": 18,
+            "name": "radius.lg",
+            "value": "12px",
+            "line": 15,
+            "evidence": "12px"
+          },
+          {
+            "index": 6,
+            "name": "shadow.card",
+            "value": "0 4px 16px",
+            "line": 15,
+            "evidence": "0 4px 16px rgba(0,0,0,.1)"
+          }
+        ],
+        "total": 25,
+        "focus": 0,
+        "status": {
+          "from": "verify",
+          "file": "capture-files/core/docs/readme/run/status.json",
+          "path": "message",
+          "value": "10/10 sampled sources still match",
+          "verified": true
+        }
+      },
+      "sha256": "a343c42bdb218efa5b97bdf1bc3bd348733a38350bd8500f373b934beddcfeda",
+      "bytes": 210924,
+      "cssWidth": 900,
+      "cssHeight": 409,
+      "contentBounds": {
+        "left": 29,
+        "top": 41,
+        "right": 871,
+        "bottom": 368
+      },
+      "contentRatio": 0.6104063094267862,
+      "contentArea": 224690.5625,
+      "balanceRatio": 0.9141615407858604,
+      "minMainFontSize": 16,
+      "endpoints": [
+        {
+          "index": 0,
+          "x1": 339,
+          "y1": 52.7421875,
+          "x2": 403,
+          "y2": 181
+        },
+        {
+          "index": 1,
+          "x1": 339,
+          "y1": 95.2421875,
+          "x2": 403,
+          "y2": 71
+        },
+        {
+          "index": 2,
+          "x1": 339,
+          "y1": 137.7421875,
+          "x2": 403,
+          "y2": 247
+        },
+        {
+          "index": 3,
+          "x1": 339,
+          "y1": 180.2421875,
+          "x2": 403,
+          "y2": 115
+        },
+        {
+          "index": 4,
+          "x1": 339,
+          "y1": 222.7421875,
+          "x2": 403,
+          "y2": 247
+        },
+        {
+          "index": 5,
+          "x1": 339,
+          "y1": 265.2421875,
+          "x2": 403,
+          "y2": 247
+        }
+      ],
+      "checks": {
+        "overflow": "pass",
+        "fontSize": "pass",
+        "contrast": "pass",
+        "fields": "pass",
+        "mainText": "pass",
+        "density": "pass",
+        "balance": "pass",
+        "links": "pass",
+        "size": "pass"
+      },
+      "problems": {
+        "overflow": [],
+        "fontSize": [],
+        "contrast": [],
+        "fields": [],
+        "mainText": [],
+        "density": [],
+        "balance": [],
+        "links": []
+      },
+      "width": 900,
+      "height": 409
+    },
+    {
+      "file": "hero-dark.png",
+      "template": "hero-link",
+      "theme": "dark",
+      "language": "en",
+      "kind": "fixture",
+      "captureId": "core",
+      "inputFile": null,
+      "labels": {
+        "result": "Output"
+      },
+      "link": {
+        "output": {
+          "file": "capture-files/core/docs/readme/run/token-rows.json",
+          "sha256": "f1a31918391f255bcd801661ee7411bb692ec62a34087ec7f40ab6cfe1bc31db"
+        },
+        "excerpts": [
+          {
+            "line": 6,
+            "text": "@font-face { font-family: \"Fixture Sans…",
+            "highlight": false,
+            "fullText": "@font-face { font-family: \"Fixture Sans\"; src: url(\"/assets/demo.woff2\"); font-weight: 400 700; }"
+          },
+          {
+            "line": 7,
+            "text": "…color: #172033;…",
+            "highlight": true,
+            "fullText": "body { margin: 0; background: white; color: #172033; font: 16px/1.5 Arial, sans-serif; }"
+          },
+          {
+            "line": 8,
+            "text": "main { padding: 32px; max-width: 960px;…",
+            "highlight": false,
+            "fullText": "main { padding: 32px; max-width: 960px; margin: auto; }"
+          },
+          {
+            "line": 9,
+            "text": "…font-size: 25.00px;…",
+            "highlight": true,
+            "fullText": "h1 { font-size: 25.00px; line-height: 1.2; }"
+          },
+          {
+            "line": 10,
+            "text": "h2 { font-size: 20.00px; }",
+            "highlight": false,
+            "fullText": "h2 { font-size: 20.00px; }"
+          },
+          {
+            "line": 11,
+            "text": ".btn-primary {",
+            "highlight": false,
+            "fullText": ".btn-primary {"
+          },
+          {
+            "line": 12,
+            "text": "background-color: var(--color-primary);",
+            "highlight": true,
+            "fullText": "  background-color: var(--color-primary);"
+          },
+          {
+            "line": 13,
+            "text": "color: white; padding: 12px 24px; borde…",
+            "highlight": false,
+            "fullText": "  color: white; padding: 12px 24px; border: 0; border-radius: 8px;"
+          },
+          {
+            "line": 14,
+            "text": "}",
+            "highlight": false,
+            "fullText": "}"
+          },
+          {
+            "line": 15,
+            "text": "…border: 1px solid #dde1e8;…",
+            "highlight": true,
+            "fullText": ".card { padding: 16px; margin-top: 24px; border: 1px solid #dde1e8; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.1); }"
+          },
+          {
+            "line": 16,
+            "text": ".near { background-color: #2564eb; padd…",
+            "highlight": false,
+            "fullText": ".near { background-color: #2564eb; padding: 16px; }"
+          }
+        ],
+        "source": {
+          "file": "inputs/main.css",
+          "sha256": "df38676e232e1e11574e4c337e5d59f8db2359733ea93c221894a927389fca45"
+        },
+        "inputs": [
+          {
+            "file": "capture-files/core/docs/readme/run/token-rows.json",
+            "sha256": "f1a31918391f255bcd801661ee7411bb692ec62a34087ec7f40ab6cfe1bc31db"
+          },
+          {
+            "file": "inputs/main.css",
+            "sha256": "df38676e232e1e11574e4c337e5d59f8db2359733ea93c221894a927389fca45"
+          },
+          {
+            "file": "capture-files/core/docs/readme/run/status.json",
+            "sha256": "2bdcd2f88060c49b489dbadf85170d6d6f59dd6a4c37cac6a20a0e778caa7082"
+          }
+        ],
+        "items": [
+          {
+            "index": 3,
+            "name": "color.accent",
+            "value": "#2564eb",
+            "line": 12,
+            "evidence": "var(--color-primary)"
+          },
+          {
+            "index": 0,
+            "name": "color.text",
+            "value": "#172033",
+            "line": 7,
+            "evidence": "#172033"
+          },
+          {
+            "index": 2,
+            "name": "color.border",
+            "value": "#dde1e8",
+            "line": 15,
+            "evidence": "1px solid #dde1e8"
+          },
+          {
+            "index": 15,
+            "name": "fontSize.xl",
+            "value": "25px",
+            "line": 9,
+            "evidence": "25.00px"
+          },
+          {
+            "index": 18,
+            "name": "radius.lg",
+            "value": "12px",
+            "line": 15,
+            "evidence": "12px"
+          },
+          {
+            "index": 6,
+            "name": "shadow.card",
+            "value": "0 4px 16px",
+            "line": 15,
+            "evidence": "0 4px 16px rgba(0,0,0,.1)"
+          }
+        ],
+        "total": 25,
+        "focus": 0,
+        "status": {
+          "from": "verify",
+          "file": "capture-files/core/docs/readme/run/status.json",
+          "path": "message",
+          "value": "10/10 sampled sources still match",
+          "verified": true
+        }
+      },
+      "sha256": "662053fbbfbdbbbbb750ac693ceaed734b79394cae0166d8782eff09af4ec6d9",
+      "bytes": 214087,
+      "cssWidth": 900,
+      "cssHeight": 409,
+      "contentBounds": {
+        "left": 29,
+        "top": 41,
+        "right": 871,
+        "bottom": 368
+      },
+      "contentRatio": 0.6104063094267862,
+      "contentArea": 224690.5625,
+      "balanceRatio": 0.9141615407858604,
+      "minMainFontSize": 16,
+      "endpoints": [
+        {
+          "index": 0,
+          "x1": 339,
+          "y1": 52.7421875,
+          "x2": 403,
+          "y2": 181
+        },
+        {
+          "index": 1,
+          "x1": 339,
+          "y1": 95.2421875,
+          "x2": 403,
+          "y2": 71
+        },
+        {
+          "index": 2,
+          "x1": 339,
+          "y1": 137.7421875,
+          "x2": 403,
+          "y2": 247
+        },
+        {
+          "index": 3,
+          "x1": 339,
+          "y1": 180.2421875,
+          "x2": 403,
+          "y2": 115
+        },
+        {
+          "index": 4,
+          "x1": 339,
+          "y1": 222.7421875,
+          "x2": 403,
+          "y2": 247
+        },
+        {
+          "index": 5,
+          "x1": 339,
+          "y1": 265.2421875,
+          "x2": 403,
+          "y2": 247
+        }
+      ],
+      "checks": {
+        "overflow": "pass",
+        "fontSize": "pass",
+        "contrast": "pass",
+        "fields": "pass",
+        "mainText": "pass",
+        "density": "pass",
+        "balance": "pass",
+        "links": "pass",
+        "size": "pass"
+      },
+      "problems": {
+        "overflow": [],
+        "fontSize": [],
+        "contrast": [],
+        "fields": [],
+        "mainText": [],
+        "density": [],
+        "balance": [],
+        "links": []
+      },
+      "width": 900,
+      "height": 409
+    },
+    {
+      "file": "hero-light.zh-CN.png",
+      "template": "hero-link",
+      "theme": "light",
+      "language": "zh-CN",
+      "kind": "fixture",
+      "captureId": "core",
+      "inputFile": null,
+      "labels": {
+        "result": "输出"
+      },
+      "link": {
+        "output": {
+          "file": "capture-files/core/docs/readme/run/token-rows.json",
+          "sha256": "f1a31918391f255bcd801661ee7411bb692ec62a34087ec7f40ab6cfe1bc31db"
+        },
+        "excerpts": [
+          {
+            "line": 6,
+            "text": "@font-face { font-family: \"Fixture Sans…",
+            "highlight": false,
+            "fullText": "@font-face { font-family: \"Fixture Sans\"; src: url(\"/assets/demo.woff2\"); font-weight: 400 700; }"
+          },
+          {
+            "line": 7,
+            "text": "…color: #172033;…",
+            "highlight": true,
+            "fullText": "body { margin: 0; background: white; color: #172033; font: 16px/1.5 Arial, sans-serif; }"
+          },
+          {
+            "line": 8,
+            "text": "main { padding: 32px; max-width: 960px;…",
+            "highlight": false,
+            "fullText": "main { padding: 32px; max-width: 960px; margin: auto; }"
+          },
+          {
+            "line": 9,
+            "text": "…font-size: 25.00px;…",
+            "highlight": true,
+            "fullText": "h1 { font-size: 25.00px; line-height: 1.2; }"
+          },
+          {
+            "line": 10,
+            "text": "h2 { font-size: 20.00px; }",
+            "highlight": false,
+            "fullText": "h2 { font-size: 20.00px; }"
+          },
+          {
+            "line": 11,
+            "text": ".btn-primary {",
+            "highlight": false,
+            "fullText": ".btn-primary {"
+          },
+          {
+            "line": 12,
+            "text": "background-color: var(--color-primary);",
+            "highlight": true,
+            "fullText": "  background-color: var(--color-primary);"
+          },
+          {
+            "line": 13,
+            "text": "color: white; padding: 12px 24px; borde…",
+            "highlight": false,
+            "fullText": "  color: white; padding: 12px 24px; border: 0; border-radius: 8px;"
+          },
+          {
+            "line": 14,
+            "text": "}",
+            "highlight": false,
+            "fullText": "}"
+          },
+          {
+            "line": 15,
+            "text": "…border: 1px solid #dde1e8;…",
+            "highlight": true,
+            "fullText": ".card { padding: 16px; margin-top: 24px; border: 1px solid #dde1e8; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.1); }"
+          },
+          {
+            "line": 16,
+            "text": ".near { background-color: #2564eb; padd…",
+            "highlight": false,
+            "fullText": ".near { background-color: #2564eb; padding: 16px; }"
+          }
+        ],
+        "source": {
+          "file": "inputs/main.css",
+          "sha256": "df38676e232e1e11574e4c337e5d59f8db2359733ea93c221894a927389fca45"
+        },
+        "inputs": [
+          {
+            "file": "capture-files/core/docs/readme/run/token-rows.json",
+            "sha256": "f1a31918391f255bcd801661ee7411bb692ec62a34087ec7f40ab6cfe1bc31db"
+          },
+          {
+            "file": "inputs/main.css",
+            "sha256": "df38676e232e1e11574e4c337e5d59f8db2359733ea93c221894a927389fca45"
+          },
+          {
+            "file": "capture-files/core/docs/readme/run/status.json",
+            "sha256": "2bdcd2f88060c49b489dbadf85170d6d6f59dd6a4c37cac6a20a0e778caa7082"
+          }
+        ],
+        "items": [
+          {
+            "index": 3,
+            "name": "color.accent",
+            "value": "#2564eb",
+            "line": 12,
+            "evidence": "var(--color-primary)"
+          },
+          {
+            "index": 0,
+            "name": "color.text",
+            "value": "#172033",
+            "line": 7,
+            "evidence": "#172033"
+          },
+          {
+            "index": 2,
+            "name": "color.border",
+            "value": "#dde1e8",
+            "line": 15,
+            "evidence": "1px solid #dde1e8"
+          },
+          {
+            "index": 15,
+            "name": "fontSize.xl",
+            "value": "25px",
+            "line": 9,
+            "evidence": "25.00px"
+          },
+          {
+            "index": 18,
+            "name": "radius.lg",
+            "value": "12px",
+            "line": 15,
+            "evidence": "12px"
+          },
+          {
+            "index": 6,
+            "name": "shadow.card",
+            "value": "0 4px 16px",
+            "line": 15,
+            "evidence": "0 4px 16px rgba(0,0,0,.1)"
+          }
+        ],
+        "total": 25,
+        "focus": 0,
+        "status": {
+          "from": "verify",
+          "file": "capture-files/core/docs/readme/run/status.json",
+          "path": "message",
+          "value": "10/10 sampled sources still match",
+          "verified": true
+        }
+      },
+      "sha256": "a343c42bdb218efa5b97bdf1bc3bd348733a38350bd8500f373b934beddcfeda",
+      "bytes": 210924,
+      "cssWidth": 900,
+      "cssHeight": 409,
+      "contentBounds": {
+        "left": 29,
+        "top": 41,
+        "right": 871,
+        "bottom": 368
+      },
+      "contentRatio": 0.6104063094267862,
+      "contentArea": 224690.5625,
+      "balanceRatio": 0.9141615407858604,
+      "minMainFontSize": 16,
+      "endpoints": [
+        {
+          "index": 0,
+          "x1": 339,
+          "y1": 52.7421875,
+          "x2": 403,
+          "y2": 181
+        },
+        {
+          "index": 1,
+          "x1": 339,
+          "y1": 95.2421875,
+          "x2": 403,
+          "y2": 71
+        },
+        {
+          "index": 2,
+          "x1": 339,
+          "y1": 137.7421875,
+          "x2": 403,
+          "y2": 247
+        },
+        {
+          "index": 3,
+          "x1": 339,
+          "y1": 180.2421875,
+          "x2": 403,
+          "y2": 115
+        },
+        {
+          "index": 4,
+          "x1": 339,
+          "y1": 222.7421875,
+          "x2": 403,
+          "y2": 247
+        },
+        {
+          "index": 5,
+          "x1": 339,
+          "y1": 265.2421875,
+          "x2": 403,
+          "y2": 247
+        }
+      ],
+      "checks": {
+        "overflow": "pass",
+        "fontSize": "pass",
+        "contrast": "pass",
+        "fields": "pass",
+        "mainText": "pass",
+        "density": "pass",
+        "balance": "pass",
+        "links": "pass",
+        "size": "pass"
+      },
+      "problems": {
+        "overflow": [],
+        "fontSize": [],
+        "contrast": [],
+        "fields": [],
+        "mainText": [],
+        "density": [],
+        "balance": [],
+        "links": []
+      },
+      "width": 900,
+      "height": 409
+    },
+    {
+      "file": "hero-dark.zh-CN.png",
+      "template": "hero-link",
+      "theme": "dark",
+      "language": "zh-CN",
+      "kind": "fixture",
+      "captureId": "core",
+      "inputFile": null,
+      "labels": {
+        "result": "输出"
+      },
+      "link": {
+        "output": {
+          "file": "capture-files/core/docs/readme/run/token-rows.json",
+          "sha256": "f1a31918391f255bcd801661ee7411bb692ec62a34087ec7f40ab6cfe1bc31db"
+        },
+        "excerpts": [
+          {
+            "line": 6,
+            "text": "@font-face { font-family: \"Fixture Sans…",
+            "highlight": false,
+            "fullText": "@font-face { font-family: \"Fixture Sans\"; src: url(\"/assets/demo.woff2\"); font-weight: 400 700; }"
+          },
+          {
+            "line": 7,
+            "text": "…color: #172033;…",
+            "highlight": true,
+            "fullText": "body { margin: 0; background: white; color: #172033; font: 16px/1.5 Arial, sans-serif; }"
+          },
+          {
+            "line": 8,
+            "text": "main { padding: 32px; max-width: 960px;…",
+            "highlight": false,
+            "fullText": "main { padding: 32px; max-width: 960px; margin: auto; }"
+          },
+          {
+            "line": 9,
+            "text": "…font-size: 25.00px;…",
+            "highlight": true,
+            "fullText": "h1 { font-size: 25.00px; line-height: 1.2; }"
+          },
+          {
+            "line": 10,
+            "text": "h2 { font-size: 20.00px; }",
+            "highlight": false,
+            "fullText": "h2 { font-size: 20.00px; }"
+          },
+          {
+            "line": 11,
+            "text": ".btn-primary {",
+            "highlight": false,
+            "fullText": ".btn-primary {"
+          },
+          {
+            "line": 12,
+            "text": "background-color: var(--color-primary);",
+            "highlight": true,
+            "fullText": "  background-color: var(--color-primary);"
+          },
+          {
+            "line": 13,
+            "text": "color: white; padding: 12px 24px; borde…",
+            "highlight": false,
+            "fullText": "  color: white; padding: 12px 24px; border: 0; border-radius: 8px;"
+          },
+          {
+            "line": 14,
+            "text": "}",
+            "highlight": false,
+            "fullText": "}"
+          },
+          {
+            "line": 15,
+            "text": "…border: 1px solid #dde1e8;…",
+            "highlight": true,
+            "fullText": ".card { padding: 16px; margin-top: 24px; border: 1px solid #dde1e8; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.1); }"
+          },
+          {
+            "line": 16,
+            "text": ".near { background-color: #2564eb; padd…",
+            "highlight": false,
+            "fullText": ".near { background-color: #2564eb; padding: 16px; }"
+          }
+        ],
+        "source": {
+          "file": "inputs/main.css",
+          "sha256": "df38676e232e1e11574e4c337e5d59f8db2359733ea93c221894a927389fca45"
+        },
+        "inputs": [
+          {
+            "file": "capture-files/core/docs/readme/run/token-rows.json",
+            "sha256": "f1a31918391f255bcd801661ee7411bb692ec62a34087ec7f40ab6cfe1bc31db"
+          },
+          {
+            "file": "inputs/main.css",
+            "sha256": "df38676e232e1e11574e4c337e5d59f8db2359733ea93c221894a927389fca45"
+          },
+          {
+            "file": "capture-files/core/docs/readme/run/status.json",
+            "sha256": "2bdcd2f88060c49b489dbadf85170d6d6f59dd6a4c37cac6a20a0e778caa7082"
+          }
+        ],
+        "items": [
+          {
+            "index": 3,
+            "name": "color.accent",
+            "value": "#2564eb",
+            "line": 12,
+            "evidence": "var(--color-primary)"
+          },
+          {
+            "index": 0,
+            "name": "color.text",
+            "value": "#172033",
+            "line": 7,
+            "evidence": "#172033"
+          },
+          {
+            "index": 2,
+            "name": "color.border",
+            "value": "#dde1e8",
+            "line": 15,
+            "evidence": "1px solid #dde1e8"
+          },
+          {
+            "index": 15,
+            "name": "fontSize.xl",
+            "value": "25px",
+            "line": 9,
+            "evidence": "25.00px"
+          },
+          {
+            "index": 18,
+            "name": "radius.lg",
+            "value": "12px",
+            "line": 15,
+            "evidence": "12px"
+          },
+          {
+            "index": 6,
+            "name": "shadow.card",
+            "value": "0 4px 16px",
+            "line": 15,
+            "evidence": "0 4px 16px rgba(0,0,0,.1)"
+          }
+        ],
+        "total": 25,
+        "focus": 0,
+        "status": {
+          "from": "verify",
+          "file": "capture-files/core/docs/readme/run/status.json",
+          "path": "message",
+          "value": "10/10 sampled sources still match",
+          "verified": true
+        }
+      },
+      "sha256": "662053fbbfbdbbbbb750ac693ceaed734b79394cae0166d8782eff09af4ec6d9",
+      "bytes": 214087,
+      "cssWidth": 900,
+      "cssHeight": 409,
+      "contentBounds": {
+        "left": 29,
+        "top": 41,
+        "right": 871,
+        "bottom": 368
+      },
+      "contentRatio": 0.6104063094267862,
+      "contentArea": 224690.5625,
+      "balanceRatio": 0.9141615407858604,
+      "minMainFontSize": 16,
+      "endpoints": [
+        {
+          "index": 0,
+          "x1": 339,
+          "y1": 52.7421875,
+          "x2": 403,
+          "y2": 181
+        },
+        {
+          "index": 1,
+          "x1": 339,
+          "y1": 95.2421875,
+          "x2": 403,
+          "y2": 71
+        },
+        {
+          "index": 2,
+          "x1": 339,
+          "y1": 137.7421875,
+          "x2": 403,
+          "y2": 247
+        },
+        {
+          "index": 3,
+          "x1": 339,
+          "y1": 180.2421875,
+          "x2": 403,
+          "y2": 115
+        },
+        {
+          "index": 4,
+          "x1": 339,
+          "y1": 222.7421875,
+          "x2": 403,
+          "y2": 247
+        },
+        {
+          "index": 5,
+          "x1": 339,
+          "y1": 265.2421875,
+          "x2": 403,
+          "y2": 247
+        }
+      ],
+      "checks": {
+        "overflow": "pass",
+        "fontSize": "pass",
+        "contrast": "pass",
+        "fields": "pass",
+        "mainText": "pass",
+        "density": "pass",
+        "balance": "pass",
+        "links": "pass",
+        "size": "pass"
+      },
+      "problems": {
+        "overflow": [],
+        "fontSize": [],
+        "contrast": [],
+        "fields": [],
+        "mainText": [],
+        "density": [],
+        "balance": [],
+        "links": []
+      },
+      "width": 900,
+      "height": 409
+    }
+  ]
+}

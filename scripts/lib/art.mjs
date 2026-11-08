@@ -1,3 +1,4 @@
+import { prepareLink, linkHTML, connectLinks } from "./art-link.mjs";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -7,6 +8,7 @@ const templateDir = fileURLToPath(
   new URL("../../templates/art/", import.meta.url),
 );
 const names = [
+  "hero-link",
   "hero-terminal",
   "hero-prompt",
   "hero-code",
@@ -30,8 +32,11 @@ export async function inspectArt(page) {
       fields: [],
       mainText: [],
       density: [],
+      balance: [],
+      links: [],
     };
     const contentRects = [];
+    let minMainFontSize = Infinity;
     const rgb = (c) => {
       const ctx = document.createElement("canvas").getContext("2d");
       ctx.fillStyle = c;
@@ -55,6 +60,7 @@ export async function inspectArt(page) {
       content.top < container.top - 1;
     for (const e of frame.querySelectorAll("*")) {
       const r = e.getBoundingClientRect();
+      if (!r.width && !r.height) continue;
       // scrollHeight/clientHeight round independently and can compound a
       // subpixel text overshoot into a false 2px overflow on an ancestor.
       // Measure direct content in fractional CSS pixels instead. Descendants
@@ -103,18 +109,18 @@ export async function inspectArt(page) {
         parseFloat(cs.fontSize) < 16
       )
         problems.mainText.push(e.textContent.slice(0, 80));
-      for (const n of e.childNodes)
-        if (n.nodeType === 3 && n.textContent.trim()) {
-          const range = document.createRange();
-          range.selectNodeContents(n);
-          for (const r of range.getClientRects())
-            contentRects.push({
-              left: r.left,
-              top: r.top,
-              right: r.right,
-              bottom: r.bottom,
-            });
-        }
+      // Actual text-bearing element boxes, excluding container-only cards.
+      // Union later prevents nested inline text being counted twice.
+      contentRects.push({
+        left: box.left,
+        top: box.top,
+        right: box.right,
+        bottom: box.bottom,
+      });
+      if (
+        !e.closest(".head,.eyebrow,.caption,.illustration,.number,[data-label]")
+      )
+        minMainFontSize = Math.min(minMainFontSize, parseFloat(cs.fontSize));
       let b = e,
         bg;
       while (b) {
@@ -148,22 +154,6 @@ export async function inspectArt(page) {
         problems.fields.push("Broken image");
     if (/undefined|\{\{/.test(frame.textContent) || !frame.textContent.trim())
       problems.fields.push("Empty or unresolved fields");
-    // Designed panels are visual content too. Never count the canvas or empty boxes.
-    for (const panel of frame.querySelectorAll(".card,.bubble"))
-      if (
-        panel.textContent.trim() ||
-        [...panel.querySelectorAll("img")].some(
-          (i) => i.complete && i.naturalWidth,
-        )
-      ) {
-        const r = panel.getBoundingClientRect();
-        contentRects.push({
-          left: r.left,
-          top: r.top,
-          right: r.right,
-          bottom: r.bottom,
-        });
-      }
     const contentBounds = contentRects.length
       ? {
           left: Math.min(...contentRects.map((r) => r.left)),
@@ -172,18 +162,91 @@ export async function inspectArt(page) {
           bottom: Math.max(...contentRects.map((r) => r.bottom)),
         }
       : null;
-    const contentRatio = contentBounds
-      ? ((contentBounds.right - contentBounds.left) *
-          (contentBounds.bottom - contentBounds.top)) /
-        (bounds.width * bounds.height)
-      : 0;
+    // Sweep the rectangles to measure their union, never a bounding envelope.
+    const area = (rects, left, right) => {
+      const rs = rects
+        .map((r) => ({
+          left: Math.max(left, r.left),
+          right: Math.min(right, r.right),
+          top: Math.max(bounds.top, r.top),
+          bottom: Math.min(bounds.bottom, r.bottom),
+        }))
+        .filter((r) => r.right > r.left && r.bottom > r.top);
+      const xs = [...new Set(rs.flatMap((r) => [r.left, r.right]))].sort(
+        (a, b) => a - b,
+      );
+      let sum = 0;
+      for (let i = 1; i < xs.length; i++) {
+        const ys = rs
+          .filter((r) => r.left < xs[i] && r.right > xs[i - 1])
+          .map((r) => [r.top, r.bottom])
+          .sort((a, b) => a[0] - b[0]);
+        let length = 0,
+          end = -Infinity;
+        for (const [top, bottom] of ys) {
+          length += Math.max(0, bottom - Math.max(top, end));
+          end = Math.max(end, bottom);
+        }
+        sum += (xs[i] - xs[i - 1]) * length;
+      }
+      return sum;
+    };
+    const contentArea = area(contentRects, bounds.left, bounds.right);
+    const contentRatio = contentArea / (bounds.width * bounds.height);
     if (contentRatio < 0.6)
       problems.density.push(
-        `Content bounds occupy ${(100 * contentRatio).toFixed(1)}%; minimum 60%`,
+        `Actual content occupies ${(100 * contentRatio).toFixed(1)}%; minimum 60%`,
       );
+    const mid = (bounds.left + bounds.right) / 2;
+    const halves = [
+      area(contentRects, bounds.left, mid),
+      area(contentRects, mid, bounds.right),
+    ];
+    const balanceRatio = Math.max(...halves)
+      ? Math.min(...halves) / Math.max(...halves)
+      : 0;
+    if (balanceRatio < 1 / 3)
+      problems.balance.push(
+        `Left/right content ratio ${balanceRatio.toFixed(3)}; minimum 1:3`,
+      );
+    const linkRoot = frame.querySelector(".link-panels");
+    let endpoints = [];
+    if (linkRoot) {
+      endpoints = JSON.parse(linkRoot.dataset.endpoints || "[]");
+      const origin = linkRoot.getBoundingClientRect(),
+        output = linkRoot
+          .querySelector(".output-panel")
+          .getBoundingClientRect(),
+        source = linkRoot
+          .querySelector(".source-panel")
+          .getBoundingClientRect();
+      const inside = (x, y, r) =>
+        x >= r.left - 1 &&
+        x <= r.right + 1 &&
+        y >= r.top - 1 &&
+        y <= r.bottom + 1;
+      if (!endpoints.length) problems.links.push("Missing link endpoints");
+      for (const p of endpoints)
+        if (
+          !inside(origin.left + p.x1, origin.top + p.y1, output) ||
+          !inside(origin.left + p.x2, origin.top + p.y2, source)
+        )
+          problems.links.push(`Endpoint outside panel: ${p.index}`);
+      if (
+        !linkRoot.querySelector("svg path:last-child") ||
+        Number(linkRoot.dataset.focus) < 0
+      )
+        problems.links.push("Focused connector missing");
+    }
     return {
       contentBounds,
       contentRatio,
+      contentArea,
+      balanceRatio,
+      minMainFontSize: Number.isFinite(minMainFontSize)
+        ? minMainFontSize
+        : null,
+      endpoints,
       checks: Object.fromEntries(
         Object.entries(problems).map(([k, v]) => [
           k,
@@ -242,20 +305,42 @@ export async function renderArt({ spec, out, work }) {
       !item.illustration
     )
       throw Error("Result text requires capture or illustration");
-    prepared.push({ item, capture });
+    if (capture?.inputFile) {
+      const p = path.resolve(base, capture.inputFile.file);
+      const real = await fs.realpath(p),
+        realBase = await fs.realpath(base);
+      if (!real.startsWith(realBase + path.sep))
+        throw Error("Capture input escapes art directory");
+      const bytes = await fs.readFile(real);
+      if (
+        hash(bytes) !== capture.inputFile.sha256 ||
+        bytes.toString("utf8") !== capture.input
+      )
+        throw Error("Capture input hash/content mismatch");
+    }
+    const link =
+      item.template === "hero-link"
+        ? await prepareLink(item, capture, base, cache)
+        : null;
+    prepared.push({ item, capture, link });
   }
   await fs.mkdir(out, { recursive: true });
   const browser = await chromium.launch();
   const manifest = { schemaVersion: 1, accent, files: [] };
   try {
-    for (const { item, capture } of prepared)
+    for (const { item, capture, link } of prepared)
       for (const lang of ["en", "zh-CN"])
         for (const theme of ["light", "dark"]) {
           const zh = lang === "zh-CN",
             text = (v, f) => escape(pick(v, lang, f));
           const values = {
-            title: text(item.title, "title"),
-            subtitle: text(item.subtitle, "subtitle"),
+            title:
+              item.template === "hero-link" ? "" : text(item.title, "title"),
+            subtitle:
+              item.template === "hero-link"
+                ? ""
+                : text(item.subtitle, "subtitle"),
+            link: link ? linkHTML(link) : "",
             prompt:
               capture?.role === "core" && capture.input
                 ? escape(
@@ -281,14 +366,11 @@ export async function renderArt({ spec, out, work }) {
                 : zh
                   ? "你告诉智能体"
                   : "You tell your agent",
-            resultLabel:
-              capture?.role === "core"
-                ? zh
-                  ? "润色后"
-                  : "Polished draft"
-                : zh
-                  ? "你得到"
-                  : "You get",
+            resultLabel: item.resultLabel
+              ? text(item.resultLabel, "resultLabel")
+              : zh
+                ? "输出"
+                : "Output",
             outputClass:
               capture?.kind === "agent-run"
                 ? "prose-output"
@@ -298,13 +380,18 @@ export async function renderArt({ spec, out, work }) {
             terminalLabel: zh ? "终端记录" : "terminal capture",
             inputLabel: zh ? "输入" : "Input",
             command: escape(capture?.command || ""),
+            codeInput: escape(
+              capture?.inputFile ? capture.input : capture?.command || "",
+            ),
             output: escape(
               capture
                 ? stripANSI(
                     capture.stdout +
                       (capture.stderr ? "\n" + capture.stderr : ""),
                   ).trim()
-                : ["strip-3", "hero-screens"].includes(item.template)
+                : ["strip-3", "hero-screens", "hero-link"].includes(
+                      item.template,
+                    )
                   ? ""
                   : pick(item.result, lang, "result"),
             ),
@@ -380,7 +467,7 @@ export async function renderArt({ spec, out, work }) {
           });
           await page.route("**/*", (r) => r.abort());
           await page.setContent(
-            `<!doctype html><meta charset="utf-8"><style>${await read(path.join(templateDir, "base.css"))}:root{--accent:${accent}}</style><body class="${theme}"><main class="frame ${item.template === "social" ? "social" : item.template === "strip-3" ? "strip" : ""} ${item.compact ? "compact" : ""}">${content}</main></body>`,
+            `<!doctype html><meta charset="utf-8"><style>${await read(path.join(templateDir, "base.css"))}:root{--accent:${accent}}</style><body class="${theme}"><main class="frame ${item.template === "social" ? "social" : item.template === "strip-3" ? "strip" : ""} ${item.template} ${item.compact ? "compact" : ""}">${content}</main></body>`,
           );
           await page.evaluate(() => document.fonts.ready);
           if (
@@ -388,6 +475,7 @@ export async function renderArt({ spec, out, work }) {
             ["hero-terminal", "hero-code", "hero-prompt"].includes(
               item.template,
             ) &&
+            !capture?.inputFile &&
             capture?.kind !== "agent-run" &&
             (capture?.stdout || "").split("\n").filter((l) => l.trim()).length <
               4
@@ -398,7 +486,9 @@ export async function renderArt({ spec, out, work }) {
           // Measure after fonts and the final canvas width are ready. Preserve the
           // normal wrapping; only shrink headings that still overflow their box.
           await page.evaluate(() => {
-            for (const title of document.querySelectorAll(".frame h1,.frame h2")) {
+            for (const title of document.querySelectorAll(
+              ".frame h1,.frame h2",
+            )) {
               const minimum = 16;
               let size = parseFloat(getComputedStyle(title).fontSize);
               while (
@@ -411,6 +501,34 @@ export async function renderArt({ spec, out, work }) {
               }
             }
           });
+          if (link) await connectLinks(page, link.focus);
+          if (item.template === "social")
+            await page.evaluate(() => {
+              const frame = document.querySelector(".frame"),
+                card = frame.querySelector(".card");
+              // Fit the complete stack, including CJK wrapping, before measuring.
+              for (
+                let n = 0;
+                n < 200 &&
+                card.getBoundingClientRect().bottom >
+                  frame.getBoundingClientRect().bottom - 40;
+                n++
+              ) {
+                let changed = false;
+                for (const selector of ["h1,.sub", "pre"]) {
+                  for (const e of frame.querySelectorAll(selector)) {
+                    const current = parseFloat(getComputedStyle(e).fontSize),
+                      min = e.matches("pre") ? 26 : 16;
+                    if (current > min) {
+                      e.style.fontSize = current - 1 + "px";
+                      changed = true;
+                    }
+                  }
+                  if (changed) break;
+                }
+                if (!changed) break;
+              }
+            });
           const inspected = await inspectArt(page);
           const file = `${item.id}-${theme}${zh ? ".zh-CN" : ""}.png`;
           await page
@@ -429,6 +547,15 @@ export async function renderArt({ spec, out, work }) {
                 ? "fixture"
                 : "real",
             captureId: item.captureId || null,
+            inputFile: capture?.inputFile || null,
+            labels: {
+              result: item.resultLabel
+                ? pick(item.resultLabel, lang, "resultLabel")
+                : zh
+                  ? "输出"
+                  : "Output",
+            },
+            ...(link ? { link: { ...link, visible: undefined } } : {}),
             sha256: hash(bytes),
             bytes: bytes.length,
             cssWidth: inspected.width,
@@ -443,7 +570,38 @@ export async function renderArt({ spec, out, work }) {
   await write(path.join(out, "art-manifest.json"), manifest);
   // Store every visual input beside the spec so regeneration survives cache deletion.
   const portable = structuredClone(cfg);
-  for (const { item, capture } of prepared) {
+  for (const { item, capture, link } of prepared) {
+    if (link)
+      for (const input of link.inputs) {
+        const from = path.resolve(base, input.file),
+          to = path.resolve(out, input.file);
+        if (from !== to) {
+          await fs.mkdir(path.dirname(to), { recursive: true });
+          await fs.copyFile(from, to);
+        }
+      }
+    for (const output of capture?.outputs || []) {
+      const from = await fs.realpath(path.resolve(base, output.file)),
+        realBase = await fs.realpath(base);
+      if (!from.startsWith(realBase + path.sep))
+        throw Error("Capture output escapes art directory");
+      const bytes = await fs.readFile(from);
+      if (hash(bytes) !== output.sha256)
+        throw Error("Capture output hash mismatch: " + output.file);
+      const to = path.resolve(out, output.file);
+      if (from !== to) {
+        await fs.mkdir(path.dirname(to), { recursive: true });
+        await fs.writeFile(to, bytes);
+      }
+    }
+    if (capture?.inputFile) {
+      const from = path.resolve(base, capture.inputFile.file),
+        to = path.resolve(out, capture.inputFile.file);
+      if (from !== to) {
+        await fs.mkdir(path.dirname(to), { recursive: true });
+        await fs.copyFile(from, to);
+      }
+    }
     if (capture?.kind === "agent-run")
       for (const source of [
         ...(capture.usedFiles || []),

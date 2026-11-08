@@ -1,0 +1,66 @@
+{
+  "accent": "#2563eb",
+  "images": [
+    {
+      "id": "hero",
+      "template": "hero-link",
+      "captureId": "core",
+      "fixture": true,
+      "link": {
+        "output": "capture-files/core/docs/readme/run/token-rows.json",
+        "outputPath": "entries",
+        "source": "inputs/main.css",
+        "items": [
+          {
+            "index": 3,
+            "name": "name",
+            "value": "value",
+            "line": "line",
+            "evidence": "evidence"
+          },
+          {
+            "index": 0,
+            "name": "name",
+            "value": "value",
+            "line": "line",
+            "evidence": "evidence"
+          },
+          {
+            "index": 2,
+            "name": "name",
+            "value": "value",
+            "line": "line",
+            "evidence": "evidence"
+          },
+          {
+            "index": 15,
+            "name": "name",
+            "value": "value",
+            "line": "line",
+            "evidence": "evidence"
+          },
+          {
+            "index": 18,
+            "name": "name",
+            "value": "value",
+            "line": "line",
+            "evidence": "evidence"
+          },
+          {
+            "index": 6,
+            "name": "name",
+            "value": "value",
+            "line": "line",
+            "evidence": "evidence"
+          }
+        ],
+        "focus": 0,
+        "status": {
+          "from": "verify",
+          "file": "capture-files/core/docs/readme/run/status.json",
+          "path": "message"
+        }
+      }
+    }
+  ]
+}

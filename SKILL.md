@@ -34,12 +34,15 @@ path before making a claim. Inspect readmeTests: preserve their guarantee when
 rewriting README content. Code facts have stable IDs and `file:line` sources.
 Add specific feature facts only after reading and checking that source line.
 GitHub About/topics are optional context, not source-code evidence.
-Keep the first scan's baseline.json: it snapshots old H2 headings and integration
-facts. Facts with kind integration describe compatible tools/platforms/runtimes;
+Keep the first scan's baseline.json: it snapshots old H2 headings, integration
+facts and each status badge (image URL, target URL, source and stable ID).
+Facts with kind integration describe compatible tools/platforms/runtimes;
 kind alternative describes competitors. Never remove compatibility names merely
 to avoid naming alternatives. V11 accounts for every old H2 and integration:
 keep it, move it to a docs page linked by the README, or record its ID and a
-concrete reason in docs/readme/retention.json intentionalDeletions. Report them.
+concrete reason in docs/readme/retention.json intentionalDeletions. Each old badge
+must stay in its README or have its ID and a specific deletion reason there
+(e.g. dead status endpoint or a false claim). Report every deletion.
 
 Run `node scripts/run.mjs audit --repo DIR --work WORK/before` before editing.
 Keep the old score and desktop light/dark and mobile screenshots. Do not remove
@@ -93,7 +96,7 @@ handwrite an output and call it a run. Caption agent-produced work explicitly as
 profile. For this skill, show a real fixture's before/after first-screen images
 and its actual audit scores, not an excerpt of this skill's own README.
 
-Write docs/readme/art.json using one of six templates: hero-terminal,
+Write docs/readme/art.json using one of seven templates: hero-link, hero-terminal,
 hero-prompt, hero-code, hero-screens, strip-3, social. Data schema and an original
 fixture example are in docs/reference.md and docs/design/art.json.
 Use `captureId` for terminal text; `stats` may reference only verify summary
@@ -104,10 +107,20 @@ a running web app. Keep the result short enough to read at README width.
 Run `art --repo DIR --spec DIR/docs/readme/art.json --out DIR/docs/readme`.
 Every image gets light/dark × en/zh-CN variants and a self-check manifest.
 Keep 40px top/bottom air and let ordinary canvas height follow content. Primary
-text is >=16 CSS px; labels >=13. Occupied content bounds (text, loaded images
-and nonempty designed panels, excluding the canvas/empty boxes) must cover >=60%
-of the canvas area. Balance both sides. Terminal/code panels need four meaningful
-lines; use a narrower canvas for shorter runs. Social retains its required size.
+text is >=16 CSS px; labels >=13. The union of text-bearing element and
+loaded-image rectangles (excluding container-only panels and empty boxes) must
+cover >=60% of the canvas area. Balance both sides. Single terminal/code
+transcripts should show four meaningful lines when the actual output has them; use a narrower canvas for shorter runs. Short paired
+transformations use compact hero-code with a recorded input, not added wrapper
+text. Social retains its required size.
+For source-linked products, prefer hero-link (schema in reference.md): use real
+hashed capture outputs and source lines, never hand-authored rows. Keep the
+strongest existing promise; let the hero explain its benefit, not repeat it.
+Use `capture --outputs FILE1,FILE2` to preserve real output files before cleanup.
+For short CLI transformations, capture the actual entry point with
+`--input-file` and use compact hero-code. Keep both install and first use on the
+first screen. Preserve an effective existing brand banner and concise navigation
+when supported by local assets; do not flatten useful original visual identity.
 Compare the rendered heroes at the same display width with the baseline images,
 not only with self-check flags.
 Inspect the PNGs yourself: readable text, even spacing and a useful result,
@@ -128,6 +141,10 @@ in brief.json. Record both G1/G2 decisions in the report.
 Desktop is 1280×800, content exactly 838px, with 72px reserved for the sticky bar.
 Name, one-liner, whole hero and entire installation block must fit. Mobile
 390×844 is recorded, not a hard gate. A local renderer fallback must be disclosed.
+P12: default screenshots allow only GET remote image requests. Confirm before
+badges/images load before judging. For `--offline`, render both before and after
+with that flag: remote images become identical neutral placeholders. Disclose
+the mode in the report; do not compare an offline side with an online side.
 
 ## 5. Write
 
@@ -152,7 +169,12 @@ reason. Private clones may explicitly share the authorized gh identity via
 `shareGitHubAuth: true` in that block plan; disclose it. No command rewrites or append flags behind the reader's back.
 Run `node scripts/run.mjs verify --repo DIR`. V1–V11 must have no failures.
 Read the report and resolve failures. A skip is a disclosed limitation, not an
-executed check. Project test commands come from scan; document a missing one.
+executed check. Project test commands come from scan. Use command-plan `projectTests.skip` with
+a concrete reason when a user forbids those tests (V8 is skip, never pass), or
+`projectTests.command` for an explicitly scoped command. For installation blocks,
+set `expectStdout` to a real completion receipt; exit 0 at a selector is not
+installation proof. Check warnings. Primary image text must remain >=13px at
+the actual README display width; export fonts alone do not prove readability.
 
 Run `stranger prepare --repo DIR`. Follow [prompts/stranger.md](prompts/stranger.md).
 Use a fresh isolated reader with only first-screen-desktop.png and questions.md,
@@ -164,7 +186,11 @@ appeals most (record only). Score its JSON with stranger score; all five checks
 must pass. Also run stranger blind-prepare --before OLD --after NEW: A/B labels
 are randomized and the mapping is kept outside the reader's image directory.
 Give a fresh reader only A.png, B.png and questions.md; never reveal old/new.
-Run stranger blind-score --answers FILE. The new version must win. Preserve
+Run stranger blind-score --answers FILE for each of exactly three fresh readers.
+The new version wins only with at least 2/3 choices. If it wins fewer than two,
+the delivery conclusion is "保留现有 README": keep the existing README and do
+not open a replacement PR. Report readers' verbatim words and improvements to
+borrow. Do not add readers or rerun rounds to overturn a loss. Preserve
 random labels, hashes, original answers and failed attempts; never answer or
 edit the stranger's choice. Preserve confusing[] verbatim. If an independent reader cannot run,
 use `stranger score --not-run 'specific reason'` and disclose this in the PR.
@@ -174,9 +200,16 @@ use `stranger score --not-run 'specific reason'` and disclose this in the PR.
 Run `storefront --repo DIR` for suggested About (<=120 characters), 5–8 topics
 and a 1280×640 social image; apply no settings. Run `report --repo DIR` for a
 PR body with before/after scores/screenshots, verify, stranger result, image
-provenance, gate decisions and unverified areas. Link screenshots in the PR.
+provenance, gate decisions and unverified areas. Aggregate the three untouched
+blind-score results as {readers: [RESULT1, RESULT2, RESULT3], improvements: [...]}
+in WORK/stranger/blind-result.json (or pass --blind-results FILE). report writes
+delivery.json and pr-body.md for either outcome, including "保留现有 README"
+when the new version wins fewer than 2/3. This is a completed delivery: return
+the report, verbatim reader feedback and improvements; do not open a replacement
+PR. Missing/invalid blind evidence remains not-run and cannot authorize replacement.
+Link screenshots in a replacement PR only when the new version wins and verify passes.
 
-With user authorization, create `readme/YYYYMMDD`, inspect the diff, run any
-user-supplied private/denied word scan, commit and open a PR when gh and remote
+After a blind win and passing verify, with user authorization, create
+`readme/YYYYMMDD`, inspect the diff, run any user-supplied private/denied word scan, commit and open a PR when gh and remote
 are available. Existing authorized branches may be reused. Never merge. Keep
 unrelated work and private inputs out of the diff. Report the PR and limitations.

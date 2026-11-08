@@ -310,3 +310,458 @@ h2 {
 .social .terminal {
   font-size: 28px;
 }
+/* A linked artifact is the hero: no repeated product heading. */
+.link-panels {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 44px;
+  align-items: stretch;
+}
+.link-panels .head {
+  padding: 10px 12px;
+  font-size: 16px;
+  gap: 4px;
+}
+.link-panels .head span:last-child {
+  white-space: nowrap;
+}
+.link-panels .card {
+  overflow: visible;
+}
+.token-rows {
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: calc(100% - 45px);
+  gap: 8px;
+}
+.link-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  padding: 8px 6px;
+  border-radius: 5px;
+  gap: 2px 8px;
+}
+.link-item.focus {
+  background: var(--soft);
+}
+.token-name {
+  display: block;
+  font:
+    600 18px/1.4 ui-monospace,
+    monospace;
+  overflow-wrap: anywhere;
+}
+.token-value {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font:
+    18px/1.4 ui-monospace,
+    monospace;
+}
+.swatch {
+  width: 14px;
+  height: 14px;
+  border: 1px solid var(--mute);
+  display: inline-block;
+  flex-shrink: 0;
+}
+.source-badge {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  font:
+    13px/1.6 ui-monospace,
+    monospace;
+  color: var(--mute);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 2px 4px;
+}
+.source-rows {
+  padding: 12px 8px;
+}
+.source-line {
+  display: flex;
+  gap: 8px;
+  border-radius: 3px;
+  padding: 4px 4px;
+}
+.source-line.cited {
+  background: var(--soft);
+}
+.line-number {
+  font:
+    13px/25px ui-monospace,
+    monospace;
+  width: 20px;
+  flex-shrink: 0;
+  color: var(--mute);
+  text-align: right;
+}
+.source-code {
+  display: block;
+  flex: 1;
+  min-width: 0;
+  font:
+    16px/25px ui-monospace,
+    monospace;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.source-gap {
+  font:
+    16px/25px ui-monospace,
+    monospace;
+  color: var(--mute);
+  padding-left: 32px;
+}
+.link-lines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+}
+.link-status {
+  font:
+    16px/1.5 ui-monospace,
+    monospace;
+  color: var(--mute);
+  margin-top: 14px;
+}
+.social h1 {
+  font-size: 100px;
+}
+.social .sub {
+  font-size: 60px;
+  line-height: 1.3;
+  margin: 12px 0;
+  max-width: 100%;
+}
+.social .illustrated-result {
+  font-family: ui-monospace, "DejaVu Sans Mono", monospace;
+  font-size: 100px;
+  line-height: 1.35;
+  padding: 24px 32px;
+}
+.social .card {
+  flex-shrink: 0;
+}
+.link-item {
+  font:
+    600 16px/1.3 ui-monospace,
+    monospace;
+  padding: 6px;
+  gap: 2px 8px;
+}
+.token-value {
+  grid-column: 1;
+  grid-row: 2;
+  font:
+    400 16px/1.3 ui-monospace,
+    monospace;
+}
+.source-line {
+  font:
+    16px/23px ui-monospace,
+    monospace;
+  display: grid;
+  grid-template-columns: 20px 1fr;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  padding: 2px 4px;
+}
+.line-number {
+  font:
+    13px/23px ui-monospace,
+    monospace;
+}
+.token-rows {
+  gap: 4px;
+}
+.link-item {
+  padding: 3px 6px;
+  gap: 0 8px;
+  line-height: 20px;
+}
+.token-value {
+  line-height: 20px;
+}
+.source-rows {
+  padding: 8px;
+}
+.source-line {
+  font-size: 16px;
+  line-height: 20px;
+  padding: 1px 4px;
+}
+.line-number {
+  line-height: 20px;
+}
+/* Short transformations show real data side by side, leaving room to try it. */
+.frame.hero-code.compact .title,
+.frame.hero-code.compact .caption {
+  display: none;
+}
+.frame.hero-code.compact .row {
+  gap: 12px;
+}
+/* Linked artifacts retain a calm, consistent row rhythm and a visible focus. */
+.hero-link {
+  background: var(--bg);
+}
+.hero-link .card {
+  border-radius: 12px;
+  box-shadow:
+    0 2px 3px #1720330a,
+    0 10px 24px #1720330a;
+}
+.hero-link .head {
+  font:
+    600 14px/20px ui-monospace,
+    monospace;
+  padding: 8px 12px;
+  background: var(--bg);
+  border-radius: 12px 12px 0 0;
+}
+.hero-link .token-rows {
+  height: calc(100% - 37px);
+  padding: 0;
+  gap: 0;
+  justify-content: stretch;
+}
+.hero-link .link-item {
+  flex: 1;
+  min-height: 36px;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  padding: 6px 8px;
+  gap: 6px;
+  border-radius: 0;
+  border-bottom: 1px solid var(--line);
+  font:
+    600 16px/20px ui-monospace,
+    monospace;
+}
+.hero-link .link-item:last-child {
+  border-bottom: 0;
+}
+.hero-link .token-value {
+  grid-column: 2;
+  grid-row: 1;
+  font-size: 16px;
+  gap: 4px;
+}
+.hero-link .source-badge {
+  grid-column: 3;
+  grid-row: 1;
+  border-radius: 99px;
+  padding: 2px 6px;
+  color: var(--ink);
+  font-weight: 400;
+}
+.hero-link .focus .source-badge {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+.hero-link .source-rows {
+  padding: 8px 6px;
+}
+.hero-link .source-line {
+  font:
+    16px/18px ui-monospace,
+    monospace;
+  padding: 1px 4px;
+}
+.hero-link .line-number {
+  font:
+    13px/18px ui-monospace,
+    monospace;
+}
+.hero-link .focused-source {
+  box-shadow: inset 3px 0 var(--accent);
+  font-weight: 600;
+}
+.hero-link .link-status {
+  margin-top: 10px;
+  font:
+    14px/20px system-ui,
+    sans-serif;
+  color: var(--ink);
+  text-align: center;
+  border-radius: 99px;
+  background: var(--soft);
+  padding: 6px 12px;
+}
+.frame.hero-code.compact .terminal {
+  font-size: 22px;
+}
+.hero-link .source-line {
+  white-space: normal;
+}
+.hero-link {
+  --soft: color-mix(in srgb, var(--accent) 8%, #fff);
+}
+.dark .hero-link {
+  --soft: color-mix(in srgb, var(--accent) 20%, #171a18);
+}
+.frame.hero-code.compact .terminal {
+  font-size: 24px;
+}
+.hero-link {
+  --bg: #fff;
+  --card: #fff;
+  --ink: #172033;
+  --line: #dde3ed;
+  --mute: #526176;
+}
+.dark .hero-link {
+  --bg: #0d1117;
+  --card: #151b26;
+  --ink: #e6edf3;
+  --line: #303d52;
+  --mute: #aab7ca;
+}
+.hero-link .head,
+.hero-link .link-item,
+.hero-link .token-value,
+.hero-link .source-badge,
+.hero-link .source-line,
+.hero-link .line-number {
+  font-family: Menlo, "DejaVu Sans Mono", Consolas, monospace;
+}
+/* Separate semantic names, raw values and source badges for fast comparison. */
+.hero-link .head {
+  font-size: 14px;
+  line-height: 18px;
+  padding: 6px 12px;
+}
+.hero-link .token-rows {
+  height: calc(100% - 31px);
+}
+.hero-link .link-item {
+  min-height: 40px;
+  grid-template-columns: 28px minmax(0, 1fr) auto;
+  padding: 2px 8px;
+  gap: 0 8px;
+  font-size: 16px;
+  line-height: 18px;
+}
+.hero-link .token-value {
+  grid-column: 2;
+  grid-row: 2;
+  font-size: 16px;
+  line-height: 18px;
+  color: var(--mute);
+}
+.hero-link .source-badge {
+  grid-column: 3;
+  grid-row: 1 / span 2;
+}
+.hero-link .token-icon {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  align-self: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+}
+.hero-link .color-icon {
+  border: 1px solid var(--mute);
+}
+.hero-link .type-icon {
+  border: 1px solid var(--line);
+  font:
+    600 16px/20px system-ui,
+    sans-serif;
+  text-align: center;
+}
+.hero-link .radius-icon {
+  border: 2px solid var(--accent);
+  border-radius: 8px;
+}
+.hero-link .shadow-icon {
+  border: 1px solid var(--line);
+  background: var(--card);
+  box-shadow: 0 3px 6px #17203340;
+}
+.hero-link .source-rows {
+  padding: 6px;
+}
+.hero-link .source-line {
+  line-height: 18px;
+  padding: 0 4px;
+}
+.hero-link .line-number {
+  line-height: 18px;
+}
+.hero-link .link-status {
+  width: max-content;
+  max-width: 100%;
+  margin: 10px auto 0;
+  padding: 4px 16px;
+  font:
+    600 16px/22px system-ui,
+    sans-serif;
+}
+.hero-link .link-status.verified {
+  background: #e9f7ee;
+  color: #176b32;
+  border: 1px solid #cce8d5;
+}
+.dark .hero-link .link-status.verified {
+  background: #12291b;
+  color: #8cdda4;
+  border-color: #284b34;
+}
+/* Code is a bounded preview; full lines remain in the hashed source and manifest. */
+.hero-link .link-panels {
+  grid-template-columns: 0.875fr 1.125fr;
+}
+.hero-link .source-line,
+.hero-link .line-number {
+  line-height: 22px;
+}
+
+/* A quieter linked-source preview; retain the existing readable main-text floor. */
+.frame.hero-link {
+  padding: 12px;
+}
+.hero-link .link-panels {
+  gap: 40px;
+}
+.hero-link .head {
+  font-weight: 500;
+  padding: 8px 12px;
+}
+.hero-link .token-rows {
+  height: calc(100% - 35px);
+}
+.hero-link .link-item {
+  min-height: 44px;
+  padding: 4px 10px;
+  font-weight: 400;
+  line-height: 20px;
+}
+.hero-link .token-value {
+  font-weight: 400;
+  line-height: 20px;
+}
+.hero-link .source-line,
+.hero-link .line-number {
+  line-height: 24px;
+  font-weight: 400;
+}
+.hero-link .source-line {
+  letter-spacing: -0.3px;
+}
+.hero-link .link-status {
+  margin-top: 12px;
+  font-weight: 400;
+  font-size: 14px;
+}
