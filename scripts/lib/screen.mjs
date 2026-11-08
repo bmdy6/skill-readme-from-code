@@ -7,6 +7,22 @@ import { marked } from "marked";
 import GithubSlugger from "github-slugger";
 import { read, write, escape } from "./io.mjs";
 const root = fileURLToPath(new URL("../../", import.meta.url));
+const remotePlaceholder =
+  '<svg xmlns="http://www.w3.org/2000/svg" width="120" height="20"><rect width="120" height="20" rx="3" fill="#e5e7eb"/><text x="60" y="14" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">Remote image</text></svg>';
+
+export function routeScreenRequest(route, { offline = false } = {}) {
+  const request = route.request();
+  if (!/^https?:/i.test(request.url())) return route.continue();
+  if (request.method() !== "GET" || request.resourceType() !== "image")
+    return route.abort();
+  return offline
+    ? route.fulfill({
+        status: 200,
+        contentType: "image/svg+xml",
+        body: remotePlaceholder,
+      })
+    : route.continue();
+}
 export async function markdownHTML(md, { local = false } = {}) {
   if (!local)
     try {
@@ -50,9 +66,10 @@ export async function firstScreen({
   readme = "README.md",
   install,
   local = false,
+  offline = false,
 }) {
   const md = await read(path.join(repo, readme));
-  const rendered = await markdownHTML(md, { local });
+  const rendered = await markdownHTML(md, { local: local || offline });
   const css = await read(path.join(root, "templates/github-markdown.css"));
   await fs.mkdir(work, { recursive: true });
   const htmlFile = path.join(work, "screen.html");
@@ -73,11 +90,10 @@ export async function firstScreen({
       const page = await browser.newPage({
         viewport: { width, height },
         colorScheme: theme,
+        serviceWorkers: "block",
       });
       await page.route("**/*", (route) =>
-        /^https?:/.test(route.request().url())
-          ? route.abort()
-          : route.continue(),
+        routeScreenRequest(route, { offline }),
       );
       await page.goto(pathToFileURL(htmlFile).href, { waitUntil: "load" });
       await page.evaluate(
@@ -156,6 +172,8 @@ export async function firstScreen({
             images: [...root.querySelectorAll("img")].map((i) => ({
               src: i.currentSrc || i.src,
               width: i.getBoundingClientRect().width,
+              loaded: i.complete && i.naturalWidth > 0,
+              naturalWidth: i.naturalWidth,
             })),
           };
         },
@@ -178,6 +196,7 @@ export async function firstScreen({
   const result = {
     renderer: rendered.renderer,
     fallbackReason: rendered.fallbackReason,
+    remoteImages: offline ? "neutral-placeholder" : "get-only",
     readme,
     viewports,
   };

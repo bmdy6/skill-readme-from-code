@@ -22,11 +22,11 @@ there is no automatic `write` CLI command.
 |---|---|---|
 | doctor | none | Checks Node; installs Chromium when absent. |
 | scan | --repo DIR | facts.json; deterministic with identical repository and metadata. |
-| audit | --repo DIR [--online] [--local] [--deny-words FILE] | audit.json, audit.md, screen.html, first-screen.json and three screenshots. V2–V7 only; target untouched. |
+| audit | --repo DIR [--online] [--local] [--offline] [--deny-words FILE] | audit.json, audit.md, screen.html, first-screen.json and three screenshots. V2–V7 only; target untouched. |
 | capture | --repo DIR --id ID [--tty] -- 'COMMAND' | captures/ID.json. 60 second cap, separate home, closed stdin, no inherited credentials by default. |
 | art | --spec FILE [--out DIR] | PNGs and art-manifest.json; portable art.json and capture/screen inputs. Default out: target docs/readme. |
-| verify | --repo DIR [--plan FILE] [--online] [--local] [--deny-words FILE] | verify.json, verify.md, screenshots. V1–V11; any failure exits 1. |
-| stranger prepare | --repo DIR | stranger/first-screen-desktop.png, desktop-dark/mobile PNG, questions.md, result.json (not-run). |
+| verify | --repo DIR [--plan FILE] [--online] [--local] [--offline] [--deny-words FILE] | verify.json, verify.md, screenshots. V1–V11; any failure exits 1. |
+| stranger prepare | --repo DIR [--local] [--offline] | stranger/first-screen-desktop.png, desktop-dark/mobile PNG, questions.md, result.json (not-run). |
 | stranger score | --answers FILE or --not-run 'reason' | stranger/result.json. Five independent checks; confusing[] is preserved. |
 | storefront | --repo DIR | storefront.md, social-light.png and storefront-art/. Suggestions only. |
 | report | --repo DIR [--before DIR] | pr-body.md. Before defaults to work/before; absent evidence is not-run. |
@@ -37,8 +37,15 @@ heading anchors using GitHub slug rules. External links are explicitly unchecked
 `--local` forces marked rendering; otherwise GitHub Markdown API is tried first,
 with a documented fallback. The renderer adds a 72px header reserve. Desktop is
 1280×800 with 838px content; mobile is 390×844 and informational. Desktop dark
-uses the same dimensions. Remote image requests are blocked for reproducibility;
-keep evidence images local. Badges are checked as text/URLs, not network proof.
+uses the same dimensions. P12: screenshots allow remote HTTP(S) images only when
+requested with GET; scripts, stylesheets, frames, fetches and other requests stay
+blocked. `--local` selects the Markdown renderer only; it does not block images.
+`--offline` also selects local Markdown rendering and replaces every remote image
+(including picture/srcset sources) with the same neutral placeholder. Use the
+same mode for before and after; the report records each side's remoteImages
+policy. first-screen.json records image loading so failed online images can be
+caught before blind selection. Keep evidence images local. Badges are visual
+context, not verified evidence of build status or endorsement.
 
 ## Facts and source evidence
 

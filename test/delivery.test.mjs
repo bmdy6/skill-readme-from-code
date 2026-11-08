@@ -84,16 +84,38 @@ test("audience synonyms come from the brief and reject unrelated answers", () =>
     assert.equal(scoreAnswers(positioned, { forWhom }).checks.forWhom, false);
   }
   assert.equal(
-    scoreAnswers(positioned, { what: "A README skill" }).checks.what, true,
+    scoreAnswers(positioned, { what: "A README skill" }).checks.what,
+    true,
   );
   assert.equal(
-    scoreAnswers(positioned, { what: "engineers" }).checks.what, false,
+    scoreAnswers(positioned, { what: "engineers" }).checks.what,
+    false,
   );
   assert.equal(
     scoreAnswers(
-      { ...positioned, keyTerms: { what: ["readme"], audience: ["designers"] } },
+      {
+        ...positioned,
+        keyTerms: { what: ["readme"], audience: ["designers"] },
+      },
       { forWhom: "designers" },
     ).checks.forWhom,
     true,
   );
+});
+
+test("P12 report discloses each side's remote image policy", async (t) => {
+  const work = await fs.mkdtemp(path.join(os.tmpdir(), "rfc-report-images-"));
+  t.after(() => fs.rm(work, { recursive: true, force: true }));
+  const screen = { remoteImages: "neutral-placeholder", viewports: {} };
+  await write(path.join(work, "before/audit.json"), {
+    score: 80,
+    checks: [{ id: "V2", screen }],
+  });
+  await write(path.join(work, "verify.json"), {
+    score: 90,
+    checks: [{ id: "V2", screen }],
+  });
+  const text = await report({ work });
+  assert.match(text, /before=neutral-placeholder; after=neutral-placeholder/);
+  assert.match(text, /same neutral placeholder \(--offline\)/);
 });

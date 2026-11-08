@@ -138,6 +138,10 @@ in brief.json. Record both G1/G2 decisions in the report.
 Desktop is 1280×800, content exactly 838px, with 72px reserved for the sticky bar.
 Name, one-liner, whole hero and entire installation block must fit. Mobile
 390×844 is recorded, not a hard gate. A local renderer fallback must be disclosed.
+P12: default screenshots allow only GET remote image requests. Confirm before
+badges/images load before judging. For `--offline`, render both before and after
+with that flag: remote images become identical neutral placeholders. Disclose
+the mode in the report; do not compare an offline side with an online side.
 
 ## 5. Write
 
