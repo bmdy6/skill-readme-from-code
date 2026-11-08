@@ -1,6 +1,5 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { marked } from "marked";
 import { read, json, write, exists, hash } from "./io.mjs";
 import { scan } from "./scan.mjs";
 import {
@@ -10,6 +9,7 @@ import {
   links,
   prose,
   proseParagraphs,
+  leadText,
 } from "./markdown.mjs";
 import { firstScreen } from "./screen.mjs";
 import { runCopy } from "./execute.mjs";
@@ -192,12 +192,7 @@ export async function staticChecks(repo, facts, brief = {}, opts = {}) {
     ["README.md", md, "en"],
     ...(zh ? [["README.zh-CN.md", zh, "zh-CN"]] : []),
   ]) {
-    const lead = marked
-      .lexer(text)
-      .find(
-        (t) =>
-          t.type === "paragraph" && !/^!?\[/.test(t.text) && !/^</.test(t.text),
-      )?.text;
+    const lead = leadText(text);
     if (lead) {
       const plain = lead.replace(/[\*_`]/g, "");
       if (

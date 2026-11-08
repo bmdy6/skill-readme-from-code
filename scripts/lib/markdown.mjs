@@ -75,3 +75,17 @@ export function proseParagraphs(md) {
   visit(tokens(md));
   return out;
 }
+
+// Use the same visible lead forms as firstScreen; captions are not taglines.
+export function leadText(md) {
+  for (const t of tokens(md)) {
+    if (t.type === "html") {
+      const lead = t.text.match(/<(h[23]|blockquote)\b[^>]*>([\s\S]*?)<\/\1>/i);
+      if (lead) return lead[2].replace(/<[^>]*>/g, "").trim();
+    }
+    if (t.type === "heading" && [2, 3].includes(t.depth)) return t.text;
+    if (t.type === "blockquote") return prose(t.text).trim();
+    if (t.type === "paragraph" && !/^!?\[/.test(t.text) && !/^</.test(t.text))
+      return t.text;
+  }
+}

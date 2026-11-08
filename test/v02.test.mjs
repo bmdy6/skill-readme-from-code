@@ -698,3 +698,31 @@ test("portable art retains all hashed capture outputs, including original JSON b
     source: "raw provenance",
   });
 });
+
+test("P8 V6 uses the visible HTML tagline instead of a later long image caption", async () => {
+  const repo = await tmp();
+  const brief = {
+    coreAction: { output: { keywords: ["tokens", "设计令牌"] } },
+  };
+  await write(path.join(repo, "README.md"), "# Moss\n\nTurn CSS into tokens.");
+  await write(
+    path.join(repo, "README.zh-CN.md"),
+    "<h3>从样式生成设计令牌。</h3>\n\n" +
+      "这是图片的详细注释，而不是一句话介绍。".repeat(2),
+  );
+  assert.ok(
+    !(await staticChecks(repo, facts, brief))
+      .find((c) => c.id === "V6")
+      .issues.some((s) => s.includes("One-liner")),
+  );
+  await write(
+    path.join(repo, "README.zh-CN.md"),
+    "<h3>" + "设计令牌".repeat(11) + "</h3>\n\n图片注释。",
+  );
+  assert.match(
+    (await staticChecks(repo, facts, brief))
+      .find((c) => c.id === "V6")
+      .issues.join(" "),
+    /One-liner exceeds 40/,
+  );
+});
