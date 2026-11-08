@@ -19,3 +19,11 @@ Compatible tools are not competitors. Keep their actual names and boundaries.
 If the hero shows scores, its immediate caption must explain the calculation in
 one sentence (for example, Audit score = share of README checks passed). Keep
 the explanation in every README language; a FAQ alone does not satisfy V10.
+
+Choose the visual by what makes the product useful: source-linked artifacts use
+hero-link, transformations use hero-code with the real input and output, and
+terminal workflows use hero-terminal. Do not replace an explanatory visual with
+a file listing just because the listing is easy to capture. Preserve the old
+README's strongest concrete claim when the code supports it. In the caption,
+name the demonstrated scope and what is not demonstrated. Put the first useful
+request/example directly after installation so a stranger can actually try it.

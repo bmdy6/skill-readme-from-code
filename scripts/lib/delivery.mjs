@@ -10,17 +10,34 @@ function termsFor(brief, field) {
   const terms = brief.keyTerms || [];
   return Array.isArray(terms) ? terms : terms[field] || [];
 }
+// Only English morphology is normalized; commands retain exact normalized equality.
+export function normalizeTerms(s) {
+  return String(s || "")
+    .replace(/[A-Z]/g, (c) => c.toLowerCase())
+    .replace(/[-\s]+/g, " ")
+    .replace(/[a-z]+/g, (word) => {
+      if (word.endsWith("ies") && word.length > 3)
+        return word.slice(0, -3) + "y";
+      if (/(?:sses|shes|ches|xes|zes)$/.test(word)) return word.slice(0, -2);
+      if (word.endsWith("s") && word.length > 3 && !/(?:ss|us|is)$/.test(word))
+        return word.slice(0, -1);
+      return word;
+    })
+    .trim();
+}
+function hasTerm(answer, term) {
+  const a = normalizeTerms(answer),
+    t = normalizeTerms(term);
+  if (!t) return false;
+  const escaped = t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(`(?<![a-z0-9])${escaped}(?![a-z0-9])`).test(a);
+}
 export function scoreAnswers(brief, answers) {
   const norm = (s) =>
       String(s || "")
         .trim()
         .replace(/\s+/g, " "),
-    hit = (s, field) =>
-      termsFor(brief, field).some((t) =>
-        String(s || "")
-          .toLowerCase()
-          .includes(t.toLowerCase()),
-      );
+    hit = (s, field) => termsFor(brief, field).some((t) => hasTerm(s, t));
   const checks = {
     what: hit(answers.what, "what"),
     forWhom: hit(answers.forWhom, "audience"),
@@ -29,9 +46,7 @@ export function scoreAnswers(brief, answers) {
       norm(answers.firstCommand) === norm(brief.install.command),
     wouldTry: answers.wouldTry === "yes",
     whatOutput: (brief.coreAction?.output?.keywords || []).some((t) =>
-      String(answers.whatOutput || "")
-        .toLowerCase()
-        .includes(t.toLowerCase()),
+      hasTerm(answers.whatOutput, t),
     ),
   };
   return {
@@ -176,7 +191,7 @@ export async function report(opts) {
           .map(([name, v]) => `![${label} ${name}](${dir}/${v.screenshot})`)
           .join("\n\n")
       : `${label}: not-run`;
-  const text = `# README delivery\n\nBefore: ${before?.score ?? "not-run"}/100. After: ${after?.score ?? "not-run"}/100.\n\n${screenshots("Before", screen(before), "before")}\n\n${screenshots("After", screen(after), ".")}\n\n## Verification\n\n| Check | Status | Evidence |\n|---|---|---|\n${(after?.checks || []).map((c) => `| ${c.id} | ${c.status} | ${(c.issues?.join("; ") || c.reason || "Passed").replace(/\|/g, "\\|")} |`).join("\n")}\n\n## Stranger\n\n${JSON.stringify(stranger, null, 2)}\n\n## Blind choice\n\n${JSON.stringify(await json(path.join(opts.work, "stranger/blind-result.json"), { status: "not-run" }), null, 2)}\n\n## Images\n\n${art.files.map((f) => `- ${f.file}: ${f.kind}; ${Object.values(f.checks).every((s) => s === "pass") ? "self-check pass" : "self-check fail"}`).join("\n") || "not-run"}\n\n## Gates\n\nG1: ${brief.gates?.G1?.decidedBy || brief.decidedBy || "not recorded"}. G2: ${brief.gates?.G2?.decidedBy || brief.decidedBy || "not recorded"}.\n\n${JSON.stringify(brief.gates || {}, null, 2)}\n\n## Intentional deletions\n\n${JSON.stringify(after?.checks?.find((c) => c.id === "V11")?.intentionalDeletions || [], null, 2)}\n\n## Not verified\n\n${[...(!after ? ["- Verification not-run"] : []), ...(!before ? ["- Before audit not-run"] : []), ...(after?.checks?.filter((c) => c.status !== "pass").map((c) => `- ${c.id}: ${c.status}; ${c.reason || c.issues?.join("; ")}`) || []), ...(stranger.status === "not-run" ? [`- Stranger not-run: ${stranger.reason}`] : []), "- External links only checked when --online was requested.", `- Renderer: ${screen(after)?.renderer || "not-run"}${screen(after)?.fallbackReason ? `; ${screen(after).fallbackReason}` : ""}.`].join("\n")}\n`;
+  const text = `# README delivery\n\nBefore: ${before?.score ?? "not-run"}/100. After: ${after?.score ?? "not-run"}/100.\n\n${screenshots("Before", screen(before), "before")}\n\n${screenshots("After", screen(after), ".")}\n\n## Verification\n\n| Check | Status | Evidence |\n|---|---|---|\n${(after?.checks || []).map((c) => `| ${c.id} | ${c.status} | ${(c.issues?.join("; ") || c.reason || c.warnings?.join("; ") || "Passed").replace(/\|/g, "\\|")} |`).join("\n")}\n\n## Stranger\n\n${JSON.stringify(stranger, null, 2)}\n\n## Blind choice\n\n${JSON.stringify(await json(path.join(opts.work, "stranger/blind-result.json"), { status: "not-run" }), null, 2)}\n\n## Images\n\n${art.files.map((f) => `- ${f.file}: ${f.kind}; ${Object.values(f.checks).every((s) => s === "pass") ? "self-check pass" : "self-check fail"}`).join("\n") || "not-run"}\n\n## Gates\n\nG1: ${brief.gates?.G1?.decidedBy || brief.decidedBy || "not recorded"}. G2: ${brief.gates?.G2?.decidedBy || brief.decidedBy || "not recorded"}.\n\n${JSON.stringify(brief.gates || {}, null, 2)}\n\n## Intentional deletions\n\n${JSON.stringify(after?.checks?.find((c) => c.id === "V11")?.intentionalDeletions || [], null, 2)}\n\n## Not verified\n\n${[...(!after ? ["- Verification not-run"] : []), ...(!before ? ["- Before audit not-run"] : []), ...(after?.checks?.filter((c) => c.status !== "pass").map((c) => `- ${c.id}: ${c.status}; ${c.reason || c.issues?.join("; ")}`) || []), ...(stranger.status === "not-run" ? [`- Stranger not-run: ${stranger.reason}`] : []), "- External links only checked when --online was requested.", `- Renderer: ${screen(after)?.renderer || "not-run"}${screen(after)?.fallbackReason ? `; ${screen(after).fallbackReason}` : ""}.`].join("\n")}\n`;
   await write(path.join(opts.work, "pr-body.md"), text);
   return text;
 }

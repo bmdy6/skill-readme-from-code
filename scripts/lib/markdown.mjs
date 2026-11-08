@@ -60,3 +60,18 @@ export const prose = (md) =>
     .replace(/^.*\|.*$/gm, "")
     .replace(/<picture>[\s\S]*?<\/picture>/gi, "")
     .replace(/!\[[^\]]*\]\([^)]*\)|<[^>]*>|https?:\/\/\S+/g, "");
+
+// Keep list items independent; a list marker is structure, never a sentence.
+export function proseParagraphs(md) {
+  const out = [];
+  const visit = (list) => {
+    for (const t of list) {
+      if (t.type === "list") for (const item of t.items) visit(item.tokens);
+      else if (t.type === "blockquote") visit(t.tokens);
+      else if (t.type === "paragraph" || t.type === "text")
+        out.push(prose(t.text));
+    }
+  };
+  visit(tokens(md));
+  return out;
+}

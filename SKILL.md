@@ -93,7 +93,7 @@ handwrite an output and call it a run. Caption agent-produced work explicitly as
 profile. For this skill, show a real fixture's before/after first-screen images
 and its actual audit scores, not an excerpt of this skill's own README.
 
-Write docs/readme/art.json using one of six templates: hero-terminal,
+Write docs/readme/art.json using one of seven templates: hero-link, hero-terminal,
 hero-prompt, hero-code, hero-screens, strip-3, social. Data schema and an original
 fixture example are in docs/reference.md and docs/design/art.json.
 Use `captureId` for terminal text; `stats` may reference only verify summary
@@ -104,10 +104,14 @@ a running web app. Keep the result short enough to read at README width.
 Run `art --repo DIR --spec DIR/docs/readme/art.json --out DIR/docs/readme`.
 Every image gets light/dark × en/zh-CN variants and a self-check manifest.
 Keep 40px top/bottom air and let ordinary canvas height follow content. Primary
-text is >=16 CSS px; labels >=13. Occupied content bounds (text, loaded images
-and nonempty designed panels, excluding the canvas/empty boxes) must cover >=60%
+text is >=16 CSS px; labels >=13. The union of actual text/image element rectangles (text, loaded images
+excluding container-only panels and empty boxes) must cover >=60%
 of the canvas area. Balance both sides. Terminal/code panels need four meaningful
 lines; use a narrower canvas for shorter runs. Social retains its required size.
+For source-linked products, prefer hero-link (schema in reference.md): use real
+hashed capture outputs and source lines, never hand-authored rows. Keep the
+strongest existing promise; let the hero explain its benefit, not repeat it.
+Use `capture --outputs FILE1,FILE2` to preserve real output files before cleanup.
 Compare the rendered heroes at the same display width with the baseline images,
 not only with self-check flags.
 Inspect the PNGs yourself: readable text, even spacing and a useful result,
@@ -152,7 +156,12 @@ reason. Private clones may explicitly share the authorized gh identity via
 `shareGitHubAuth: true` in that block plan; disclose it. No command rewrites or append flags behind the reader's back.
 Run `node scripts/run.mjs verify --repo DIR`. V1–V11 must have no failures.
 Read the report and resolve failures. A skip is a disclosed limitation, not an
-executed check. Project test commands come from scan; document a missing one.
+executed check. Project test commands come from scan. Use command-plan `projectTests.skip` with
+a concrete reason when a user forbids those tests (V8 is skip, never pass), or
+`projectTests.command` for an explicitly scoped command. For installation blocks,
+set `expectStdout` to a real completion receipt; exit 0 at a selector is not
+installation proof. Check warnings. Primary image text must remain >=13px at
+the actual README display width; export fonts alone do not prove readability.
 
 Run `stranger prepare --repo DIR`. Follow [prompts/stranger.md](prompts/stranger.md).
 Use a fresh isolated reader with only first-screen-desktop.png and questions.md,

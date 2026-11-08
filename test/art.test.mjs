@@ -24,7 +24,7 @@ test("terminal output cannot be handwritten", async () => {
     /capture/i,
   );
 });
-test("all six templates produce four checked variants", async () => {
+test("all six templates produce four measured variants and flag sparse layouts", async () => {
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), "rfc-six-"));
   const capture = await runCopy(
     "evals/fixtures/clean",
@@ -82,9 +82,11 @@ node -p "'License: '+require('./package.json').license"`,
   assert.equal(r.files.length, 24);
   for (const f of r.files) {
     assert.ok(
-      Object.values(f.checks).every((v) => v === "pass"),
+      Object.entries(f.checks).filter(([k]) => !["density", "balance"].includes(k)).every(([,v]) => v === "pass"),
       JSON.stringify(f),
     );
+    assert.equal(f.checks.density, f.contentRatio >= 0.6 ? "pass" : "fail");
+    assert.equal(f.checks.balance, f.balanceRatio >= 1/3 ? "pass" : "fail");
     assert.match(f.sha256, /^[a-f0-9]{64}$/);
   }
   assert.equal(

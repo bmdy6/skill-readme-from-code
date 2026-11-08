@@ -9,8 +9,22 @@ export async function capture(opts) {
     id: opts.id,
     kind: "command-run",
     role: opts.role || "supporting",
-    ...(await runCopy(opts.repo, opts.command, { tty: !!opts.tty })),
+    ...(await runCopy(opts.repo, opts.command, {
+      tty: !!opts.tty,
+      outputs: opts.outputs
+        ? String(opts.outputs)
+            .split(",")
+            .map((s) => s.trim())
+            .filter(Boolean)
+        : [],
+      outputDir: path.join(opts.work, "capture-files", opts.id),
+    })),
   };
+  if (result.outputs)
+    result.outputs = result.outputs.map((o) => ({
+      ...o,
+      file: path.posix.join("capture-files", opts.id, o.file),
+    }));
   await write(path.join(opts.work, "captures", opts.id + ".json"), result);
   return result;
 }

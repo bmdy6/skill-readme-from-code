@@ -2,11 +2,17 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { spawn, execFileSync } from "node:child_process";
-import { files } from "./io.mjs";
+import { files, hash } from "./io.mjs";
 export async function runCopy(
   repo,
   command,
-  { timeoutMs = 60000, tty = false, shareGitHubAuth = false } = {},
+  {
+    timeoutMs = 60000,
+    tty = false,
+    shareGitHubAuth = false,
+    outputs = [],
+    outputDir,
+  } = {},
 ) {
   const temp = await fs.mkdtemp(path.join(os.tmpdir(), "readme-run-"));
   const cwd = path.join(temp, "repo"),
@@ -30,7 +36,7 @@ export async function runCopy(
       if (e.code !== "ENOENT") throw e;
     }
     const start = Date.now();
-    return await new Promise((resolve) => {
+    const result = await new Promise((resolve) => {
       const env = {
         PATH: process.env.PATH,
         HOME: home,
@@ -108,6 +114,27 @@ export async function runCopy(
         });
       });
     });
+    if (outputs.length) {
+      if (!outputDir)
+        throw Error("Capture outputs require an output directory");
+      result.outputs = [];
+      for (const file of outputs) {
+        const from = path.resolve(cwd, file),
+          real = await fs.realpath(from);
+        if (
+          !real.startsWith((await fs.realpath(cwd)) + path.sep) ||
+          path.isAbsolute(file) ||
+          file.split(/[\\/]/).includes("..")
+        )
+          throw Error("Capture output escapes disposable repository");
+        const bytes = await fs.readFile(real),
+          to = path.join(outputDir, file);
+        await fs.mkdir(path.dirname(to), { recursive: true });
+        await fs.writeFile(to, bytes);
+        result.outputs.push({ file, sha256: hash(bytes) });
+      }
+    }
+    return result;
   } finally {
     await fs.rm(temp, { recursive: true, force: true });
   }

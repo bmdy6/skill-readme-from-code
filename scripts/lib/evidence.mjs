@@ -1,3 +1,4 @@
+import { prepareLink } from "./art-link.mjs";
 import path from "node:path";
 import fs from "node:fs/promises";
 import { json, hash, read } from "./io.mjs";
@@ -63,6 +64,19 @@ export async function heroRelevance(repo, brief, facts) {
         issues.push(
           `${file}: Hero score needs a calculation in its immediate caption`,
         );
+    }
+  }
+  if (hero?.template === "hero-link" && capture) {
+    try {
+      const link = await prepareLink(hero, capture, base, base);
+      const manifest = await json(path.join(base, "art-manifest.json"));
+      for (const f of manifest?.files?.filter(
+        (f) => f.captureId === hero.captureId && f.template === "hero-link",
+      ) || [])
+        if (f.link?.source?.sha256 !== link.source.sha256)
+          issues.push("hero-link source changed since rendering");
+    } catch (e) {
+      issues.push(e.message);
     }
   }
   if (!capture) issues.push("Hero requires a core capture");

@@ -110,8 +110,15 @@ export async function firstScreen({
                 Node.DOCUMENT_POSITION_PRECEDING,
           );
           const title = banner || heading;
-          const lead = [...root.querySelectorAll("p")].find(
-            (p) => p.textContent.trim().length > 10 && !p.querySelector("img"),
+          const lead = [...root.querySelectorAll("p,h2,h3,blockquote")].find(
+            (p) =>
+              p.textContent.trim().length > 10 &&
+              !p.querySelector("img") &&
+              (!heading ||
+                !!(
+                  heading.compareDocumentPosition(p) &
+                  Node.DOCUMENT_POSITION_FOLLOWING
+                )),
           );
           const hero = imgs.find((i) => i !== banner && i.naturalWidth >= 400);
           const pre = [...root.querySelectorAll("pre")].find((p) =>
@@ -145,7 +152,11 @@ export async function firstScreen({
               root.clientWidth -
               parseFloat(getComputedStyle(root).paddingLeft) -
               parseFloat(getComputedStyle(root).paddingRight),
-            fold: height - 72,
+            fold: height,
+            images: [...root.querySelectorAll("img")].map((i) => ({
+              src: i.currentSrc || i.src,
+              width: i.getBoundingClientRect().width,
+            })),
           };
         },
         { install, height },

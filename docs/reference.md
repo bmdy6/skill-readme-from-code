@@ -55,6 +55,15 @@ excludes manifest dependencies from this list; --deny-words always applies.
 Feature claims need agent inspection. Add `{id,claim,value,source}` to
 work/facts.json after checking the actual code. Verification rescans structural
 facts and also validates supplemental facts against their source file and line.
+Supplemental `value` must be a nonempty string and a literal substring of the
+specified source line. `source` is a repository-relative path plus a 1-based line
+number. `id` and `claim` are nonempty strings; booleans, numbers, paraphrases,
+blank values, wrong lines and paths outside the repository are rejected.
+
+```json
+[{"id":"copy-execution","claim":"Commands run in disposable copies.","value":"const temp = await fs.mkdtemp", "source":"scripts/lib/execute.mjs:11"}]
+```
+
 claims.json in target docs/readme contains an array:
 
 ```json
@@ -240,3 +249,73 @@ This applies to each README language, not only the FAQ. For agent-run voice
 comparisons, measurements.before is `{score,source:{file,sha256}}`, while
 measurements.score and source retain the actual polished score. Art shows
 `Voice match X → Y`; V10 checks both saved checker outputs and their hashes.
+
+## v0.2: linked artifacts and explicit execution
+
+`hero-link` uses 900 CSS px and needs no title/subtitle: filenames, values,
+source excerpts and a checked status are the content. Select it when the product's
+value is the relationship between output and source. Keep the old strongest
+promise and compare the same-width images before choosing a terminal instead.
+
+```json
+{"images":[{"id":"hero","template":"hero-link","captureId":"extract",
+  "link":{
+    "output":"capture-files/extract/tokens.json","outputPath":"entries",
+    "source":"inputs/site.css",
+    "items":[{"index":0,"name":"name","value":"value","line":"line"}],
+    "focus":0,"status":{"from":"capture","path":"exitCode"}
+  }}]}
+```
+
+`link.output` must appear in capture `outputs` or `usedFiles` as `{file,sha256}`;
+its current bytes must match. `outputPath` selects an array. Each item selects an
+integer `index` in that array and field paths for its `name`, `value`, and 1-based
+`line`. No literal display values are accepted. For a separate sources.json,
+add `source:{file,path}` to the item: the hashed capture file and selector of the
+provenance record. `line` and optional `evidence` then select fields in that
+record. Source lines must contain the displayed value or selected evidence
+substring. Selectors accept dotted paths or RFC6901 pointers (use pointers for
+keys such as `color.primary`). Up to six items, one zero-based `focus`.
+`status:{from:"capture",path}` selects a scalar in the capture; alternatively
+`{from:"verify",file:"verify.json",path:"summary.pass"}` reads a saved check.
+Missing selectors or changed outputs fail before any PNG is created.
+
+Rendering records hashes of every input and the actual source file, copies them
+beside the portable spec, and shows cited source lines with one context line on
+either side and `⋯` for omissions. Connectors are ordered by endpoints; the
+focused path is drawn last with a separating halo. `links` checks the endpoints
+inside both panels. V10 still requires role `core`; a successful installation
+or a supporting/check capture remains ineligible.
+
+`capture --outputs tokens.json,sources.json` collects those generated files from
+the disposable execution **before cleanup**, preserving their bytes and hashes
+under work/capture-files/ID. Set `--role core` for a core operation. Copy selected
+capture files beside art.json before rendering. Source input files must also be
+copied there. Do not reconstruct output data by hand.
+
+All templates accept `resultLabel` as an en/zh-CN map; the default is neutral
+Output / 输出. Density retains its 60% minimum but measures the union of actual
+text-bearing element and loaded-image rectangles. Container-only cards and
+empty boxes contribute nothing. `balance` needs at least 1:3 occupied area
+between canvas halves. Sparse older specs can now fail and must be redesigned,
+not blessed by their previous manifests. V9 requires balance and checks primary
+font size at the actual desktop README display width, including dark picture
+sources: `minMainFontSize × min(1, displayedWidth/cssWidth) >= 13px`. The 16px
+export minimum remains; mobile is recorded as informational, as for V2.
+
+```json
+{"projectTests":{"skip":"User forbids target UI tests; npm test includes them."},
+ "blocks":[{"index":0,"expectExit":0,"expectStdout":"Installed successfully"}]}
+```
+
+Use either `projectTests.skip` (nonempty reason, V8 skip, printed in reports) or
+`projectTests.command` (one explicit command, its real exit decides V8). Both at
+once and empty/non-string values fail. Without an override, discovered commands
+still run. `expectStdout` is a regex string, **not** a shell command. A missing
+match or invalid regex fails V1 even after exit 0. Interactive selectors without
+a matched completion receipt produce warnings in V1 results and the report.
+
+Stranger term matching normalizes English case, s/es/ies and hyphen/space forms
+on both sides with word boundaries; Chinese text is not segmented or rewritten.
+The exact first command is still compared with whitespace normalization only.
+Questions, A/B randomization and wouldTry/choice requirements are unchanged.
