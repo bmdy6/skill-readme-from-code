@@ -39,3 +39,9 @@ Preserve a useful original brand banner, direct tagline and concise navigation
 when they help scanning. Do not flatten them into an anonymous H1. Use original
 local assets with accurate alt/theme variants. Keep technical provenance in a
 short factual caption; do not let it displace the reason to try the product.
+
+When readers prefer a branded original, compare at a similar logo display size
+before discarding that preference as superficial. For linked artifacts, separate
+name, value and source badge; source swatches and a measured verification status
+should remain visually distinct. Preserve verification claims only from real
+saved checks. Source glyphs and decoration never substitute for provenance.

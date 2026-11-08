@@ -170,15 +170,34 @@ export async function prepareLink(item, capture, base, cache) {
     visible,
     total: entries.length,
     focus: link.focus,
-    status: { ...status, value: statusValue },
+    status: {
+      ...status,
+      value: statusValue,
+      verified:
+        statusData.ok === true ||
+        (statusData.summary?.fail === 0 && statusData.summary?.pass > 0) ||
+        (statusData.sampled > 0 &&
+          statusData.passed === statusData.sampled &&
+          statusData.failures?.length === 0),
+    },
   };
 }
 export function linkHTML(data) {
   const badge = (i) => `${path.basename(data.source.file)}:${i.line}`;
+  const icon = (i) =>
+    /^#[0-9a-f]{3,8}$/i.test(i.value)
+      ? `<span class="token-icon color-icon" style="background:${i.value}"></span>`
+      : /font/i.test(i.name)
+        ? '<span class="token-icon type-icon" data-label>Aa</span>'
+        : /radius/i.test(i.name)
+          ? '<span class="token-icon radius-icon"></span>'
+          : /shadow/i.test(i.name)
+            ? '<span class="token-icon shadow-icon"></span>'
+            : '<span class="token-icon"></span>';
   const rows = data.items
     .map(
       (i, index) =>
-        `<div class="link-item ${index === data.focus ? "focus" : ""}" data-item="${index}" data-line="${i.line}">${escape(i.name)}<span class="token-value">${/^#[0-9a-f]{3,8}$/i.test(i.value) ? `<i class="swatch" style="background:${i.value}"></i>` : ""}${escape(i.value)}</span><span class="source-badge" data-label>${escape(badge(i))}</span></div>`,
+        `<div class="link-item ${index === data.focus ? "focus" : ""}" data-item="${index}" data-line="${i.line}">${icon(i)}${escape(i.name)}<span class="token-value">${escape(i.value)}</span><span class="source-badge" data-label>${escape(badge(i))}</span></div>`,
     )
     .join("");
   const code = data.excerpts
@@ -188,7 +207,7 @@ export function linkHTML(data) {
         : `<div class="source-line ${i.line === data.items[data.focus].line ? "cited focused-source" : i.highlight ? "cited" : ""}" data-line="${i.line}"><span class="line-number" data-label>${i.line}</span>${escape(i.text)}</div>`,
     )
     .join("");
-  return `<div class="link-panels"><section class="card output-panel"><div class="head">${escape(path.basename(data.output.file))}<span>${data.items.length} of ${data.total}</span></div><div class="token-rows">${rows}</div></section><section class="card source-panel"><div class="head">${escape(path.basename(data.source.file))}<span>source</span></div><div class="source-rows">${code}</div></section><svg class="link-lines" aria-hidden="true"></svg></div><p class="link-status" data-label>${escape(data.status.value)}</p>`;
+  return `<div class="link-panels"><section class="card output-panel"><div class="head">${escape(path.basename(data.output.file))}<span>${data.items.length} of ${data.total}</span></div><div class="token-rows">${rows}</div></section><section class="card source-panel"><div class="head">${escape(path.basename(data.source.file))}<span>source</span></div><div class="source-rows">${code}</div></section><svg class="link-lines" aria-hidden="true"></svg></div><p class="link-status ${data.status.verified ? "verified" : ""}" data-label>${escape(data.status.value)}</p>`;
 }
 // Run after layout/fonts. Sort by endpoints; focus is painted last with a halo.
 export async function connectLinks(page, focus) {

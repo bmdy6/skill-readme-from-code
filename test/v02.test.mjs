@@ -726,3 +726,48 @@ test("P8 V6 uses the visible HTML tagline instead of a later long image caption"
     /One-liner exceeds 40/,
   );
 });
+
+test("hero-link keeps names, values, source badges and swatches in distinct visual columns", async (t) => {
+  const { dir, spec } = await linkFixture();
+  const { prepareLink, linkHTML } = await import("../scripts/lib/art-link.mjs");
+  const data = await prepareLink(
+    spec.images[0],
+    await json(path.join(dir, "captures/demo.json")),
+    dir,
+  );
+  const browser = await chromium.launch();
+  t.after(() => browser.close());
+  const page = await browser.newPage();
+  await page.setContent(
+    "<style>" +
+      (await fs.readFile("templates/art/base.css", "utf8")) +
+      '</style><main class="frame hero-link">' +
+      linkHTML(data) +
+      "</main>",
+  );
+  const rects = await page
+    .locator(".link-item")
+    .first()
+    .evaluate((row) => {
+      const node = [...row.childNodes].find(
+          (n) => n.nodeType === 3 && n.textContent.trim(),
+        ),
+        range = document.createRange();
+      range.selectNodeContents(node);
+      const box = (e) => e.getBoundingClientRect().toJSON();
+      return {
+        name: range.getBoundingClientRect().toJSON(),
+        value: box(row.querySelector(".token-value")),
+        icon: row.querySelector(".token-icon")
+          ? box(row.querySelector(".token-icon"))
+          : null,
+        badge: box(row.querySelector(".source-badge")),
+      };
+    });
+  assert.ok(rects.value.top >= rects.name.bottom - 1, JSON.stringify(rects));
+  assert.ok(
+    rects.icon && rects.icon.right <= rects.name.left,
+    JSON.stringify(rects),
+  );
+  assert.ok(rects.badge.left > rects.value.right, JSON.stringify(rects));
+});
