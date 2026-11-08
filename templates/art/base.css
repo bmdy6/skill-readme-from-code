@@ -481,3 +481,25 @@ h2 {
     13px/23px ui-monospace,
     monospace;
 }
+.token-rows {
+  gap: 4px;
+}
+.link-item {
+  padding: 3px 6px;
+  gap: 0 8px;
+  line-height: 20px;
+}
+.token-value {
+  line-height: 20px;
+}
+.source-rows {
+  padding: 8px;
+}
+.source-line {
+  font-size: 16px;
+  line-height: 20px;
+  padding: 1px 4px;
+}
+.line-number {
+  line-height: 20px;
+}

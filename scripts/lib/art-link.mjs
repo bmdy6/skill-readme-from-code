@@ -135,18 +135,18 @@ export async function prepareLink(item, capture, base, cache) {
     if (row.gap) return row;
     const code = row.text.trim(),
       needles = items.filter((i) => i.line === row.line).map((i) => i.evidence);
-    if (code.length <= 38) return { ...row, text: code };
+    if (code.length <= 30) return { ...row, text: code };
     const intervals = needles.length
       ? needles
           .map((needle) => {
             const start = code.indexOf(needle);
             return [
-              Math.max(0, start - 8),
-              Math.min(code.length, start + needle.length + 2),
+              Math.max(0, start - (needles.length > 1 ? 3 : 8)),
+              Math.min(code.length, start + needle.length),
             ];
           })
           .sort((a, b) => a[0] - b[0])
-      : [[0, 36]];
+      : [[0, 28]];
     const merged = [];
     for (const [start, end] of intervals) {
       if (merged.length && start <= merged.at(-1)[1] + 3)
@@ -155,7 +155,7 @@ export async function prepareLink(item, capture, base, cache) {
     }
     const text =
       (merged[0][0] > 0 ? "…" : "") +
-      merged.map(([start, end]) => code.slice(start, end)).join(" … ") +
+      merged.map(([start, end]) => code.slice(start, end)).join("…") +
       (merged.at(-1)[1] < code.length ? "…" : "");
     return { ...row, text };
   });
@@ -186,7 +186,7 @@ export function linkHTML(data) {
         : `<div class="source-line ${i.highlight ? "cited" : ""}" data-line="${i.line}"><span class="line-number" data-label>${i.line}</span>${escape(i.text)}</div>`,
     )
     .join("");
-  return `<div class="link-panels"><section class="card output-panel"><div class="head"><span>${escape(path.basename(data.output.file))}</span><span>${data.items.length} of ${data.total}</span></div><div class="token-rows">${rows}</div></section><section class="card source-panel"><div class="head"><span>${escape(path.basename(data.source.file))}</span><span>source</span></div><div class="source-rows">${code}</div></section><svg class="link-lines" aria-hidden="true"></svg></div><p class="link-status" data-label>${escape(data.status.path)}: ${escape(data.status.value)}</p>`;
+  return `<div class="link-panels"><section class="card output-panel"><div class="head">${escape(path.basename(data.output.file))}<span>${data.items.length} of ${data.total}</span></div><div class="token-rows">${rows}</div></section><section class="card source-panel"><div class="head">${escape(path.basename(data.source.file))}<span>source</span></div><div class="source-rows">${code}</div></section><svg class="link-lines" aria-hidden="true"></svg></div><p class="link-status" data-label>${escape(data.status.path)}: ${escape(data.status.value)}</p>`;
 }
 // Run after layout/fonts. Sort by endpoints; focus is painted last with a halo.
 export async function connectLinks(page, focus) {

@@ -537,3 +537,16 @@ test("hero-link long CSS lines become explicit excerpts without hiding the cited
     ),
   );
 });
+
+test("global npm command plans use a disposable prefix, never the host prefix", async () => {
+  const repo = await tmp(),
+    work = await tmp();
+  const r = await capture({
+    repo,
+    work,
+    id: "prefix",
+    command: "npm prefix --global",
+  });
+  assert.match(r.stdout.trim(), /readme-run-[^/]+\/home\/\.local$/);
+  assert.equal(r.exitCode, 0);
+});

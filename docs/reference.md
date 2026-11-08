@@ -319,3 +319,10 @@ Stranger term matching normalizes English case, s/es/ies and hyphen/space forms
 on both sides with word boundaries; Chinese text is not segmented or rewritten.
 The exact first command is still compared with whitespace normalization only.
 Questions, A/B randomization and wouldTry/choice requirements are unchanged.
+
+Global npm installation examples use `npm_config_prefix` inside the disposable
+home, so they never install into the host's global prefix. Each block still runs
+in its own copy: a later block that depends on an earlier installation must be
+explicitly skipped or made self-contained in the README, not silently rewritten.
+Long source lines are rendered as explicit substrings with ellipses; all cited
+evidence remains visible, and full source bytes/hashes travel with the spec.

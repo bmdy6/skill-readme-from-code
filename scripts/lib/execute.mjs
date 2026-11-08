@@ -40,6 +40,7 @@ export async function runCopy(
       const env = {
         PATH: process.env.PATH,
         HOME: home,
+        npm_config_prefix: path.join(home, ".local"),
         CI: "1",
         DO_NOT_TRACK: "1",
         DISABLE_TELEMETRY: "1",
