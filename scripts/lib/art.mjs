@@ -509,7 +509,7 @@ export async function renderArt({ spec, out, work }) {
               // Fit the complete stack, including CJK wrapping, before measuring.
               for (
                 let n = 0;
-                n < 80 &&
+                n < 200 &&
                 card.getBoundingClientRect().bottom >
                   frame.getBoundingClientRect().bottom - 40;
                 n++

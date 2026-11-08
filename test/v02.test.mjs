@@ -822,3 +822,34 @@ test("source previews stay single-line while every same-line citation still veri
   await write(path.join(dir, "captures/demo.json"), c);
   await assert.rejects(render(), /source mismatch/);
 });
+
+test("storefront fits a long real skill installation command at the fixed social size", async () => {
+  const repo = await tmp(),
+    work = await tmp();
+  await write(path.join(repo, "package.json"), {
+    name: "design-from-sites",
+    version: "0.1.0",
+    license: "MIT",
+  });
+  await write(path.join(repo, "README.md"), "# design-from-sites");
+  await write(path.join(work, "brief.json"), {
+    projectType: "agent-skill",
+    oneLiner: {
+      en: "Turn the sites you love into a design system you can trace.",
+    },
+    keyTerms: { what: ["design-tokens"], audience: ["developers"] },
+    install: {
+      command: "npx skills add bmdy6/skill-design-from-sites -a codex -y",
+    },
+  });
+  const { storefront } = await import("../scripts/lib/delivery.mjs");
+  await storefront({ repo, work });
+  const m = await json(path.join(work, "storefront-art/art-manifest.json"));
+  assert.ok(
+    m.files.every(
+      (f) =>
+        f.cssHeight === 640 &&
+        Object.values(f.checks).every((v) => v === "pass"),
+    ),
+  );
+});

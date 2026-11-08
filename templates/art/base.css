@@ -723,3 +723,7 @@ h2 {
 .hero-link .link-panels {
   grid-template-columns: 0.875fr 1.125fr;
 }
+.hero-link .source-line,
+.hero-link .line-number {
+  line-height: 22px;
+}
