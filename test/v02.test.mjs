@@ -546,7 +546,7 @@ test("global npm command plans use a disposable prefix, never the host prefix", 
     work,
     id: "prefix",
     command: `npm prefix --global
-node -e 'process.exit(require("fs").existsSync(process.env.npm_config_prefix)?0:1)'`,
+node -e 'process.exit(require("fs").existsSync(process.env.npm_config_prefix+"/lib/node_modules")?0:1)'`,
   });
   assert.match(r.stdout.trim(), /readme-run-[^/]+\/home\/\.local$/);
   assert.equal(r.exitCode, 0);
@@ -571,4 +571,42 @@ test("V5 accepts --global for the real package and still rejects a different pac
     (await staticChecks(repo, f)).find((c) => c.id === "V5").status,
     "fail",
   );
+});
+
+test("isolated npm exec can discover an existing local binary with a fresh prefix", async () => {
+  const repo = await tmp(),
+    work = await tmp();
+  const bin = path.join(repo, "node_modules/.bin/rfc-local-bin");
+  await write(bin, "#!/bin/sh\necho ready\n");
+  await fs.chmod(bin, 0o755);
+  const r = await capture({
+    repo,
+    work,
+    id: "exec",
+    command: "npm exec --offline -- rfc-local-bin",
+  });
+  assert.equal(r.exitCode, 0, r.stderr);
+  assert.match(r.stdout, /ready/);
+});
+
+test("isolated npx installs and executes a local package without host prefix directories", async () => {
+  const repo = await tmp(),
+    work = await tmp();
+  await write(path.join(repo, "fixture/package.json"), {
+    name: "rfc-npx-fixture",
+    version: "1.0.0",
+    bin: { "rfc-npx-fixture": "cli.js" },
+  });
+  await write(
+    path.join(repo, "fixture/cli.js"),
+    '#!/usr/bin/env node\nconsole.log("fixture ready")\n',
+  );
+  const r = await capture({
+    repo,
+    work,
+    id: "npx",
+    command: "npm exec --offline --yes --package ./fixture -- rfc-npx-fixture",
+  });
+  assert.equal(r.exitCode, 0, r.stderr);
+  assert.match(r.stdout, /fixture ready/);
 });

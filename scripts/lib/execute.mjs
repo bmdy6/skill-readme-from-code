@@ -18,7 +18,10 @@ export async function runCopy(
   const cwd = path.join(temp, "repo"),
     home = path.join(temp, "home");
   await fs.mkdir(cwd);
-  await fs.mkdir(path.join(home, ".local"), { recursive: true });
+  await fs.mkdir(path.join(home, ".local", "lib", "node_modules"), {
+    recursive: true,
+  });
+  await fs.mkdir(path.join(home, ".local", "bin"), { recursive: true });
   try {
     for (const file of await files(repo)) {
       const to = path.join(cwd, file);
