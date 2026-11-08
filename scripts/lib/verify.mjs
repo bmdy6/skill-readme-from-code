@@ -382,7 +382,7 @@ async function base(opts) {
   if (sourceIssues.length) checks.find((c) => c.id === "V5").status = "fail";
   let screen;
   try {
-    screen = await firstScreen({ ...opts, install: brief.install?.command });
+    screen = await firstScreen({ ...opts, install: brief.install });
     checks.unshift(
       check(
         "V2",

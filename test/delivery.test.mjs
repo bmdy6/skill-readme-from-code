@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { scoreAnswers, storefront, report } from "../scripts/lib/delivery.mjs";
+import { delivery, prepareStranger, scoreAnswers, storefront, report } from "../scripts/lib/delivery.mjs";
 import { write } from "../scripts/lib/io.mjs";
 const brief = {
   projectType: "agent-skill",
@@ -129,6 +129,7 @@ for (const wins of [0, 1, 2, 3])
       score: 100,
       checks: [],
     });
+    await write(path.join(work, "stranger/result.json"), { status: "pass" });
     const readers = Array.from({ length: 3 }, (_, i) => ({
       status: i < wins ? "pass" : "fail",
       winner: i < wins ? "after" : "before",
@@ -150,6 +151,12 @@ for (const wins of [0, 1, 2, 3])
       await fs.readFile(path.join(work, "delivery.json"), "utf8"),
     );
     assert.equal(outcome.replaceReadme, wins >= 2);
+    if (wins === 2) {
+      await write(path.join(work, "stranger/result.json"), { status: "fail", outputMatch: "review" });
+      await report({ work });
+      const blocked = JSON.parse(await fs.readFile(path.join(work, "delivery.json"), "utf8"));
+      assert.equal(blocked.replaceReadme, false);
+    }
     if (wins < 2) {
       assert.match(text, /保留现有 README/);
       assert.match(text, /Do not open a replacement PR/);
@@ -207,4 +214,62 @@ test("report CLI accepts explicit blind evidence and completes a losing delivery
     await fs.readFile(path.join(work, "delivery.json"), "utf8"),
   );
   assert.equal(outcome.replaceReadme, false);
+});
+
+test("GUI reader names the visible download label and a valid first step", () => {
+  const gui = {
+    ...brief,
+    install: {
+      url: "https://example.com/releases/latest",
+      heading: "Install",
+      label: "Download Example",
+      stepKeywords: ["unzip", "extract"],
+    },
+  };
+  const answers = {
+    installLink: "Download Example",
+    firstStep: "Extract the ZIP.",
+  };
+  assert.equal(scoreAnswers(gui, answers).checks.firstInstall, true);
+  assert.equal(scoreAnswers(gui, { ...answers, firstStep: "Run npm install." }).checks.firstInstall, false);
+  assert.equal(scoreAnswers(gui, { ...answers, installLink: "Source" }).checks.firstInstall, false);
+});
+test("output terms are project-specific and unrecognized answers retain an explicit review state", () => {
+  const prose = "Revised Chinese prose that sounds more conversational.";
+  const unrecognized = scoreAnswers(brief, { whatOutput: prose });
+  assert.equal(unrecognized.outputMatch, "review");
+  assert.equal(unrecognized.answers.whatOutput, prose);
+  assert.equal(unrecognized.checks.whatOutput, false);
+  const revised = { ...brief, coreAction: { output: { keywords: ["draft", "revised Chinese prose"] } } };
+  assert.equal(scoreAnswers(revised, { whatOutput: prose }).checks.whatOutput, true);
+  assert.equal(scoreAnswers(revised, { whatOutput: "A Chinese style profile" }).checks.whatOutput, false);
+});
+
+test("prepared GUI questions hide answer terms and reject later brief changes", async (t) => {
+  const work = await fs.mkdtemp(path.join(os.tmpdir(), "rfc-reader-contract-"));
+  t.after(() => fs.rm(work, { recursive: true, force: true }));
+  const original = {
+    ...brief,
+    install: {
+      url: "https://example.com/releases/latest",
+      heading: "Install",
+      label: "Download Example",
+      stepKeywords: ["extract"],
+    },
+  };
+  await write(path.join(work, "brief.json"), original);
+  const opts = { repo: path.resolve("evals/fixtures/clean"), work, offline: true };
+  await prepareStranger(opts);
+  const question = await fs.readFile(path.join(work, "stranger/questions.md"), "utf8");
+  assert.match(question, /installLink, firstStep/);
+  assert.doesNotMatch(question, /Download Example|extract|firstCommand/);
+  const answers = path.join(work, "answers.json");
+  await write(answers, { whatOutput: "Revised Chinese prose" });
+  await write(path.join(work, "brief.json"), {
+    ...original,
+    coreAction: { output: { keywords: ["prose"] } },
+  });
+  await assert.rejects(delivery("stranger", { ...opts, action: "score", answers }), /Brief changed/);
+  const prior = JSON.parse(await fs.readFile(path.join(work, "stranger/result.json"), "utf8"));
+  assert.equal(prior.status, "not-run");
 });

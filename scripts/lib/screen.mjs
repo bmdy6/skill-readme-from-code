@@ -68,6 +68,15 @@ export async function firstScreen({
   local = false,
   offline = false,
 }) {
+  const installCommand = typeof install === "string" ? install : install?.command;
+  const download = install?.url
+    ? {
+        url: install.url,
+        heading: typeof install.heading === "string"
+          ? install.heading
+          : install.heading?.[readme === "README.zh-CN.md" ? "zh-CN" : "en"],
+      }
+    : null;
   const md = await read(path.join(repo, readme));
   const rendered = await markdownHTML(md, { local: local || offline });
   const css = await read(path.join(root, "templates/github-markdown.css"));
@@ -102,7 +111,7 @@ export async function firstScreen({
       );
       await page.evaluate(() => document.fonts.ready);
       const measured = await page.evaluate(
-        ({ install, height }) => {
+        ({ installCommand, download, height }) => {
           const root = document.querySelector("article");
           const box = (e) => {
             if (!e) return null;
@@ -137,18 +146,57 @@ export async function firstScreen({
                 )),
           );
           const hero = imgs.find((i) => i !== banner && i.naturalWidth >= 400);
-          const pre = [...root.querySelectorAll("pre")].find((p) =>
-            install
-              ? p.textContent.trim() === install.trim()
-              : /\b(npx|npm|pip|uv|cargo|git clone|brew|curl|python3?)\b/.test(
-                  p.textContent,
-                ),
-          );
+          let installBox = null, installText = null;
+          if (download) {
+            const heading = [...root.querySelectorAll("h2,h3,h4")].find(
+              (h) => h.textContent.trim() === download.heading,
+            );
+            const section = [];
+            for (let e = heading?.nextElementSibling;
+              e && !(/^H[1-6]$/.test(e.tagName) && e.tagName <= heading.tagName);
+              e = e.nextElementSibling
+            ) section.push(e);
+            const link = section.flatMap((e) => [...e.querySelectorAll("a")])
+              .find((a) => a.getAttribute("href") === download.url);
+            const visible = (e) =>
+              e.getClientRects().length && getComputedStyle(e).visibility === "visible";
+            if (
+              link?.textContent.trim() &&
+              visible(link) &&
+              visible(heading) &&
+              section.some(
+                (e) =>
+                  e.matches("p,ol,ul") &&
+                  visible(e) &&
+                  e.textContent.trim() &&
+                  !e.contains(link),
+              )
+            ) {
+              const rects = [heading, ...section.filter(visible)].map(box);
+              installBox = {
+                top: Math.min(...rects.map((r) => r.top)),
+                bottom: Math.max(...rects.map((r) => r.bottom)),
+                left: Math.min(...rects.map((r) => r.left)),
+                right: Math.max(...rects.map((r) => r.right)),
+              };
+              installText = link.textContent.trim();
+            }
+          } else {
+            const pre = [...root.querySelectorAll("pre")].find((p) =>
+              installCommand
+                ? p.textContent.trim() === installCommand.trim()
+                : /\b(npx|npm|pip|uv|cargo|git clone|brew|curl|python3?)\b/.test(
+                    p.textContent,
+                  ),
+            );
+            installBox = box(pre);
+            installText = pre?.textContent.trim() || null;
+          }
           const items = {
             name: box(title),
             oneLiner: box(lead),
             hero: hero?.complete && hero.naturalWidth ? box(hero) : null,
-            install: box(pre),
+            install: installBox,
           };
           const checks = Object.fromEntries(
             Object.entries(items).map(([k, r]) => [
@@ -163,7 +211,7 @@ export async function firstScreen({
           return {
             items,
             checks,
-            install: pre?.textContent.trim() || null,
+            install: installText,
             contentWidth:
               root.clientWidth -
               parseFloat(getComputedStyle(root).paddingLeft) -
@@ -177,7 +225,7 @@ export async function firstScreen({
             })),
           };
         },
-        { install, height },
+        { installCommand, download, height },
       );
       const file = `first-screen-${name}.png`;
       await page.screenshot({ path: path.join(work, file) });

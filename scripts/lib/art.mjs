@@ -411,7 +411,7 @@ export async function renderArt({ spec, out, work }) {
             values.steps = item.steps
               .map(
                 (s, i) =>
-                  `<div class="card step"><div class="number">${i + 1}</div><h2>${text(s, "step")}</h2><p>${text(item.details?.[i] || s, "detail")}</p></div>${i < 2 ? '<div class="arrow">→</div>' : ""}`,
+                  `<div class="card step"><h2><span class="number">${i + 1}</span>${text(s, "step")}</h2><p>${text(item.details?.[i] || s, "detail")}</p></div>${i < 2 ? '<div class="arrow">→</div>' : ""}`,
               )
               .join("");
           }

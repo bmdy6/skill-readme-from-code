@@ -208,7 +208,37 @@ h2 {
   margin-top: 14px;
 }
 .strip {
-  padding: 40px 28px;
+  padding: 8px 12px;
+}
+.strip .row {
+  gap: 12px;
+}
+.strip .step {
+  padding: 3px 8px;
+}
+.strip .number {
+  margin: 0 6px 0 0;
+  width: 24px;
+  height: 24px;
+  line-height: 20px;
+  vertical-align: 2px;
+}
+.strip .step p,
+.strip .illustration {
+  margin-top: 1px;
+}
+.frame.hero-prompt {
+  padding: 16px;
+}
+.hero-prompt .head {
+  padding: 6px 12px;
+}
+.hero-prompt .input-copy,
+.hero-prompt .result-copy {
+  padding: 8px 12px;
+}
+.hero-prompt .illustration {
+  margin-top: 4px;
 }
 .title {
   margin-bottom: 20px;

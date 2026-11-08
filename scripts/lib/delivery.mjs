@@ -38,20 +38,34 @@ export function scoreAnswers(brief, answers) {
         .trim()
         .replace(/\s+/g, " "),
     hit = (s, field) => termsFor(brief, field).some((t) => hasTerm(s, t));
+  const install = brief.install;
+  const outputMatch = (brief.coreAction?.output?.keywords || []).some((t) =>
+    hasTerm(answers.whatOutput, t),
+  );
   const checks = {
     what: hit(answers.what, "what"),
     forWhom: hit(answers.forWhom, "audience"),
-    firstCommand:
-      !!brief.install?.command &&
-      norm(answers.firstCommand) === norm(brief.install.command),
+    ...(install?.url
+      ? {
+          firstInstall:
+            !!install.label &&
+            norm(answers.installLink) === norm(install.label) &&
+            (install.stepKeywords || []).some((term) =>
+              hasTerm(answers.firstStep, term),
+            ),
+        }
+      : {
+          firstCommand:
+            !!install?.command &&
+            norm(answers.firstCommand) === norm(install.command),
+        }),
     wouldTry: answers.wouldTry === "yes",
-    whatOutput: (brief.coreAction?.output?.keywords || []).some((t) =>
-      hasTerm(answers.whatOutput, t),
-    ),
+    whatOutput: outputMatch,
   };
   return {
     status: Object.values(checks).every(Boolean) ? "pass" : "fail",
     checks,
+    outputMatch: outputMatch ? "matched" : norm(answers.whatOutput) ? "review" : "missing",
     answers,
   };
 }
@@ -59,10 +73,20 @@ export async function prepareStranger(opts) {
   const brief = await json(opts.brief || path.join(opts.work, "brief.json"));
   if (!brief) throw Error("Missing brief.json");
   const out = path.join(opts.work, "stranger");
-  await firstScreen({ ...opts, work: out, install: brief.install.command });
+  await firstScreen({ ...opts, work: out, install: brief.install });
+  const installation = brief.install?.url
+    ? {
+        question: "What exact download link label is visible, and what should a new user do first after downloading?",
+        keys: "installLink, firstStep",
+      }
+    : {
+        question: "What exact first command should a new user copy?",
+        keys: "firstCommand",
+      };
+  await write(path.join(out, "brief-hash.json"), { sha256: hash(JSON.stringify(brief)) });
   await write(
     path.join(out, "questions.md"),
-    "Look only at the attached first-screen image. Do not inspect files, browse, or use tools. What is this? Who is it for? What exact first command should a new user copy? Would you try it, and why? What does the output look like? What appeals to you most? What is confusing? Return only JSON with keys what, forWhom, firstCommand, wouldTry (yes/no), why, whatOutput, mostAppealing, confusing (array).\n",
+    `Look only at the attached first-screen image. Do not inspect files, browse, or use tools. What is this? Who is it for? ${installation.question} Would you try it, and why? What does the output look like? What appeals to you most? What is confusing? Return only JSON with keys what, forWhom, ${installation.keys}, wouldTry (yes/no), why, whatOutput, mostAppealing, confusing (array).\n`,
   );
   await write(path.join(out, "result.json"), {
     status: "not-run",
@@ -138,6 +162,7 @@ export async function storefront(opts) {
       ),
     ),
   ].slice(0, 8);
+  const installText = brief.install.command || brief.install.label;
   const out = path.join(opts.work, "storefront-art");
   const spec = path.join(opts.work, "storefront-art.json");
   await write(spec, {
@@ -151,7 +176,7 @@ export async function storefront(opts) {
           "zh-CN": facts.manifest.name || path.basename(opts.repo),
         },
         subtitle: { en: about, "zh-CN": brief.oneLiner["zh-CN"] || about },
-        result: { en: brief.install.command, "zh-CN": brief.install.command },
+        result: { en: installText, "zh-CN": installText },
         illustration: true,
       },
     ],
@@ -212,7 +237,7 @@ export async function report(opts) {
     );
   const wins = readers.filter((r) => r.winner === "after").length;
   const won = complete && wins >= 2;
-  const replaceReadme = won && after?.ok === true;
+  const replaceReadme = won && after?.ok === true && stranger.status === "pass";
   const outcome = {
     status: complete ? (won ? "pass" : "fail") : "not-run",
     wins,
@@ -266,6 +291,9 @@ export async function delivery(command, opts) {
         );
         const answers = await json(opts.answers);
         if (!brief || !answers) throw Error("Missing brief or answers");
+        const prepared = await json(path.join(opts.work, "stranger/brief-hash.json"));
+        if (prepared && prepared.sha256 !== hash(JSON.stringify(brief)))
+          throw Error("Brief changed since stranger prepare; preserve the previous result and prepare a fresh reader in a new work directory");
         result = scoreAnswers(brief, answers);
       }
       await write(path.join(opts.work, "stranger/result.json"), result);
