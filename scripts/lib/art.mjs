@@ -60,6 +60,7 @@ export async function inspectArt(page) {
       content.top < container.top - 1;
     for (const e of frame.querySelectorAll("*")) {
       const r = e.getBoundingClientRect();
+      if (!r.width && !r.height) continue;
       // scrollHeight/clientHeight round independently and can compound a
       // subpixel text overshoot into a false 2px overflow on an ancestor.
       // Measure direct content in fractional CSS pixels instead. Descendants
@@ -304,6 +305,19 @@ export async function renderArt({ spec, out, work }) {
       !item.illustration
     )
       throw Error("Result text requires capture or illustration");
+    if (capture?.inputFile) {
+      const p = path.resolve(base, capture.inputFile.file);
+      const real = await fs.realpath(p),
+        realBase = await fs.realpath(base);
+      if (!real.startsWith(realBase + path.sep))
+        throw Error("Capture input escapes art directory");
+      const bytes = await fs.readFile(real);
+      if (
+        hash(bytes) !== capture.inputFile.sha256 ||
+        bytes.toString("utf8") !== capture.input
+      )
+        throw Error("Capture input hash/content mismatch");
+    }
     const link =
       item.template === "hero-link"
         ? await prepareLink(item, capture, base, cache)
@@ -366,6 +380,9 @@ export async function renderArt({ spec, out, work }) {
             terminalLabel: zh ? "终端记录" : "terminal capture",
             inputLabel: zh ? "输入" : "Input",
             command: escape(capture?.command || ""),
+            codeInput: escape(
+              capture?.inputFile ? capture.input : capture?.command || "",
+            ),
             output: escape(
               capture
                 ? stripANSI(
@@ -450,7 +467,7 @@ export async function renderArt({ spec, out, work }) {
           });
           await page.route("**/*", (r) => r.abort());
           await page.setContent(
-            `<!doctype html><meta charset="utf-8"><style>${await read(path.join(templateDir, "base.css"))}:root{--accent:${accent}}</style><body class="${theme}"><main class="frame ${item.template === "social" ? "social" : item.template === "strip-3" ? "strip" : ""} ${item.compact ? "compact" : ""}">${content}</main></body>`,
+            `<!doctype html><meta charset="utf-8"><style>${await read(path.join(templateDir, "base.css"))}:root{--accent:${accent}}</style><body class="${theme}"><main class="frame ${item.template === "social" ? "social" : item.template === "strip-3" ? "strip" : ""} ${item.template} ${item.compact ? "compact" : ""}">${content}</main></body>`,
           );
           await page.evaluate(() => document.fonts.ready);
           if (
@@ -458,6 +475,7 @@ export async function renderArt({ spec, out, work }) {
             ["hero-terminal", "hero-code", "hero-prompt"].includes(
               item.template,
             ) &&
+            !capture?.inputFile &&
             capture?.kind !== "agent-run" &&
             (capture?.stdout || "").split("\n").filter((l) => l.trim()).length <
               4
@@ -529,6 +547,7 @@ export async function renderArt({ spec, out, work }) {
                 ? "fixture"
                 : "real",
             captureId: item.captureId || null,
+            inputFile: capture?.inputFile || null,
             labels: {
               result: item.resultLabel
                 ? pick(item.resultLabel, lang, "resultLabel")
@@ -561,6 +580,14 @@ export async function renderArt({ spec, out, work }) {
           await fs.copyFile(from, to);
         }
       }
+    if (capture?.inputFile) {
+      const from = path.resolve(base, capture.inputFile.file),
+        to = path.resolve(out, capture.inputFile.file);
+      if (from !== to) {
+        await fs.mkdir(path.dirname(to), { recursive: true });
+        await fs.copyFile(from, to);
+      }
+    }
     if (capture?.kind === "agent-run")
       for (const source of [
         ...(capture.usedFiles || []),

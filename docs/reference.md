@@ -326,3 +326,10 @@ in its own copy: a later block that depends on an earlier installation must be
 explicitly skipped or made self-contained in the README, not silently rewritten.
 Long source lines are rendered as explicit substrings with ellipses; all cited
 evidence remains visible, and full source bytes/hashes travel with the spec.
+
+`capture --input-file PATH` records the actual UTF-8 input bytes, a hash and a
+portable inputFile. hero-code validates those bytes and uses them in the input
+panel, rather than the capture command. Never author input text in art.json.
+For brief CLI transformations, hero-code with compact:true keeps the two data
+panels and omits repeated art title/caption. The README must still explain the
+example and show the real first-use command. Keep install and first use visible.

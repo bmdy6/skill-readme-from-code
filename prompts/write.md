@@ -27,3 +27,15 @@ a file listing just because the listing is easy to capture. Preserve the old
 README's strongest concrete claim when the code supports it. In the caption,
 name the demonstrated scope and what is not demonstrated. Put the first useful
 request/example directly after installation so a stranger can actually try it.
+
+For short non-writing CLIs, keep the real input/output example compact enough
+that both installation AND the first useful command remain visible. Capture the
+actual CLI entry point, not a demo wrapper that prints a synthetic transcript.
+Use capture --input-file with hero-code for a short transformation; show the
+hashed input beside actual stdout. compact:true omits repeated art headings and
+captions. A file path only present in the repository needs an explicit note.
+
+Preserve a useful original brand banner, direct tagline and concise navigation
+when they help scanning. Do not flatten them into an anonymous H1. Use original
+local assets with accurate alt/theme variants. Keep technical provenance in a
+short factual caption; do not let it displace the reason to try the product.

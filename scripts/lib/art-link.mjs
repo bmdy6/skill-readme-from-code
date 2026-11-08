@@ -140,10 +140,12 @@ export async function prepareLink(item, capture, base, cache) {
       ? needles
           .map((needle) => {
             const start = code.indexOf(needle);
-            return [
-              Math.max(0, start - (needles.length > 1 ? 3 : 8)),
-              Math.min(code.length, start + needle.length),
-            ];
+            const declaration =
+              Math.max(
+                code.lastIndexOf(";", start),
+                code.lastIndexOf("{", start),
+              ) + 1;
+            return [declaration, Math.min(code.length, start + needle.length)];
           })
           .sort((a, b) => a[0] - b[0])
       : [[0, 28]];
@@ -183,7 +185,7 @@ export function linkHTML(data) {
     .map((i) =>
       i.gap
         ? '<div class="source-gap" data-label>⋯</div>'
-        : `<div class="source-line ${i.highlight ? "cited" : ""}" data-line="${i.line}"><span class="line-number" data-label>${i.line}</span>${escape(i.text)}</div>`,
+        : `<div class="source-line ${i.line === data.items[data.focus].line ? "cited focused-source" : i.highlight ? "cited" : ""}" data-line="${i.line}"><span class="line-number" data-label>${i.line}</span>${escape(i.text)}</div>`,
     )
     .join("");
   return `<div class="link-panels"><section class="card output-panel"><div class="head">${escape(path.basename(data.output.file))}<span>${data.items.length} of ${data.total}</span></div><div class="token-rows">${rows}</div></section><section class="card source-panel"><div class="head">${escape(path.basename(data.source.file))}<span>source</span></div><div class="source-rows">${code}</div></section><svg class="link-lines" aria-hidden="true"></svg></div><p class="link-status" data-label>${escape(data.status.path)}: ${escape(data.status.value)}</p>`;
@@ -228,7 +230,7 @@ export async function connectLinks(page, focus) {
           ? "var(--bg)"
           : p.index === focus
             ? "var(--accent)"
-            : "var(--mute)",
+            : "var(--accent)",
       );
       e.setAttribute(
         "stroke-width",

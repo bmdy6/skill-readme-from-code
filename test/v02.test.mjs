@@ -610,3 +610,74 @@ test("isolated npx installs and executes a local package without host prefix dir
   assert.equal(r.exitCode, 0, r.stderr);
   assert.match(r.stdout, /fixture ready/);
 });
+
+test("compact hero-code renders hashed input bytes rather than an internal wrapper command", async () => {
+  const repo = await tmp(),
+    work = await tmp();
+  await write(path.join(repo, "input.jsonc"), '{ // note\n "port": 8080,\n}\n');
+  const c = await capture({
+    repo,
+    work,
+    id: "core",
+    role: "core",
+    "input-file": "input.jsonc",
+    command: `node -e 'console.log("{\\n \\\"port\\\": 8080\\n}")'`,
+  });
+  assert.equal(c.input, '{ // note\n "port": 8080,\n}\n');
+  const spec = {
+    images: [
+      {
+        id: "hero",
+        template: "hero-code",
+        captureId: "core",
+        compact: true,
+        title: { en: "Actual transform", "zh-CN": "真实转换" },
+        subtitle: { en: "Actual JSON", "zh-CN": "真实 JSON" },
+      },
+    ],
+  };
+  await write(path.join(work, "art.json"), spec);
+  const r = await renderArt({
+    spec: path.join(work, "art.json"),
+    out: path.join(work, "out"),
+  });
+  assert.ok(r.files.every((f) => f.cssHeight < 300));
+  assert.equal(r.files[0].inputFile.sha256, hash(c.input));
+  await write(path.join(work, c.inputFile.file), "invented");
+  await assert.rejects(
+    renderArt({
+      spec: path.join(work, "art.json"),
+      out: path.join(work, "out"),
+    }),
+    /input.*hash|input.*mismatch/i,
+  );
+});
+test("hero-link six rows stay compact enough for a branded first screen", async () => {
+  const { dir, spec, render } = await linkFixture();
+  const o = {
+    entries: Array.from({ length: 6 }, (_, i) => ({
+      name: "color.token" + i,
+      value: "#2f6f4e",
+      line: i + 2,
+    })),
+  };
+  await write(path.join(dir, "tokens.json"), o);
+  await write(
+    path.join(dir, "style.css"),
+    ":root {\n" +
+      o.entries.map((e, i) => ` --token-${i}: #2f6f4e;`).join("\n") +
+      "\n}\n",
+  );
+  const c = await json(path.join(dir, "captures/demo.json"));
+  c.outputs[0].sha256 = hash(await fs.readFile(path.join(dir, "tokens.json")));
+  await write(path.join(dir, "captures/demo.json"), c);
+  spec.images[0].link.items = o.entries.map((_, index) => ({
+    index,
+    name: "name",
+    value: "value",
+    line: "line",
+  }));
+  await write(path.join(dir, "art.json"), spec);
+  const r = await render();
+  assert.ok(r.files.every((f) => f.cssHeight <= 420));
+});

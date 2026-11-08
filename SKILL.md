@@ -112,6 +112,10 @@ For source-linked products, prefer hero-link (schema in reference.md): use real
 hashed capture outputs and source lines, never hand-authored rows. Keep the
 strongest existing promise; let the hero explain its benefit, not repeat it.
 Use `capture --outputs FILE1,FILE2` to preserve real output files before cleanup.
+For short CLI transformations, capture the actual entry point with
+`--input-file` and use compact hero-code. Keep both install and first use on the
+first screen. Preserve an effective existing brand banner and concise navigation
+when supported by local assets; do not flatten useful original visual identity.
 Compare the rendered heroes at the same display width with the baseline images,
 not only with self-check flags.
 Inspect the PNGs yourself: readable text, even spacing and a useful result,

@@ -503,3 +503,98 @@ h2 {
 .line-number {
   line-height: 20px;
 }
+/* Short transformations show real data side by side, leaving room to try it. */
+.frame.hero-code.compact .title,
+.frame.hero-code.compact .caption {
+  display: none;
+}
+.frame.hero-code.compact .row {
+  gap: 12px;
+}
+/* Linked artifacts retain a calm, consistent row rhythm and a visible focus. */
+.hero-link {
+  background: var(--bg);
+}
+.hero-link .card {
+  border-radius: 12px;
+  box-shadow:
+    0 2px 3px #1720330a,
+    0 10px 24px #1720330a;
+}
+.hero-link .head {
+  font:
+    600 14px/20px ui-monospace,
+    monospace;
+  padding: 8px 12px;
+  background: var(--bg);
+  border-radius: 12px 12px 0 0;
+}
+.hero-link .token-rows {
+  height: calc(100% - 37px);
+  padding: 0;
+  gap: 0;
+  justify-content: stretch;
+}
+.hero-link .link-item {
+  flex: 1;
+  min-height: 36px;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  padding: 6px 8px;
+  gap: 6px;
+  border-radius: 0;
+  border-bottom: 1px solid var(--line);
+  font:
+    600 16px/20px ui-monospace,
+    monospace;
+}
+.hero-link .link-item:last-child {
+  border-bottom: 0;
+}
+.hero-link .token-value {
+  grid-column: 2;
+  grid-row: 1;
+  font-size: 16px;
+  gap: 4px;
+}
+.hero-link .source-badge {
+  grid-column: 3;
+  grid-row: 1;
+  border-radius: 99px;
+  padding: 2px 6px;
+  color: var(--ink);
+  font-weight: 400;
+}
+.hero-link .focus .source-badge {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+.hero-link .source-rows {
+  padding: 8px 6px;
+}
+.hero-link .source-line {
+  font:
+    16px/18px ui-monospace,
+    monospace;
+  padding: 1px 4px;
+}
+.hero-link .line-number {
+  font:
+    13px/18px ui-monospace,
+    monospace;
+}
+.hero-link .focused-source {
+  box-shadow: inset 3px 0 var(--accent);
+  font-weight: 600;
+}
+.hero-link .link-status {
+  margin-top: 10px;
+  font:
+    14px/20px system-ui,
+    sans-serif;
+  color: var(--ink);
+  text-align: center;
+  border-radius: 99px;
+  background: var(--soft);
+  padding: 6px 12px;
+}
