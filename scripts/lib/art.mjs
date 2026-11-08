@@ -73,7 +73,21 @@ export async function inspectArt(page) {
         if (node.nodeType === 3 && node.textContent.trim()) {
           const range = document.createRange();
           range.selectNodeContents(node);
-          rects.push(...range.getClientRects());
+          // A text rect spans the font's ascent+descent, which can exceed the
+          // line box (fallback CJK fonts). Compare its line-box part vertically.
+          const lineHeight = parseFloat(cs.lineHeight);
+          for (const t of range.getClientRects()) {
+            const trim =
+              lineHeight > 0 && t.height > lineHeight
+                ? (t.height - lineHeight) / 2
+                : 0;
+            rects.push({
+              left: t.left,
+              right: t.right,
+              top: t.top + trim,
+              bottom: t.bottom - trim,
+            });
+          }
         }
       if (outside(r, bounds) || rects.some((content) => outside(content, box)))
         problems.overflow.push(e.tagName + "." + e.className);
