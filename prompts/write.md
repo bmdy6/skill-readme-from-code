@@ -45,3 +45,8 @@ before discarding that preference as superficial. For linked artifacts, separate
 name, value and source badge; source swatches and a measured verification status
 should remain visually distinct. Preserve verification claims only from real
 saved checks. Source glyphs and decoration never substitute for provenance.
+
+Retain concise original navigation when it helps readers explore before installing.
+For dense source lines, use the template's explicit single-line excerpts; preserve
+full source files and all citation checks. A cluttered preview is not stronger
+proof. Keep ellipses visible and make the recorded run/full source reachable.

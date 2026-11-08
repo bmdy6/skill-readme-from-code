@@ -324,8 +324,10 @@ Global npm installation examples use `npm_config_prefix` inside the disposable
 home, so they never install into the host's global prefix. Each block still runs
 in its own copy: a later block that depends on an earlier installation must be
 explicitly skipped or made self-contained in the README, not silently rewritten.
-Long source lines are rendered as explicit substrings with ellipses; all cited
-evidence remains visible, and full source bytes/hashes travel with the spec.
+Long source lines are rendered as explicit substrings with ellipses; full source
+bytes/hashes travel with the spec. A single-line preview can omit declarations,
+while every citation still validates against its complete source line. The manifest
+retains fullText for each excerpt; ellipses never stand in for source validation.
 
 `capture --input-file PATH` records the actual UTF-8 input bytes, a hash and a
 portable inputFile. hero-code validates those bytes and uses them in the input

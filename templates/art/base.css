@@ -719,3 +719,7 @@ h2 {
   color: #8cdda4;
   border-color: #284b34;
 }
+/* Code is a bounded preview; full lines remain in the hashed source and manifest. */
+.hero-link .link-panels {
+  grid-template-columns: 0.875fr 1.125fr;
+}

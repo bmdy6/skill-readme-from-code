@@ -350,6 +350,15 @@ async function base(opts) {
   for (const f of Array.isArray(supplements)
     ? supplements
     : supplements.facts || []) {
+    if (
+      typeof f.id !== "string" ||
+      !f.id.trim() ||
+      typeof f.claim !== "string" ||
+      !f.claim.trim()
+    ) {
+      sourceIssues.push(`Invalid supplemental fact fields: ${f.id}`);
+      continue;
+    }
     if (facts.facts.some((x) => x.id === f.id)) continue;
     const match =
       typeof f.source === "string" && f.source.match(/^(.+):(\d+)$/);

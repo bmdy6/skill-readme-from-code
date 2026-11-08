@@ -133,33 +133,30 @@ export async function prepareLink(item, capture, base, cache) {
   // Multiple citations on one line retain all evidence substrings.
   const excerpts = visible.map((row) => {
     if (row.gap) return row;
-    const code = row.text.trim(),
-      needles = items.filter((i) => i.line === row.line).map((i) => i.evidence);
-    if (code.length <= 30) return { ...row, text: code };
-    const intervals = needles.length
-      ? needles
-          .map((needle) => {
-            const start = code.indexOf(needle);
-            const declaration =
-              Math.max(
-                code.lastIndexOf(";", start),
-                code.lastIndexOf("{", start),
-              ) + 1;
-            return [declaration, Math.min(code.length, start + needle.length)];
-          })
-          .sort((a, b) => a[0] - b[0])
-      : [[0, 28]];
-    const merged = [];
-    for (const [start, end] of intervals) {
-      if (merged.length && start <= merged.at(-1)[1] + 3)
-        merged.at(-1)[1] = Math.max(end, merged.at(-1)[1]);
-      else merged.push([start, end]);
-    }
+    const fullText = row.text,
+      code = fullText.trim(),
+      limit = 40;
+    if (code.length <= limit) return { ...row, text: code, fullText };
+    const cited = items.filter((i) => i.line === row.line);
+    const chosen = cited.find((i) => i === items[link.focus]) || cited[0];
+    if (!chosen)
+      return { ...row, text: code.slice(0, limit - 1) + "…", fullText };
+    const start = code.indexOf(chosen.evidence),
+      end = start + chosen.evidence.length;
+    const declaration =
+      Math.max(code.lastIndexOf(";", start), code.lastIndexOf("{", start)) + 1;
+    const left = Math.max(declaration, end - (limit - 2));
+    const semicolon = code.indexOf(";", end);
+    const right = Math.min(
+      code.length,
+      left + limit - 2,
+      semicolon < 0 ? code.length : semicolon + 1,
+    );
     const text =
-      (merged[0][0] > 0 ? "…" : "") +
-      merged.map(([start, end]) => code.slice(start, end)).join("…") +
-      (merged.at(-1)[1] < code.length ? "…" : "");
-    return { ...row, text };
+      (left > 0 ? "…" : "") +
+      code.slice(left, right).trim() +
+      (right < code.length ? "…" : "");
+    return { ...row, text, fullText };
   });
   return {
     output,

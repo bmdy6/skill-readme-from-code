@@ -771,3 +771,54 @@ test("hero-link keeps names, values, source badges and swatches in distinct visu
   );
   assert.ok(rects.badge.left > rects.value.right, JSON.stringify(rects));
 });
+
+test("P7 documented supplemental IDs and claims are nonempty strings", async () => {
+  const repo = await tmp(),
+    work = await tmp();
+  await write(path.join(repo, "README.md"), "# Moss\n\nCreate a digest.");
+  await write(path.join(repo, "entry.mjs"), 'export const mode="digest";');
+  for (const fields of [
+    { id: "mode", claim: "Emits digest" },
+    { id: "", claim: "Emits digest" },
+    { id: "mode", claim: "" },
+    { id: 3, claim: "Emits digest" },
+  ]) {
+    await write(path.join(repo, "docs/readme/facts.json"), [
+      { ...fields, value: "digest", source: "entry.mjs:1" },
+    ]);
+    const r = await verify({ repo, work, local: true });
+    assert.equal(
+      r.checks.find((c) => c.id === "V5").status,
+      fields.id === "mode" && fields.claim ? "pass" : "fail",
+    );
+  }
+});
+
+test("source previews stay single-line while every same-line citation still verifies against full bytes", async () => {
+  const { dir, spec, render } = await linkFixture();
+  const o = {
+    entries: [
+      { name: "primary", value: "#2f6f4e", line: 2 },
+      { name: "surface", value: "#ffffff", line: 2 },
+    ],
+  };
+  await write(path.join(dir, "tokens.json"), o);
+  await write(
+    path.join(dir, "style.css"),
+    ":root {\n --primary: #2f6f4e; " +
+      "margin: 0; ".repeat(8) +
+      " --surface: #ffffff;\n}\n",
+  );
+  const c = await json(path.join(dir, "captures/demo.json"));
+  c.outputs[0].sha256 = hash(await fs.readFile(path.join(dir, "tokens.json")));
+  await write(path.join(dir, "captures/demo.json"), c);
+  const r = await render();
+  const excerpt = r.files[0].link.excerpts.find((e) => e.line === 2);
+  assert.ok(excerpt.text.length <= 40);
+  assert.match(excerpt.fullText, /#ffffff/);
+  o.entries[1].value = "#123456";
+  await write(path.join(dir, "tokens.json"), o);
+  c.outputs[0].sha256 = hash(await fs.readFile(path.join(dir, "tokens.json")));
+  await write(path.join(dir, "captures/demo.json"), c);
+  await assert.rejects(render(), /source mismatch/);
+});
