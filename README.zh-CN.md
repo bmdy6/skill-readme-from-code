@@ -14,7 +14,7 @@
 ## 快速开始
 
 ```sh
-gh repo clone bmdy6/skill-readme-from-code .agents/skills/readme-from-code -- --branch feat/v0.1
+gh repo clone bmdy6/skill-readme-from-code .agents/skills/readme-from-code
 ```
 
 然后告诉智能体：
@@ -54,7 +54,7 @@ gh repo clone bmdy6/skill-readme-from-code .agents/skills/readme-from-code -- --
 
 **图里的数据可信吗？** 终端文本来自真实 capture，流程示意会明确标注；本页展示样例真实的改写前后首屏。
 
-**能直接在线安装吗？** 当前私有预览需要已认证的 gh，安装 feat/v0.1 分支；无凭据安装未验证。
+**能直接在线安装吗？** 当前私有预览需要已认证的 gh，安装 main 分支；无凭据安装未验证。
 
 **审计分数代表什么？** 它统计 README 检查通过率，不是访客评分。
 

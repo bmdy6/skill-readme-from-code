@@ -48,21 +48,53 @@ export async function inspectArt(page) {
         .reduce((s, v, i) => s + v * [0.2126, 0.7152, 0.0722][i], 0);
     const frame = document.querySelector(".frame"),
       bounds = frame.getBoundingClientRect();
+    const outside = (content, container) =>
+      content.right > container.right + 1 ||
+      content.left < container.left - 1 ||
+      content.bottom > container.bottom + 1 ||
+      content.top < container.top - 1;
     for (const e of frame.querySelectorAll("*")) {
       const r = e.getBoundingClientRect();
-      if (
-        e.scrollWidth > e.clientWidth + 1 ||
-        e.scrollHeight > e.clientHeight + 1 ||
-        r.right > bounds.right + 1 ||
-        r.left < bounds.left - 1 ||
-        r.bottom > bounds.bottom + 1
-      )
+      // scrollHeight/clientHeight round independently and can compound a
+      // subpixel text overshoot into a false 2px overflow on an ancestor.
+      // Measure direct content in fractional CSS pixels instead. Descendants
+      // are checked in their own turn, including text in fixed-height boxes.
+      const cs = getComputedStyle(e);
+      const box = {
+        left: r.left + parseFloat(cs.borderLeftWidth),
+        top: r.top + parseFloat(cs.borderTopWidth),
+        right: r.right - parseFloat(cs.borderRightWidth),
+        bottom: r.bottom - parseFloat(cs.borderBottomWidth),
+      };
+      const rects = [...e.children].flatMap((child) => [
+        ...child.getClientRects(),
+      ]);
+      for (const node of e.childNodes)
+        if (node.nodeType === 3 && node.textContent.trim()) {
+          const range = document.createRange();
+          range.selectNodeContents(node);
+          // A text rect spans the font's ascent+descent, which can exceed the
+          // line box (fallback CJK fonts). Compare its line-box part vertically.
+          const lineHeight = parseFloat(cs.lineHeight);
+          for (const t of range.getClientRects()) {
+            const trim =
+              lineHeight > 0 && t.height > lineHeight
+                ? (t.height - lineHeight) / 2
+                : 0;
+            rects.push({
+              left: t.left,
+              right: t.right,
+              top: t.top + trim,
+              bottom: t.bottom - trim,
+            });
+          }
+        }
+      if (outside(r, bounds) || rects.some((content) => outside(content, box)))
         problems.overflow.push(e.tagName + "." + e.className);
       if (
         ![...e.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim())
       )
         continue;
-      const cs = getComputedStyle(e);
       if (parseFloat(cs.fontSize) < 13) problems.fontSize.push(e.textContent);
       if (
         !e.closest(
@@ -363,6 +395,22 @@ export async function renderArt({ spec, out, work }) {
             await page
               .locator(".frame")
               .evaluate((e) => (e.style.width = "640px"));
+          // Measure after fonts and the final canvas width are ready. Preserve the
+          // normal wrapping; only shrink headings that still overflow their box.
+          await page.evaluate(() => {
+            for (const title of document.querySelectorAll(".frame h1,.frame h2")) {
+              const minimum = 16;
+              let size = parseFloat(getComputedStyle(title).fontSize);
+              while (
+                size > minimum &&
+                (title.scrollWidth > title.clientWidth + 1 ||
+                  title.scrollHeight > title.clientHeight + 1)
+              ) {
+                size = Math.max(minimum, size - 1);
+                title.style.fontSize = `${size}px`;
+              }
+            }
+          });
           const inspected = await inspectArt(page);
           const file = `${item.id}-${theme}${zh ? ".zh-CN" : ""}.png`;
           await page

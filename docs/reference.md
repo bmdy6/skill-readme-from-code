@@ -71,7 +71,7 @@ traceability; an agent must still review whether the cited line supports it.
   "projectType":"agent-skill",
   "audience":"repository maintainers",
   "oneLiner":{"en":"Help maintainers write a README with evidence.","zh-CN":"帮助维护者写出有证据的项目介绍。"},
-  "keyTerms":["readme","maintainer"],
+  "keyTerms":{"what":["readme"],"audience":["maintainers","developers","engineers","programmers","开发者","程序员"]},
   "install":{"command":"npx skills add bmdy6/skill-readme-from-code"},
   "firstUse":"Write a source-backed README for this repository.",
   "languages":["en","zh-CN"],
@@ -85,6 +85,10 @@ traceability; an agent must still review whether the cited line supports it.
 
 Interactive G1 and G2 require user decisions. Noninteractive decisions must be
 recorded individually and appear in the report. Do not infer approval from time.
+
+Art headings that overflow after font loading shrink in 1px steps to a 16px
+minimum. Overflow at that floor still fails the self-check; it is never hidden.
+This adapts to local font metrics without requiring a bundled font family.
 
 ## Command plans and captures
 
@@ -170,9 +174,11 @@ layout or authenticated repository UI. Test copies can use network; they are not
 a malware boundary. No GIF recording, automatic web-app capture, settings
 changes, publishing or CI drift checking are included in v0.1.
 
-Stranger scoring requires normalized firstCommand equality, >=1 keyTerms hit
-in both what and forWhom, and wouldTry exactly yes. It is a simple acceptance
-heuristic, not research on users' likelihood of starring. Keep the actual reader
+Stranger scoring requires normalized firstCommand equality, >=1 keyTerms.what hit
+in what, >=1 keyTerms.audience hit in forWhom, and wouldTry exactly yes.
+G1 fills audience synonyms and translations in the brief, not a code dictionary.
+Legacy keyTerms arrays remain accepted as the shared terms for both checks.
+It is a simple acceptance heuristic, not research on users' likelihood of starring. Keep the actual reader
 response and confusing[]; no response means not-run. Reports do not suppress
 failures or missing evidence.
 
@@ -182,8 +188,7 @@ The generated brief and command plan are committed in docs/readme. To replay,
 pass --brief TARGET/docs/readme/brief.json and --plan
 TARGET/docs/readme/command-plan.json to verify. The private clone plan explicitly
 shares the already-authorized gh identity; no token is stored in these files.
-Recorded reports are in docs/evidence. The self-install command intentionally
-pins feat/v0.1 because main does not contain the new skill until review/merge.
+Recorded reports are in docs/evidence. The self-install command installs main.
 
 
 ## Round 2 evidence contracts (R1–R6)
@@ -225,8 +230,7 @@ never send that mapping to the reader. stranger blind-score --answers FILE saves
 the original answer and only passes if the new screenshot wins. Both modes need
 fresh ephemeral read-only readers, images and neutral questions only.
 
-Internal docs/superpowers material is excluded. The preview install stays pinned
-to feat/v0.1 until review; change it to main after merge, never merge automatically.
+Internal docs/superpowers material is excluded. Never merge automatically.
 
 ### Score captions
 

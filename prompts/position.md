@@ -12,3 +12,7 @@ Start with the user's action or concrete deliverable; name the output artifact.
 Reject Help, A tool that, An agent skill that, This project, 帮助, 一个…的工具,
 and using an agent skill. Prefer the original project's direct promise over a
 new generic construction.
+
+In G1, write brief.keyTerms as {what: [...], audience: [...]}. Include appropriate
+audience synonyms and translated terms in audience; these are the accepted
+forWhom answers. Keep tool/output terms in what, not in the audience list.
