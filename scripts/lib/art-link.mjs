@@ -1,6 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { hash, json, escape } from "./io.mjs";
+import { hash, escape } from "./io.mjs";
 
 export function at(object, selector) {
   if (selector === "" || selector === undefined) return object;
@@ -129,8 +129,39 @@ export async function prepareLink(item, capture, base, cache) {
       highlight: items.some((i) => i.line === n),
     });
   }
+  // Preserve exact substrings, with explicit ellipses for omitted source text.
+  // Multiple citations on one line retain all evidence substrings.
+  const excerpts = visible.map((row) => {
+    if (row.gap) return row;
+    const code = row.text.trim(),
+      needles = items.filter((i) => i.line === row.line).map((i) => i.evidence);
+    if (code.length <= 38) return { ...row, text: code };
+    const intervals = needles.length
+      ? needles
+          .map((needle) => {
+            const start = code.indexOf(needle);
+            return [
+              Math.max(0, start - 8),
+              Math.min(code.length, start + needle.length + 2),
+            ];
+          })
+          .sort((a, b) => a[0] - b[0])
+      : [[0, 36]];
+    const merged = [];
+    for (const [start, end] of intervals) {
+      if (merged.length && start <= merged.at(-1)[1] + 3)
+        merged.at(-1)[1] = Math.max(end, merged.at(-1)[1]);
+      else merged.push([start, end]);
+    }
+    const text =
+      (merged[0][0] > 0 ? "…" : "") +
+      merged.map(([start, end]) => code.slice(start, end)).join(" … ") +
+      (merged.at(-1)[1] < code.length ? "…" : "");
+    return { ...row, text };
+  });
   return {
     output,
+    excerpts,
     source: { file: link.source, sha256: hash(sourceBytes) },
     inputs: [...new Map(inputs.map((i) => [i.file, i])).values()],
     items,
@@ -145,14 +176,14 @@ export function linkHTML(data) {
   const rows = data.items
     .map(
       (i, index) =>
-        `<div class="link-item ${index === data.focus ? "focus" : ""}" data-item="${index}" data-line="${i.line}"><span class="token-name">${escape(i.name)}</span><span class="token-value">${/^#[0-9a-f]{3,8}$/i.test(i.value) ? `<i class="swatch" style="background:${i.value}"></i>` : ""}${escape(i.value)}</span><span class="source-badge" data-label>${escape(badge(i))}</span></div>`,
+        `<div class="link-item ${index === data.focus ? "focus" : ""}" data-item="${index}" data-line="${i.line}">${escape(i.name)}<span class="token-value">${/^#[0-9a-f]{3,8}$/i.test(i.value) ? `<i class="swatch" style="background:${i.value}"></i>` : ""}${escape(i.value)}</span><span class="source-badge" data-label>${escape(badge(i))}</span></div>`,
     )
     .join("");
-  const code = data.visible
+  const code = data.excerpts
     .map((i) =>
       i.gap
         ? '<div class="source-gap" data-label>⋯</div>'
-        : `<div class="source-line ${i.highlight ? "cited" : ""}" data-line="${i.line}"><span class="line-number" data-label>${i.line}</span><span class="source-code">${escape(i.text)}</span></div>`,
+        : `<div class="source-line ${i.highlight ? "cited" : ""}" data-line="${i.line}"><span class="line-number" data-label>${i.line}</span>${escape(i.text)}</div>`,
     )
     .join("");
   return `<div class="link-panels"><section class="card output-panel"><div class="head"><span>${escape(path.basename(data.output.file))}</span><span>${data.items.length} of ${data.total}</span></div><div class="token-rows">${rows}</div></section><section class="card source-panel"><div class="head"><span>${escape(path.basename(data.source.file))}</span><span>source</span></div><div class="source-rows">${code}</div></section><svg class="link-lines" aria-hidden="true"></svg></div><p class="link-status" data-label>${escape(data.status.path)}: ${escape(data.status.value)}</p>`;

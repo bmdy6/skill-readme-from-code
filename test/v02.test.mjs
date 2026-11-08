@@ -520,3 +520,20 @@ test("hero-link separate hashed provenance, evidence substring and verify status
   });
   await assert.rejects(render(), /provenance hash mismatch/);
 });
+
+test("hero-link long CSS lines become explicit excerpts without hiding the cited evidence", async () => {
+  const { dir, spec, render } = await linkFixture();
+  const css =
+    ":root {\n  --primary: #2f6f4e; " +
+    "margin: 0; ".repeat(40) +
+    "\n  --surface: #ffffff;\n}\n";
+  await write(path.join(dir, "style.css"), css);
+  const r = await render();
+  assert.ok(r.files.every((f) => f.cssHeight < 600));
+  assert.ok(r.files.every((f) => f.checks.overflow === "pass"));
+  assert.ok(
+    r.files[0].link.excerpts.some(
+      (e) => e.text.includes("…") && e.text.includes("#2f6f4e"),
+    ),
+  );
+});

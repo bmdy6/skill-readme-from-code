@@ -497,13 +497,16 @@ export async function renderArt({ spec, out, work }) {
                 n++
               ) {
                 let changed = false;
-                for (const e of frame.querySelectorAll("h1,.sub,pre")) {
-                  const current = parseFloat(getComputedStyle(e).fontSize),
-                    min = e.matches("pre") ? 26 : 16;
-                  if (current > min) {
-                    e.style.fontSize = current - 1 + "px";
-                    changed = true;
+                for (const selector of ["h1,.sub", "pre"]) {
+                  for (const e of frame.querySelectorAll(selector)) {
+                    const current = parseFloat(getComputedStyle(e).fontSize),
+                      min = e.matches("pre") ? 26 : 16;
+                    if (current > min) {
+                      e.style.fontSize = current - 1 + "px";
+                      changed = true;
+                    }
                   }
+                  if (changed) break;
                 }
                 if (!changed) break;
               }

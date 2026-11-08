@@ -158,7 +158,18 @@ export async function storefront(opts) {
   });
   const art = await renderArt({ spec, out, work: opts.work });
   if (art.files.some((f) => Object.values(f.checks).some((v) => v !== "pass")))
-    throw Error("Social image self-check failed");
+    throw Error(
+      "Social image self-check failed: " +
+        JSON.stringify(
+          art.files
+            .filter((f) => Object.values(f.checks).some((v) => v !== "pass"))
+            .map((f) => ({
+              file: f.file,
+              problems: f.problems,
+              contentRatio: f.contentRatio,
+            })),
+        ),
+    );
   await fs.copyFile(
     path.join(out, "social-light.png"),
     path.join(opts.work, "social-light.png"),
