@@ -545,8 +545,30 @@ test("global npm command plans use a disposable prefix, never the host prefix", 
     repo,
     work,
     id: "prefix",
-    command: "npm prefix --global",
+    command: `npm prefix --global
+node -e 'process.exit(require("fs").existsSync(process.env.npm_config_prefix)?0:1)'`,
   });
   assert.match(r.stdout.trim(), /readme-run-[^/]+\/home\/\.local$/);
   assert.equal(r.exitCode, 0);
+});
+
+test("V5 accepts --global for the real package and still rejects a different package", async () => {
+  const repo = await tmp();
+  const f = { ...facts, manifest: { name: "moss" } };
+  await write(
+    path.join(repo, "README.md"),
+    "# Moss\n\nCreate a digest.\n\n```sh\nnpm install --global moss\n```",
+  );
+  assert.equal(
+    (await staticChecks(repo, f)).find((c) => c.id === "V5").status,
+    "pass",
+  );
+  await write(
+    path.join(repo, "README.md"),
+    "# Moss\n\nCreate a digest.\n\n```sh\nnpm install --global other\n```",
+  );
+  assert.equal(
+    (await staticChecks(repo, f)).find((c) => c.id === "V5").status,
+    "fail",
+  );
 });

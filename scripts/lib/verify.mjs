@@ -161,7 +161,9 @@ export async function staticChecks(repo, facts, brief = {}, opts = {}) {
       truth.push(`Unknown CI workflow ${workflow}`);
   }
   for (const b of shellBlocks(md)) {
-    const pkg = b.code.match(/npm (?:install|i)(?: -g)? ([\w@/.-]+)/)?.[1];
+    const pkg = b.code.match(
+      /npm (?:install|i)(?: (?:-g|--global))? ([\w@/.-]+)/,
+    )?.[1];
     if (pkg && pkg !== facts.manifest.name && !["--"].includes(pkg))
       truth.push(`Install package differs from manifest: ${pkg}`);
     const remote = b.code
