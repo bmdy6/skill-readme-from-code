@@ -580,6 +580,20 @@ export async function renderArt({ spec, out, work }) {
           await fs.copyFile(from, to);
         }
       }
+    for (const output of capture?.outputs || []) {
+      const from = await fs.realpath(path.resolve(base, output.file)),
+        realBase = await fs.realpath(base);
+      if (!from.startsWith(realBase + path.sep))
+        throw Error("Capture output escapes art directory");
+      const bytes = await fs.readFile(from);
+      if (hash(bytes) !== output.sha256)
+        throw Error("Capture output hash mismatch: " + output.file);
+      const to = path.resolve(out, output.file);
+      if (from !== to) {
+        await fs.mkdir(path.dirname(to), { recursive: true });
+        await fs.writeFile(to, bytes);
+      }
+    }
     if (capture?.inputFile) {
       const from = path.resolve(base, capture.inputFile.file),
         to = path.resolve(out, capture.inputFile.file);

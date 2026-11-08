@@ -681,3 +681,20 @@ test("hero-link six rows stay compact enough for a branded first screen", async 
   const r = await render();
   assert.ok(r.files.every((f) => f.cssHeight <= 420));
 });
+
+test("portable art retains all hashed capture outputs, including original JSON behind a projected view", async () => {
+  const { dir, render } = await linkFixture();
+  const c = await json(path.join(dir, "captures/demo.json"));
+  await write(path.join(dir, "original-sources.json"), {
+    source: "raw provenance",
+  });
+  c.outputs.push({
+    file: "original-sources.json",
+    sha256: hash(await fs.readFile(path.join(dir, "original-sources.json"))),
+  });
+  await write(path.join(dir, "captures/demo.json"), c);
+  await render();
+  assert.deepEqual(await json(path.join(dir, "out/original-sources.json")), {
+    source: "raw provenance",
+  });
+});

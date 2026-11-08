@@ -598,3 +598,40 @@ h2 {
   background: var(--soft);
   padding: 6px 12px;
 }
+.frame.hero-code.compact .terminal {
+  font-size: 22px;
+}
+.hero-link .source-line {
+  white-space: normal;
+}
+.hero-link {
+  --soft: color-mix(in srgb, var(--accent) 8%, #fff);
+}
+.dark .hero-link {
+  --soft: color-mix(in srgb, var(--accent) 20%, #171a18);
+}
+.frame.hero-code.compact .terminal {
+  font-size: 24px;
+}
+.hero-link {
+  --bg: #fff;
+  --card: #fff;
+  --ink: #172033;
+  --line: #dde3ed;
+  --mute: #526176;
+}
+.dark .hero-link {
+  --bg: #0d1117;
+  --card: #151b26;
+  --ink: #e6edf3;
+  --line: #303d52;
+  --mute: #aab7ca;
+}
+.hero-link .head,
+.hero-link .link-item,
+.hero-link .token-value,
+.hero-link .source-badge,
+.hero-link .source-line,
+.hero-link .line-number {
+  font-family: Menlo, "DejaVu Sans Mono", Consolas, monospace;
+}

@@ -188,7 +188,7 @@ export function linkHTML(data) {
         : `<div class="source-line ${i.line === data.items[data.focus].line ? "cited focused-source" : i.highlight ? "cited" : ""}" data-line="${i.line}"><span class="line-number" data-label>${i.line}</span>${escape(i.text)}</div>`,
     )
     .join("");
-  return `<div class="link-panels"><section class="card output-panel"><div class="head">${escape(path.basename(data.output.file))}<span>${data.items.length} of ${data.total}</span></div><div class="token-rows">${rows}</div></section><section class="card source-panel"><div class="head">${escape(path.basename(data.source.file))}<span>source</span></div><div class="source-rows">${code}</div></section><svg class="link-lines" aria-hidden="true"></svg></div><p class="link-status" data-label>${escape(data.status.path)}: ${escape(data.status.value)}</p>`;
+  return `<div class="link-panels"><section class="card output-panel"><div class="head">${escape(path.basename(data.output.file))}<span>${data.items.length} of ${data.total}</span></div><div class="token-rows">${rows}</div></section><section class="card source-panel"><div class="head">${escape(path.basename(data.source.file))}<span>source</span></div><div class="source-rows">${code}</div></section><svg class="link-lines" aria-hidden="true"></svg></div><p class="link-status" data-label>${escape(data.status.value)}</p>`;
 }
 // Run after layout/fonts. Sort by endpoints; focus is painted last with a halo.
 export async function connectLinks(page, focus) {
