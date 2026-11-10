@@ -428,3 +428,91 @@ Disposable copies omit credential files, `.build`, `.venv` and Python caches.
 Only Git-tracked `.env.example` templates are allowed; other `.env.*` stay excluded.
 Dependency symlinks are recreated inside the copy (including npm .bin); links
 resolving outside node_modules are rejected. No dependency writes reach the source.
+
+
+## v0.3 illustrate workflow
+
+This path is for readable existing prose missing pictures; use the full write
+workflow when prose, positioning or instructions require revision. Commands:
+
+```sh
+node scripts/run.mjs illustrate baseline --repo DIR --work WORK
+node scripts/run.mjs capture --type web-app --repo DIR --work WORK --id demo --brief WORK/brief.json
+node scripts/run.mjs illustrate verify --repo DIR --work WORK
+```
+
+brief.json must declare the exact installation block as `install.block` (or
+per-README `installs[filename]`); a demo/test block is not installation.
+Baseline writes only the git commit and README blob SHAs to `illustrate-baseline.json`, refuses overwrite and rejects uncommitted README text. Verify reads original bytes with `git show`; a manifest may embed this compact `baseline` object for portable replay.
+Verification removes only exact declared blocks before comparing original bytes,
+H2, badges and shell commands in every discovered README. It does not execute
+README commands, demand blind readers, or apply V9/V10. Images must be local,
+reachable from the declared README, under 400,000 bytes and 200–3840 × 40–2160
+pixels. Both alt and a single-line caption are required. Before installation/quick start, allow at most one hero with rendered height <=420px. Put step images after installation beside matching prose; otherwise use a three-column table of linked thumbnails. Set `placement: "hero"` or `"step"`; images sharing `group: "steps"` use one gallery marker pair via `illustrationBlock({id:"steps", images: entries})`.
+The full desktop install block must stay within 1280×800 if baseline was within it (838px content, 72px header). A pre-existing below-fold block is a warning included in the report, not failure; height and placement checks still apply. Mobile is recorded.
+
+WORK/illustrate.json example (repeat entries for each language):
+
+```json
+{"images":[{"id":"flow","readme":"README.md","file":"docs/images/flow.svg","alt":"Group message flow","width":700,"caption":"Illustration: mention, read shared context, query scoped sources, reply.","source":{"kind":"illustration","command":"node docs/images/draw.mjs","data":"Original synthetic workflow; no real group data"}}]}
+```
+
+Insert the exact block returned by exported `illustrationBlock(image)` in
+`scripts/lib/illustrate.mjs` without adding blank lines outside it:
+
+```html
+<!-- readme-illustrate:flow -->
+<img src="docs/images/flow.svg" alt="Group message flow" width="700">
+
+Illustration: mention, read shared context, query scoped sources, reply.
+<!-- /readme-illustrate:flow -->
+```
+
+`source.kind` is `illustration`, `command-run` or `web-app`. Every source declares
+`command` and `data`. Web sources also require actual `url`, `viewport` and
+`sha256` matching the inserted PNG. Keep capture receipts and briefs in WORK, outside the target repository. Commit only images, one SOURCES.md and a small manifest containing baseline commit/blob references, image hashes and insertion fields; reproducible synthetic-data/drawing scripts may stay. A compact manifest uses `sources: "docs/images/SOURCES.md"` and per-image `sha256` instead of repeating source objects; SOURCES.md identifies every image/hash with command, data origin, route and viewport. Declare synthetic data / model-call status once, in SOURCES.md or the hero caption. Never put disclaimers in synthetic fixture content; use natural dialogue and feedback. Original diagram source is
+not a screenshot. Do not substitute test logs for live acceptance.
+
+## Web application capture brief
+
+Capture requires an explicit `webCapture` object in brief.json. Screenshots fast-forward finite CSS animations to their completed state, preventing faded intermediate frames. It runs in the
+target checkout, not runCopy: prepare isolated dependencies and disposable data
+first. Never point this at production. The process inherits PATH/HOME/TMPDIR and
+locale only, with explicit synthetic configuration from `env`; it does not
+inherit API keys. HOME is not isolated, so inspect every command. The browser
+is always headless, blocks service workers and remote origins. Backend commands
+are not network sandboxed; omit model credentials and use a local disabled
+endpoint or the project's test substitute. No paid requests.
+
+```json
+{"webCapture":{
+ "setup":["python scripts/seed_demo.py"],
+ "prepare":[],
+ "data":"Disposable synthetic account and prefilled learning history",
+ "env":{"LLM_API_KEY":"","LLM_BASE_URL":"http://127.0.0.1:9"},
+ "services":[{"command":"npm run dev -- --host 127.0.0.1 --port 5173","readyUrl":"http://127.0.0.1:5173/"}],
+ "pages":[{"id":"plan","url":"http://127.0.0.1:5173/#/chat","viewport":{"width":1280,"height":800},"waitFor":".plan-card","storageState":"demo-browser-state.json"}],
+ "timeoutMs":60000
+}}
+```
+
+All setup and prepare arrays, including empty arrays, are required. Setup runs
+before services, prepare after every readiness probe succeeds. Each service
+specifies command and a loopback readiness URL (port included). HTTP 2xx signals
+ready. Refuse already-occupied endpoints. Each page requires a safe unique ID,
+loopback URL, viewport and a real ready selector. Optional `storageState` is a
+Playwright browser-state file containing only synthetic auth; global state can
+also be set on webCapture. Per-page states are isolated. Keep auth files out of
+public commits. Record synthetic preparation commands and data in provenance.
+
+Receipts are WORK/captures/ID.json; PNGs are
+WORK/capture-files/ID/PAGE.png. Receipts preserve commands/stdout/stderr/exits,
+readiness URL/status, source data, requested and final URL, viewport, bytes and
+SHA-256. Browser and owned service process groups are closed in finally,
+including preparation/launch/readiness/navigation/selector errors. A partial
+capture remains failed; completed pages retain their evidence. No image is
+invented when startup fails. Cleanup failure also fails the capture. This is
+process lifecycle management, not an OS security sandbox. Copy only intended
+public product images and nonsecret provenance into the target repository;
+README preview screenshots belong outside it. Use illustrate verify `--shots DIR`
+to write previews directly to a task shots directory.

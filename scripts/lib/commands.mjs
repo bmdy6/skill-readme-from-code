@@ -26,11 +26,26 @@ export async function dispatch(command, opts) {
       await b.close();
     }
     console.log("Node and Chromium ready");
+  } else if (command === "illustrate") {
+    const { illustrateBaseline, verifyIllustrate } = await import(
+      "./illustrate.mjs"
+    );
+    const r =
+      opts.action === "baseline"
+        ? await illustrateBaseline(opts)
+        : await verifyIllustrate(opts);
+    console.log(JSON.stringify(r, null, 2));
+    if (r.ok === false) process.exitCode = 1;
   } else if (command === "capture") {
     const { capture } = await import("./capture.mjs");
     const r = await capture(opts);
     console.log(JSON.stringify(r, null, 2));
-    if (r.exitCode !== 0 || r.timedOut || r.outputErrors?.length) process.exitCode = 1;
+    if (
+      r.kind === "web-app"
+        ? !r.ok
+        : r.exitCode !== 0 || r.timedOut || r.outputErrors?.length
+    )
+      process.exitCode = 1;
   } else if (command === "art") {
     const { renderArt } = await import("./art.mjs");
     const r = await renderArt({

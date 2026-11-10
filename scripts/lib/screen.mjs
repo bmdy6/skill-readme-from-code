@@ -65,6 +65,7 @@ export async function firstScreen({
   work,
   readme = "README.md",
   install,
+  markdown,
   local = false,
   offline = false,
   brief = {},
@@ -79,7 +80,7 @@ export async function firstScreen({
           : install.heading?.[language],
       }
     : null;
-  const md = await read(path.join(repo, readme));
+  const md = markdown ?? await read(path.join(repo, readme));
   const rendered = await markdownHTML(md, { local: local || offline });
   const css = await read(path.join(root, "templates/github-markdown.css"));
   await fs.mkdir(work, { recursive: true });
@@ -222,6 +223,9 @@ export async function firstScreen({
             images: [...root.querySelectorAll("img")].map((i) => ({
               src: i.currentSrc || i.src,
               width: i.getBoundingClientRect().width,
+              height: i.getBoundingClientRect().height,
+              top: i.getBoundingClientRect().top,
+              bottom: i.getBoundingClientRect().bottom,
               loaded: i.complete && i.naturalWidth > 0,
               naturalWidth: i.naturalWidth,
             })),

@@ -3,6 +3,11 @@ import path from "node:path";
 import { runCopy } from "./execute.mjs";
 import { write, hash } from "./io.mjs";
 export async function capture(opts) {
+  if (opts.type === "web-app") {
+    const { captureWeb } = await import("./capture-web.mjs");
+    return captureWeb(opts);
+  }
+  if (opts.type && opts.type !== "command") throw Error("Unknown capture type");
   if (!/^[\w-]+$/.test(opts.id || ""))
     throw Error("capture requires a safe --id");
   if (!opts.command) throw Error("capture requires -- followed by a command");
@@ -12,7 +17,8 @@ export async function capture(opts) {
     role: opts.role || "supporting",
     ...(await runCopy(opts.repo, opts.command, {
       tty: !!opts.tty,
-      timeoutMs: opts["timeout-ms"] === undefined ? 60000 : Number(opts["timeout-ms"]),
+      timeoutMs:
+        opts["timeout-ms"] === undefined ? 60000 : Number(opts["timeout-ms"]),
       outputs: opts.outputs
         ? String(opts.outputs)
             .split(",")
