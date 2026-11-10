@@ -152,3 +152,16 @@ test("browser close failure still stops services and saves a failed receipt", as
   assert.equal(r.cleanedUp, true);
   await assert.rejects(() => fetch(`http://127.0.0.1:${f.port}/`));
 });
+test("captures the completed finite CSS animation rather than a faded intermediate frame", async t => {
+  const f=await fixture(t);
+  await fs.writeFile(path.join(f.repo,"server.mjs"),`import http from 'node:http';http.createServer((q,s)=>s.end('<style>body{margin:0;background:white}h1{margin:0;color:white;background:black;width:800px;height:600px;animation:fade 5s linear}@keyframes fade{from{opacity:0}to{opacity:1}}</style><h1>Ready</h1>')).listen(${f.port},'127.0.0.1');`);
+  const r=await captureWeb(f);assert.equal(r.ok,true,JSON.stringify(r));
+  const {chromium}=await import('playwright'), browser=await chromium.launch();
+  try {
+    const page=await browser.newPage(),bytes=await fs.readFile(path.join(f.work,r.pages[0].file));
+    const pixel=await page.evaluate(async src=>{
+      const img=new Image();img.src=src;await img.decode();const c=document.createElement('canvas');c.width=800;c.height=600;const ctx=c.getContext('2d');ctx.drawImage(img,0,0);return [...ctx.getImageData(400,400,1,1).data];
+    },'data:image/png;base64,'+bytes.toString('base64'));
+    assert.ok(pixel.slice(0,3).every(x=>x<15),`expected fully opaque black, got ${pixel}`);
+  }finally{await browser.close();}
+});

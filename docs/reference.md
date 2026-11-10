@@ -475,7 +475,7 @@ not a screenshot. Do not substitute test logs for live acceptance.
 
 ## Web application capture brief
 
-Capture requires an explicit `webCapture` object in brief.json. It runs in the
+Capture requires an explicit `webCapture` object in brief.json. Screenshots fast-forward finite CSS animations to their completed state, preventing faded intermediate frames. It runs in the
 target checkout, not runCopy: prepare isolated dependencies and disposable data
 first. Never point this at production. The process inherits PATH/HOME/TMPDIR and
 locale only, with explicit synthetic configuration from `env`; it does not

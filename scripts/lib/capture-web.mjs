@@ -206,7 +206,7 @@ export async function captureWeb(o) {
       await page.waitForSelector(p.waitFor, { timeout: timeoutMs });
       await page.evaluate(() => document.fonts.ready);
       const file = path.join(dir, p.id + ".png");
-      await page.screenshot({ path: file });
+      await page.screenshot({ path: file, animations: "disabled" });
       const bytes = await fs.readFile(file);
       result.pages.push({
         ...p,
