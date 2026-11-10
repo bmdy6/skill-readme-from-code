@@ -1,6 +1,7 @@
 Use the project-type skeleton. Write in this order: name; one complete benefit
 sentence; at most four truthful badges and language link; theme-aware hero and
-caption; Quick start install block plus at most four first-use lines; one line
+caption; Quick start with a shell install block or a GUI download link and steps,
+plus at most four first-use lines; one line
 of requirements; three source-backed benefits; a three-step workflow; options
 (up to five rows, linking reference); 3–5 FAQs and boundaries; contributing;
 license. Put legal detail in details. Never put benefits before installation.

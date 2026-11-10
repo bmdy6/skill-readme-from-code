@@ -30,7 +30,7 @@ export async function dispatch(command, opts) {
     const { capture } = await import("./capture.mjs");
     const r = await capture(opts);
     console.log(JSON.stringify(r, null, 2));
-    if (r.exitCode !== 0 || r.timedOut) process.exitCode = 1;
+    if (r.exitCode !== 0 || r.timedOut || r.outputErrors?.length) process.exitCode = 1;
   } else if (command === "art") {
     const { renderArt } = await import("./art.mjs");
     const r = await renderArt({

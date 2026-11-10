@@ -12,6 +12,7 @@ export async function capture(opts) {
     role: opts.role || "supporting",
     ...(await runCopy(opts.repo, opts.command, {
       tty: !!opts.tty,
+      timeoutMs: opts["timeout-ms"] === undefined ? 60000 : Number(opts["timeout-ms"]),
       outputs: opts.outputs
         ? String(opts.outputs)
             .split(",")

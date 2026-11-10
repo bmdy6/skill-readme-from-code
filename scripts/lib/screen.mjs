@@ -5,7 +5,7 @@ import { execFileSync } from "node:child_process";
 import { chromium } from "playwright";
 import { marked } from "marked";
 import GithubSlugger from "github-slugger";
-import { read, write, escape } from "./io.mjs";
+import { read, write, escape, installationBlock, readmeDocuments } from "./io.mjs";
 const root = fileURLToPath(new URL("../../", import.meta.url));
 const remotePlaceholder =
   '<svg xmlns="http://www.w3.org/2000/svg" width="120" height="20"><rect width="120" height="20" rx="3" fill="#e5e7eb"/><text x="60" y="14" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4b5563">Remote image</text></svg>';
@@ -67,7 +67,18 @@ export async function firstScreen({
   install,
   local = false,
   offline = false,
+  brief = {},
 }) {
+  const installCommand = installationBlock(install);
+  const language = (await readmeDocuments(repo, brief)).find(d => d.file === readme)?.language || "en";
+  const download = install?.url
+    ? {
+        url: install.url,
+        heading: typeof install.heading === "string"
+          ? install.heading
+          : install.heading?.[language],
+      }
+    : null;
   const md = await read(path.join(repo, readme));
   const rendered = await markdownHTML(md, { local: local || offline });
   const css = await read(path.join(root, "templates/github-markdown.css"));
@@ -102,7 +113,7 @@ export async function firstScreen({
       );
       await page.evaluate(() => document.fonts.ready);
       const measured = await page.evaluate(
-        ({ install, height }) => {
+        ({ installCommand, download, height }) => {
           const root = document.querySelector("article");
           const box = (e) => {
             if (!e) return null;
@@ -137,18 +148,57 @@ export async function firstScreen({
                 )),
           );
           const hero = imgs.find((i) => i !== banner && i.naturalWidth >= 400);
-          const pre = [...root.querySelectorAll("pre")].find((p) =>
-            install
-              ? p.textContent.trim() === install.trim()
-              : /\b(npx|npm|pip|uv|cargo|git clone|brew|curl|python3?)\b/.test(
-                  p.textContent,
-                ),
-          );
+          let installBox = null, installText = null;
+          if (download) {
+            const heading = [...root.querySelectorAll("h2,h3,h4")].find(
+              (h) => h.textContent.trim() === download.heading,
+            );
+            const section = [];
+            for (let e = heading?.nextElementSibling;
+              e && !(/^H[1-6]$/.test(e.tagName) && e.tagName <= heading.tagName);
+              e = e.nextElementSibling
+            ) section.push(e);
+            const link = section.flatMap((e) => [...e.querySelectorAll("a")])
+              .find((a) => a.getAttribute("href") === download.url);
+            const visible = (e) =>
+              e.getClientRects().length && getComputedStyle(e).visibility === "visible";
+            if (
+              link?.textContent.trim() &&
+              visible(link) &&
+              visible(heading) &&
+              section.some(
+                (e) =>
+                  e.matches("p,ol,ul") &&
+                  visible(e) &&
+                  e.textContent.trim() &&
+                  !e.contains(link),
+              )
+            ) {
+              const rects = [heading, ...section.filter(visible)].map(box);
+              installBox = {
+                top: Math.min(...rects.map((r) => r.top)),
+                bottom: Math.max(...rects.map((r) => r.bottom)),
+                left: Math.min(...rects.map((r) => r.left)),
+                right: Math.max(...rects.map((r) => r.right)),
+              };
+              installText = link.textContent.trim();
+            }
+          } else {
+            const pre = [...root.querySelectorAll("pre")].find((p) =>
+              installCommand
+                ? p.textContent.trim() === installCommand.trim()
+                : /\b(npx|npm|pip|uv|cargo|git clone|brew|curl|python3?)\b/.test(
+                    p.textContent,
+                  ),
+            );
+            installBox = box(pre);
+            installText = pre?.textContent.trim() || null;
+          }
           const items = {
             name: box(title),
             oneLiner: box(lead),
             hero: hero?.complete && hero.naturalWidth ? box(hero) : null,
-            install: box(pre),
+            install: installBox,
           };
           const checks = Object.fromEntries(
             Object.entries(items).map(([k, r]) => [
@@ -163,7 +213,7 @@ export async function firstScreen({
           return {
             items,
             checks,
-            install: pre?.textContent.trim() || null,
+            install: installText,
             contentWidth:
               root.clientWidth -
               parseFloat(getComputedStyle(root).paddingLeft) -
@@ -177,7 +227,7 @@ export async function firstScreen({
             })),
           };
         },
-        { install, height },
+        { installCommand, download, height },
       );
       const file = `first-screen-${name}.png`;
       await page.screenshot({ path: path.join(work, file) });

@@ -1,6 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { read, json, write, exists, hash } from "./io.mjs";
+import { read, json, write, exists, hash, readmeDocuments, checkEvidence } from "./io.mjs";
 import { scan } from "./scan.mjs";
 import {
   shellBlocks,
@@ -21,14 +21,13 @@ const check = (id, issues = [], extra = {}) => ({
   ...extra,
 });
 export async function staticChecks(repo, facts, brief = {}, opts = {}) {
-  const md = await read(path.join(repo, "README.md")),
-    zh = await read(path.join(repo, "README.zh-CN.md"));
+  const documents = await readmeDocuments(repo, brief);
+  const md = documents.find(d => d.language === "en")?.text || documents[0]?.text || "",
+    zh = documents.find(d => d.language === "zh-CN")?.text || "";
+  const bilingual = documents.some(d => d.language === "en") && !!zh;
   const checks = [];
   const linkIssues = [];
-  for (const [file, text] of [
-    ["README.md", md],
-    ...(zh ? [["README.zh-CN.md", zh]] : []),
-  ]) {
+  for (const {file, text, language} of documents) {
     for (const link of links(text)) {
       if (/^https?:/.test(link)) {
         if (opts.online)
@@ -70,7 +69,7 @@ export async function staticChecks(repo, facts, brief = {}, opts = {}) {
     }),
   );
   const imageIssues = [],
-    referenced = [...links(md), ...links(zh)];
+    referenced = documents.flatMap(d => links(d.text));
   const artInputs = await json(path.join(repo, "docs/readme/art.json"), {
     images: [],
   });
@@ -89,10 +88,7 @@ export async function staticChecks(repo, facts, brief = {}, opts = {}) {
     }
   }
 
-  for (const [file, text] of [
-    ["README.md", md],
-    ...(zh ? [["README.zh-CN.md", zh]] : []),
-  ]) {
+  for (const {file, text, language} of documents) {
     for (const img of images(text)) {
       if (!img.source && !img.alt?.trim())
         imageIssues.push(`${file}: missing image alt`);
@@ -113,9 +109,9 @@ export async function staticChecks(repo, facts, brief = {}, opts = {}) {
           !/badge|shields\.io|badgen/i.test(img.src) &&
           /\.(png|svg|jpe?g|webp)(?:$|\?)/.test(img.src)
         ) {
-          if (file === "README.zh-CN.md" && !/\.zh-CN\./.test(img.src))
+          if (language === "zh-CN" && !/\.zh-CN\.|(?:^|\/)(?:zh|zh-CN)\//.test(img.src))
             imageIssues.push(`${file}: English image ${img.src}`);
-          if (file === "README.md" && /\.zh-CN\./.test(img.src))
+          if (language === "en" && /\.zh-CN\.|(?:^|\/)(?:zh|zh-CN)\//.test(img.src))
             imageIssues.push(`${file}: Chinese image ${img.src}`);
         }
       }
@@ -134,7 +130,7 @@ export async function staticChecks(repo, facts, brief = {}, opts = {}) {
       imageIssues.push(`Unreferenced image: ${img}`);
   checks.push(check("V4", imageIssues));
   const truth = [];
-  const all = md + "\n" + zh;
+  const all = documents.map(d => d.text).join("\n");
   if (/OWNER\/REPO|<your[-_…\w]|\bTODO\b|\blorem\b/i.test(all))
     truth.push("Placeholder text");
   const licenseText =
@@ -160,7 +156,7 @@ export async function staticChecks(repo, facts, brief = {}, opts = {}) {
     if (workflow && !facts.workflows.includes(`.github/workflows/${workflow}`))
       truth.push(`Unknown CI workflow ${workflow}`);
   }
-  for (const b of shellBlocks(md)) {
+  for (const b of documents.flatMap(d => shellBlocks(d.text))) {
     const pkg = b.code.match(
       /npm (?:install|i)(?: (?:-g|--global))? ([\w@/.-]+)/,
     )?.[1];
@@ -188,10 +184,7 @@ export async function staticChecks(repo, facts, brief = {}, opts = {}) {
   }
   checks.push(check("V5", truth));
   const copy = [];
-  for (const [file, text, lang] of [
-    ["README.md", md, "en"],
-    ...(zh ? [["README.zh-CN.md", zh, "zh-CN"]] : []),
-  ]) {
+  for (const {file, text, language: lang} of documents) {
     const lead = leadText(text);
     if (lead) {
       const plain = lead.replace(/[\*_`]/g, "");
@@ -282,12 +275,12 @@ export async function staticChecks(repo, facts, brief = {}, opts = {}) {
     if (all.toLowerCase().includes(t.toLowerCase()))
       copy.push(`Forbidden term: ${t}`);
   checks.push(check("V6", copy, { wordCount: words.length }));
-  if (!zh)
+  if (!bilingual)
     checks.push({
       id: "V7",
-      status: brief.languages?.includes("zh-CN") ? "fail" : "skip",
-      reason: "Chinese README absent",
-      issues: brief.languages?.includes("zh-CN")
+      status: brief.languages?.some(lang => !documents.some(d => d.language === lang)) ? "fail" : "skip",
+      reason: "Only one README language present",
+      issues: brief.languages?.some(lang => !documents.some(d => d.language === lang))
         ? ["Requested language missing"]
         : [],
     });
@@ -314,28 +307,21 @@ export async function staticChecks(repo, facts, brief = {}, opts = {}) {
           names.some((n) => n.toLowerCase() === h.text.toLowerCase()),
         ),
       ]);
-    const aKeys = keys(md),
-      bKeys = keys(zh);
-    if (
-      aKeys.some(
-        (a, i) => a[1] >= 0 && bKeys[i]?.[1] >= 0 && a[1] !== bKeys[i][1],
-      )
-    )
-      issues.push("Translated heading order differs");
-    if (
-      JSON.stringify(headings(md).map((h) => h.depth)) !==
-      JSON.stringify(headings(zh).map((h) => h.depth))
-    )
-      issues.push("Heading structure/order differs");
-    if (
-      JSON.stringify(shellBlocks(md).map((b) => b.code)) !==
-      JSON.stringify(shellBlocks(zh).map((b) => b.code))
-    )
-      issues.push("Shell blocks differ");
-    const norm = (s) =>
-      images(s).map((i) => i.src?.replace(/\.zh-CN(?=\.)/g, ""));
-    if (JSON.stringify(norm(md)) !== JSON.stringify(norm(zh)))
-      issues.push("Image sequence differs");
+    const reference = documents.find(d => d.language === "en");
+    for (const document of documents.filter(d => d !== reference)) {
+      const a = reference.text, b = document.text;
+      const aKeys = keys(a), bKeys = keys(b);
+      const prefix = document.file + ": ";
+      if (aKeys.some((a, i) => a[1] >= 0 && bKeys[i]?.[1] >= 0 && a[1] !== bKeys[i][1]))
+        issues.push(prefix + "Translated heading order differs");
+      if (JSON.stringify(headings(a).map(h => h.depth)) !== JSON.stringify(headings(b).map(h => h.depth)))
+        issues.push(prefix + "Heading structure/order differs");
+      if (JSON.stringify(shellBlocks(a).map(b => b.code)) !== JSON.stringify(shellBlocks(b).map(b => b.code)))
+        issues.push(prefix + "Shell blocks differ");
+      const norm = text => images(text).map(i => i.src?.replace(/\.zh-CN(?=\.)/g, "").replace(/\/(?:en|zh|zh-CN)\//g, "/LANG/"));
+      if (JSON.stringify(norm(a)) !== JSON.stringify(norm(b)))
+        issues.push(prefix + "Image sequence differs");
+    }
     checks.push(check("V7", issues));
   }
   return checks;
@@ -382,7 +368,7 @@ async function base(opts) {
   if (sourceIssues.length) checks.find((c) => c.id === "V5").status = "fail";
   let screen;
   try {
-    screen = await firstScreen({ ...opts, install: brief.install?.command });
+    screen = await firstScreen({ ...opts, install: brief.install });
     checks.unshift(
       check(
         "V2",
@@ -398,7 +384,7 @@ async function base(opts) {
   return { facts, brief, checks };
 }
 export function reportMarkdown(result, title) {
-  return `# ${title}\n\nScore: ${result.score}/100\n\n| Check | Result | Evidence |\n|---|---|---|\n${result.checks.map((c) => `| ${c.id} | ${c.status} | ${(c.issues?.join("; ") || c.reason || c.warnings?.join("; ") || "Passed").replace(/\|/g, "\\|")} |`).join("\n")}\n\n${result.checks.find((c) => c.id === "V2")?.screen?.renderer || "No screen renderer"}\n`;
+  return `# ${title}\n\nScore: ${result.score}/100\n\n| Check | Result | Evidence |\n|---|---|---|\n${result.checks.map((c) => `| ${c.id} | ${c.status} | ${checkEvidence(c).replace(/\|/g, "\\|")} |`).join("\n")}\n\n${result.checks.find((c) => c.id === "V2")?.screen?.renderer || "No screen renderer"}\n`;
 }
 export async function audit(opts) {
   const { checks } = await base(opts);
@@ -425,12 +411,8 @@ export async function verify(opts) {
     opts.plan || path.join(opts.work, "command-plan.json"),
     { blocks: [] },
   );
-  for (const file of [
-    "README.md",
-    ...((await exists(path.join(opts.repo, "README.zh-CN.md")))
-      ? ["README.zh-CN.md"]
-      : []),
-  ])
+  const documents = await readmeDocuments(opts.repo, brief);
+  for (const {file} of documents)
     for (const b of shellBlocks(await read(path.join(opts.repo, file)))) {
       const rule = plan.blocks?.find(
         (r) =>
@@ -453,6 +435,7 @@ export async function verify(opts) {
       const run = await runCopy(opts.repo, b.code, {
         tty: rule.tty,
         shareGitHubAuth: rule.shareGitHubAuth === true,
+        timeoutMs: rule.timeoutMs ?? 60000,
       });
       let stdoutMatches = true,
         reason;
@@ -503,16 +486,23 @@ export async function verify(opts) {
         ),
       {
         results: commandResults,
-        warnings: commandResults.flatMap((r) =>
-          (r.warnings || []).map((w) => `${r.file} block ${r.index}: ${w}`),
-        ),
+        warnings: commandResults.flatMap((r) => [
+          ...(r.status === "skip" ? [`${r.file} block ${r.index}: ${r.reason}`] : []),
+          ...(r.warnings || []).map((w) => `${r.file} block ${r.index}: ${w}`),
+        ]),
       },
     ),
   );
+  if (!commandResults.length || commandResults.every(r => r.status === "skip")) {
+    const v1 = checks.find(c => c.id === "V1");
+    v1.status = "skip";
+    v1.reason = commandResults.length ? "No README commands executed" : "No README shell blocks";
+  }
   const projectTests = plan.projectTests;
   const invalidProjectTests =
     projectTests &&
     ((projectTests.skip !== undefined && projectTests.command !== undefined) ||
+      (projectTests.timeoutMs !== undefined && (!Number.isSafeInteger(projectTests.timeoutMs) || projectTests.timeoutMs <= 0 || projectTests.timeoutMs > 3600000)) ||
       ![projectTests.skip, projectTests.command].some(
         (v) => typeof v === "string" && v.trim(),
       ));
@@ -541,7 +531,7 @@ export async function verify(opts) {
     for (const cmd of projectTests?.command
       ? [projectTests.command]
       : facts.testCommands)
-      results.push(await runCopy(opts.repo, cmd));
+      results.push(await runCopy(opts.repo, cmd, {timeoutMs: projectTests?.timeoutMs ?? 60000}));
     checks.push(
       check(
         "V8",
@@ -582,19 +572,14 @@ export async function verify(opts) {
     }
   // Measure the actual README rendering, including picture-selected dark variants.
   if (manifest?.files?.length) {
-    for (const readme of [
-      "README.md",
-      ...((await exists(path.join(opts.repo, "README.zh-CN.md")))
-        ? ["README.zh-CN.md"]
-        : []),
-    ]) {
+    for (const {file: readme} of documents) {
       const screens =
         readme === "README.md"
           ? checks.find((c) => c.id === "V2")?.screen
           : await firstScreen({
               ...opts,
               readme,
-              work: path.join(opts.work, "zh-screen"),
+              work: path.join(opts.work, readme + "-screen"),
             });
       for (const [viewport, screen] of Object.entries(
         screens?.viewports || {},

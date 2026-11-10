@@ -33,7 +33,9 @@ entry points, tests, CLI help, LICENSE, CI and existing docs. Follow the real ca
 path before making a claim. Inspect readmeTests: preserve their guarantee when
 rewriting README content. Code facts have stable IDs and `file:line` sources.
 Add specific feature facts only after reading and checking that source line.
-GitHub About/topics are optional context, not source-code evidence.
+GitHub About/topics are optional context, not source-code evidence. SwiftPM
+facts identify the build system and test candidate. Confirm the app platform
+and release installation separately. A null install means it needs evidence.
 Keep the first scan's baseline.json: it snapshots old H2 headings, integration
 facts and each status badge (image URL, target URL, source and stable ID).
 Facts with kind integration describe compatible tools/platforms/runtimes;
@@ -55,10 +57,16 @@ audience, current approach, and strongest feature. Offer three complete
 one-sentence positions grounded in facts. Wait for the user's choice.
 
 Write WORK/brief.json with projectType, audience, oneLiner, keyTerms, coreAction,
-install.command, firstUse, languages, accent, wordBudget,
+install, firstUse, languages, accent, wordBudget,
 allowNamedAlternatives and decidedBy. Defaults: languages ["en"], accent
 #2f6f4e, wordBudget 400, allowNamedAlternatives false. Add zh-CN when requested.
-Use real package/repository names and an installation command that can be run.
+Declare readmes as a filename → language map (for example README.md: zh-CN,
+README.en.md: en), preserving existing names. All discovered README variants are checked.
+Use real package/repository names and a confirmed installation route. For a
+shell install, set install.block to the exact runnable block and install.firstCommand
+to its first line. Legacy install.command remains supported. For GUI installs,
+set install.url, install.heading, install.label and install.stepKeywords.
+Place the download link and its steps in the named section as separate blocks.
 coreAction is {what,input,command or agentStep,output:{description,keywords},factIds}.
 Choose the main user action and a concrete output artifact. At least one G1
 candidate adapts the old tagline when it has a useful promise. Reject generic
@@ -68,6 +76,10 @@ Write keyTerms as {what: [...], audience: [...]} covering the tool and its reade
 During G1, fill audience with context-appropriate synonyms and language variants
 (e.g. developers, engineers, programmers, 开发者, 程序员). Keep these in the
 brief; the scorer has no built-in synonym dictionary. Legacy arrays still work.
+Set coreAction.output.keywords to concrete names and common paraphrases for the
+project's output (for example, revised draft and revised Chinese prose), with
+language variants. Avoid broad terms such as Chinese or result alone. Freeze the
+brief before the independent reader sees the screenshot.
 
 For explicitly noninteractive work, select the recommended position yourself
 and record `decidedBy: "agent"` plus `gates.G1` with choice and reason.
@@ -78,8 +90,10 @@ Do not use noninteractive mode to override a user who asked to choose.
 Run `capture --repo DIR --id ID -- 'COMMAND'` for genuine project output. It
 executes in a disposable copy with a separate home and no inherited credentials by default.
 It is not an OS security sandbox: inspect commands first and run only authorized
-commands. Captures preserve ANSI, exits, elapsed time, environment and TTY needs.
-The execution limit is 60 seconds. A TTY-dependent command must be marked
+commands. Captures preserve ANSI, exits, elapsed time, environment, TTY needs and output
+collection errors even when requested artifacts are missing.
+The default execution limit is 60 seconds; capture --timeout-ms and command-plan
+blocks/projectTests.timeoutMs accept 1–3600000 ms for explicitly longer runs. A TTY-dependent command must be marked
 `--tty`; this records the requirement, it does not allocate a TTY. Find a documented
 noninteractive mode or record the limitation. Never substitute a fabricated run.
 
@@ -106,7 +120,9 @@ a running web app. Keep the result short enough to read at README width.
 
 Run `art --repo DIR --spec DIR/docs/readme/art.json --out DIR/docs/readme`.
 Every image gets light/dark × en/zh-CN variants and a self-check manifest.
-Keep 40px top/bottom air and let ordinary canvas height follow content. Primary
+Let ordinary canvas height follow content. Use the template's spacing.
+Prompt comparisons, step strips and linked-source previews use tighter spacing
+than the standard 40px top/bottom padding. Primary
 text is >=16 CSS px; labels >=13. The union of text-bearing element and
 loaded-image rectangles (excluding container-only panels and empty boxes) must
 cover >=60% of the canvas area. Balance both sides. Single terminal/code
@@ -139,7 +155,7 @@ For explicitly noninteractive work, inspect screenshots yourself, make the
 recommended decision and record `gates.G2.decidedBy: "agent"`, choice and reason
 in brief.json. Record both G1/G2 decisions in the report.
 Desktop is 1280×800, content exactly 838px, with 72px reserved for the sticky bar.
-Name, one-liner, whole hero and entire installation block must fit. Mobile
+Name, one-liner, whole hero and the entire shell block or GUI install section must fit. Mobile
 390×844 is recorded, not a hard gate. A local renderer fallback must be disclosed.
 P12: default screenshots allow only GET remote image requests. Confirm before
 badges/images load before judging. For `--offline`, render both before and after
@@ -169,7 +185,7 @@ reason. Private clones may explicitly share the authorized gh identity via
 `shareGitHubAuth: true` in that block plan; disclose it. No command rewrites or append flags behind the reader's back.
 Run `node scripts/run.mjs verify --repo DIR`. V1–V11 must have no failures.
 Read the report and resolve failures. A skip is a disclosed limitation, not an
-executed check. Project test commands come from scan. Use command-plan `projectTests.skip` with
+executed check; V1 is skip when every block is unexecuted, with reasons in the reports. Project test commands come from scan. Use command-plan `projectTests.skip` with
 a concrete reason when a user forbids those tests (V8 is skip, never pass), or
 `projectTests.command` for an explicitly scoped command. For installation blocks,
 set `expectStdout` to a real completion receipt; exit 0 at a selector is not
@@ -181,9 +197,12 @@ Use a fresh isolated reader with only first-screen-desktop.png and questions.md,
 no repository, history, brief or expected answers. For acceptance use a fresh
 `codex exec -s read-only` from a separate empty directory, with the image attached
 and tools disabled where supported. The host must never answer for the reader.
-Ask what the output looks like (must hit coreAction.output.keywords) and what
-appeals most (record only). Score its JSON with stranger score; all five checks
-must pass. Also run stranger blind-prepare --before OLD --after NEW: A/B labels
+For GUI installation the reader names the visible download label and the first
+step after downloading. Ask what the output looks like and what appeals most
+(record only). Score its JSON with stranger score; all five checks must pass.
+For outputMatch: review, keep the raw answer and failed automatic check. Explain
+whether the wording is equivalent or the artifact is wrong. Revise the brief for
+a future run with a fresh reader if needed. Also run stranger blind-prepare --before OLD --after NEW: A/B labels
 are randomized and the mapping is kept outside the reader's image directory.
 Give a fresh reader only A.png, B.png and questions.md; never reveal old/new.
 Run stranger blind-score --answers FILE for each of exactly three fresh readers.
@@ -207,7 +226,7 @@ delivery.json and pr-body.md for either outcome, including "保留现有 README"
 when the new version wins fewer than 2/3. This is a completed delivery: return
 the report, verbatim reader feedback and improvements; do not open a replacement
 PR. Missing/invalid blind evidence remains not-run and cannot authorize replacement.
-Link screenshots in a replacement PR only when the new version wins and verify passes.
+Link screenshots in a replacement PR only when the new version wins and both verify and stranger score pass.
 
 After a blind win and passing verify, with user authorization, create
 `readme/YYYYMMDD`, inspect the diff, run any user-supplied private/denied word scan, commit and open a PR when gh and remote

@@ -16,3 +16,14 @@ new generic construction.
 In G1, write brief.keyTerms as {what: [...], audience: [...]}. Include appropriate
 audience synonyms and translated terms in audience; these are the accepted
 forWhom answers. Keep tool/output terms in what, not in the audience list.
+
+Record the verified install route in brief.install. Use a runnable command for
+shell installs. For GUI installs, record the download URL, visible label,
+heading and concrete first-step terms. Do not pick a source build command just
+because it is easier to score.
+
+Before showing the first screen to a reader, list likely names for the actual
+artifact in coreAction.output.keywords. Include common synonyms and translations.
+For a Chinese rewrite, examples are "revised draft", "revised Chinese prose",
+"润色稿" and "改好的中文文字". Avoid words that also describe a different artifact
+such as a style profile. Keep these terms fixed once the reader is prepared.

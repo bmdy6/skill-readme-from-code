@@ -55,7 +55,11 @@ workflows, images, readmeTests, remote, optional metadata and facts. Each fact i
 entrypoints, workflow paths, images and README-locking tests are discovered.
 Project types: cli, library, web-app, agent-skill, other. Unknown licenses have
 null SPDX; an agent must investigate instead of inventing a badge. The scanner parses
-Node manifests; other language commands require agent-supplied sourced facts.
+Node manifests and recognizes a root Package.swift as buildSystem: swiftpm.
+SwiftPM contributes a sourced swift test candidate when the manifest declares a
+test target or CI has that command. The scanner leaves SwiftPM installation
+unconfirmed. The skills installer suggestion requires a root SKILL.md and a
+remote. Unknown projects without installation evidence return install: null.
 readme-competitors.json may provide a string array of competitor terms. V6
 excludes manifest dependencies from this list; --deny-words always applies.
 
@@ -98,6 +102,24 @@ traceability; an agent must still review whether the cited line supports it.
   "gates":{"G1":{"decidedBy":"agent","choice":"Evidence first","reason":"Noninteractive acceptance"},"G2":{"decidedBy":"agent","choice":"Approved","reason":"Inspected all three screenshots"}}
 }
 ```
+
+For a GUI-first project, use this instead of install.command:
+
+```json
+{
+  "url": "https://github.com/example/app/releases/latest",
+  "heading": "Install",
+  "label": "Download Example",
+  "stepKeywords": ["unzip", "extract", "解压"]
+}
+```
+
+Put the exact URL in a visible text link within the named Markdown heading
+section, with the GUI instructions in a separate block before the next section.
+Use a localized heading map (`{"en":"Install","zh-CN":"安装"}`) for translated
+screens when needed. The label and stepKeywords describe the primary screenshot
+given to the reader. The command plan still verifies all shell blocks,
+including a separate source build section.
 
 Interactive G1 and G2 require user decisions. Noninteractive decisions must be
 recorded individually and appear in the report. Do not infer approval from time.
@@ -177,7 +199,7 @@ Reproduce gallery with `node scripts/gallery.mjs`.
 ## Verification and limitations
 
 V1 executes every planned shell block in both languages. V2 measures the full
-name, one-liner, hero and install block. V3 checks links. V4 checks alt, widths,
+name, one-liner, hero and the shell install block or GUI download section. V3 checks links. V4 checks alt, widths,
 theme/language variants and orphaned docs/readme images. V5 checks placeholders,
 badges, license, installation identity and claim references. V6 checks word and
 sentence budgets, badges, emoji headings, superlatives and forbidden terms.
@@ -193,13 +215,19 @@ layout or authenticated repository UI. Test copies can use network; they are not
 a malware boundary. No GIF recording, automatic web-app capture, settings
 changes, publishing or CI drift checking are included in v0.2.
 
-Stranger scoring requires normalized firstCommand equality, >=1 keyTerms.what hit
-in what, >=1 keyTerms.audience hit in forWhom, and wouldTry exactly yes.
+Stranger scoring requires normalized firstCommand equality for a shell install,
+or the exact visible installLink label and a firstStep term hit for a GUI install.
+It also requires a keyTerms.what hit, a keyTerms.audience hit, a
+coreAction.output.keywords hit and wouldTry exactly yes.
 G1 fills audience synonyms and translations in the brief, not a code dictionary.
 Legacy keyTerms arrays remain accepted as the shared terms for both checks.
 It is a simple acceptance heuristic, not research on users' likelihood of starring. Keep the actual reader
 response and confusing[]; no response means not-run. Reports do not suppress
-failures or missing evidence.
+failures or missing evidence. A nonempty output answer without a term hit is
+recorded as outputMatch: review and retains the failed check and verbatim answer.
+The prepare command saves a hash of the brief, and score rejects changes to that
+brief. Use a new work directory and fresh reader for a revised brief. Historical
+answers prepared before the hash was introduced can still be replayed.
 
 ## Replaying the historical acceptance
 
@@ -250,10 +278,13 @@ or scoring. At least 2/3 after wins are required. Fewer wins completes delivery
 with "保留现有 README" and no replacement PR, with verbatim feedback and points
 to borrow in pr-body.md. delivery.json records the conclusion and replaceReadme.
 Missing/incomplete/invalid readers are not-run; replacement also requires verify
-ok=true. report exits normally for a losing but successfully generated report.
+ok=true and a passing stranger score. report exits normally for a losing but successfully generated report.
 
-Art uses auto height, 40px top/bottom padding, primary text >=16px, labels >=13px,
-and actual content area >=60% of canvas area. The union includes text-bearing
+Art uses auto height, primary text >=16px, labels >=13px, and actual content area
+>=60% of canvas area. Prompt comparisons, step strips and linked-source previews
+use tighter padding than the 40px default. To regenerate old prompt/step PNGs,
+run art again with the same art.json and original captures. The layouts change,
+while recorded inputs and outputs stay intact. The union includes text-bearing
 element and loaded-image rectangles, excluding container-only cards and empty
 boxes. V9 requires mainText, density and balance passes, plus links for hero-link,
 in addition to the original checks.
@@ -347,7 +378,7 @@ a matched completion receipt produce warnings in V1 results and the report.
 Stranger term matching normalizes English case, s/es/ies and hyphen/space forms
 on both sides with word boundaries; Chinese text is not segmented or rewritten.
 The exact first command is still compared with whitespace normalization only.
-Questions, A/B randomization and wouldTry/choice requirements are unchanged.
+A/B randomization and wouldTry/choice requirements are unchanged.
 
 Global npm installation examples use `npm_config_prefix` inside the disposable
 home, so they never install into the host's global prefix. Each block still runs
@@ -364,3 +395,36 @@ panel, rather than the capture command. Never author input text in art.json.
 For brief CLI transformations, hero-code with compact:true keeps the two data
 panels and omits repeated art title/caption. The README must still explain the
 example and show the real first-use command. Keep install and first use visible.
+
+## Installation, language and execution contracts
+
+For shell installation, use `install.block` for the complete exact code fence and
+`install.firstCommand` for the first command line requested from the reader.
+Legacy `install.command` supplies the whole block and derives its first line;
+reader answers still require exact whitespace-normalized equality, never substrings.
+GUI installation fields are unchanged.
+
+Declare `brief.readmes` as `{ "README.md": "zh-CN", "README.en.md": "en" }`
+(or the reverse convention with README.zh-CN.md). Conventional README variants
+are always discovered even when omitted from the map. Language suffixes and
+`en/`, `zh/`, `zh-CN/` image directories are retained. Missing declared files fail.
+All variants enter V1/V3/V4/V7; V9 measures every README's displayed artwork.
+
+`command-plan.json` block rules and `projectTests` accept `timeoutMs`; capture
+accepts `--timeout-ms`. Default: 60000 ms. Explicit integer range: 1–3600000 ms.
+Results record the effective timeout. Invalid values fail before execution.
+
+V1 with no executable commands is `skip`, never `pass`. Every skipped filename,
+block index and reason appears in verify.md and the delivery report, including
+Not verified when other blocks passed. Skips remain allowed limitations.
+
+Capture JSON preserves stdout, stderr, exitCode and timedOut even when requested
+outputs are missing. `outputErrors` records each collection error; partial valid
+outputs retain hashes. CLI exits nonzero for missing outputs, failed commands or
+timeouts. Traversal paths are rejected before execution; escaping symlinks are
+recorded as collection errors without copying their targets.
+
+Disposable copies omit credential files, `.build`, `.venv` and Python caches.
+Only Git-tracked `.env.example` templates are allowed; other `.env.*` stay excluded.
+Dependency symlinks are recreated inside the copy (including npm .bin); links
+resolving outside node_modules are rejected. No dependency writes reach the source.
