@@ -12,6 +12,7 @@ export async function runCopy(
     shareGitHubAuth = false,
     outputs = [],
     outputDir,
+    observe,
   } = {},
 ) {
   if (!Number.isSafeInteger(timeoutMs) || timeoutMs <= 0 || timeoutMs > 3600000)
@@ -28,16 +29,18 @@ export async function runCopy(
   });
   await fs.mkdir(path.join(home, ".local", "bin"), { recursive: true });
   try {
-    for (const file of await files(repo)) {
+    const repoFiles = await files(repo);
+    for (const file of repoFiles) {
       const to = path.join(cwd, file);
       await fs.mkdir(path.dirname(to), { recursive: true });
       await fs.copyFile(path.join(repo, file), to);
     }
     // Dependencies are inputs, never a writable link back into the source repository.
-    try {
-      await copyDependencies(path.join(repo, "node_modules"), path.join(cwd, "node_modules"));
-    } catch (e) {
-      if (e.code !== "ENOENT") throw e;
+    const packages = [...new Set(['.', ...repoFiles.filter(f=>path.basename(f)==='package.json').map(f=>path.dirname(f))])];
+    for (const dir of packages) {
+      try {
+        await copyDependencies(path.join(repo, dir, 'node_modules'), path.join(cwd, dir, 'node_modules'));
+      } catch (e) { if (e.code !== 'ENOENT') throw e; }
     }
     const start = Date.now();
     const result = await new Promise((resolve) => {
@@ -75,6 +78,13 @@ export async function runCopy(
         detached: process.platform !== "win32",
         stdio: ["ignore", "pipe", "pipe"],
       });
+      let observation;
+      const observing = observe ? Promise.resolve().then(() => observe({cwd, home, env})).then(
+        value => { observation = {ok: true, value}; },
+        error => { observation = {ok: false, error: error.message}; },
+      ).finally(() => {
+        try { process.kill(-child.pid, "SIGKILL"); } catch { child.kill("SIGKILL"); }
+      }) : Promise.resolve();
       let stdout = "",
         stderr = "",
         timedOut = false;
@@ -96,8 +106,9 @@ export async function runCopy(
       child.on("error", (e) => {
         stderr += e.message;
       });
-      child.on("close", (exitCode, signal) => {
+      child.on("close", async (exitCode, signal) => {
         clearTimeout(timer);
+        await observing;
         resolve({
           command,
           stdout,
@@ -108,6 +119,7 @@ export async function runCopy(
           timeoutMs,
           timedOut,
           requiresTTY: tty,
+          ...(observe ? {observation} : {}),
           environment: {
             node: process.version,
             platform: process.platform,

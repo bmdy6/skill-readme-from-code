@@ -1,0 +1,111 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import os from 'node:os';
+import path from 'node:path';
+import net from 'node:net';
+import {hash} from '../scripts/lib/io.mjs';
+import {verify} from '../scripts/lib/verify.mjs';
+const web = await import('../scripts/lib/capture-web.mjs').catch(() => ({}));
+const only = await import('../scripts/lib/images-only.mjs').catch(() => ({}));
+async function fixture() {
+  const repo = await fs.mkdtemp(path.join(os.tmpdir(), 'rfc-v03-'));
+  const server = net.createServer();
+  await new Promise(r=>server.listen(0,'127.0.0.1',r));
+  const port = server.address().port;
+  await new Promise(r=>server.close(r));
+  await fs.writeFile(path.join(repo,'app.cjs'), `require('http').createServer((q,s)=>s.end('<h1>Notebook</h1><input aria-label="Note"><button onclick="document.querySelector(\\'output\\').textContent=document.querySelector(\\'input\\').value">Save</button><output></output>')).listen(${port},'127.0.0.1')`);
+  return {repo, work:path.join(repo,'evidence'), port, plan:{command:'node app.cjs',url:`http://127.0.0.1:${port}`,sourceFiles:['app.cjs'], viewport:{width:800,height:400},steps:[{action:'fill',selector:'input',value:'Synthetic note'},{action:'click',selector:'button'},{action:'text',selector:'output',value:'Synthetic note'}]}};
+}
+test('web capture starts the actual app, executes actions, hashes sources and stops it', async()=>{
+  assert.equal(typeof web.captureWeb,'function');
+  const f=await fixture();
+  const r=await web.captureWeb({...f,id:'note',role:'core','timeout-ms':10000});
+  const manifest=JSON.parse(await fs.readFile(path.join(f.work,'art-manifest.json')));
+  assert.equal(manifest.files[0].captureId,'note');
+  assert.equal(manifest.files[0].sha256,r.outputs[0].sha256);
+  assert.equal(r.kind,'web-run');
+  assert.equal(r.exitCode,0);
+  assert.equal(r.steps.length,3);
+  assert.match(r.visibleText,/Synthetic note/);
+  assert.equal(r.usedFiles[0].sha256.length,64);
+  assert.equal(r.outputs[0].sha256.length,64);
+  assert.equal((await fs.readFile(path.join(f.work,r.outputs[0].file))).subarray(1,4).toString(),'PNG');
+  await assert.rejects(fetch(f.plan.url));
+  assert.equal(hash(await fs.readFile(path.join(f.repo,'app.cjs'))),r.usedFiles[0].sha256);
+});
+test('failed web action retains failure evidence and stops server',async()=>{
+  assert.equal(typeof web.captureWeb,'function');
+  const f=await fixture();f.plan.steps=[{action:'text',selector:'output',value:'not produced'}];
+  const r=await web.captureWeb({...f,id:'failed','timeout-ms':3000});
+  assert.notEqual(r.exitCode,0);
+  assert.match(r.error,/text|Timeout/);
+  assert.ok(await fs.readFile(path.join(f.work,'captures/failed.json')));
+  await assert.rejects(fetch(f.plan.url));
+});
+test('web capture rejects remote URL and escaping source files before startup',async()=>{
+  assert.equal(typeof web.captureWeb,'function');
+  const f=await fixture();
+  await assert.rejects(web.captureWeb({...f,id:'bad',plan:{...f.plan,url:'https://example.com'}}),/loopback/);
+  await assert.rejects(web.captureWeb({...f,id:'bad',plan:{...f.plan,sourceFiles:['../secret']}}),/escapes/);
+});
+test('images-only preserves exact original bytes and rejects text changes and shell additions',async()=>{
+  assert.equal(typeof only.prepareImagesOnly,'function');
+  const f=await fixture();const original='# Notebook\r\n\r\nExisting prose.\r\n';
+  await fs.writeFile(path.join(f.repo,'README.md'),original);
+  await only.prepareImagesOnly(f);
+  const spec={readmes:{'README.md':[{after:'Existing prose.\r\n',block:'\n![Notebook](docs/readme/note.png)\n\nSynthetic local example.\n'}]}};
+  await only.applyImagesOnly({...f,spec});
+  assert.equal((await only.checkImagesOnly(f)).status,'pass');
+  await fs.appendFile(path.join(f.repo,'README.md'),'A rewritten promise.');
+  assert.equal((await only.checkImagesOnly(f)).status,'fail');
+  await fs.writeFile(path.join(f.repo,'README.md'),original);
+  await assert.rejects(only.applyImagesOnly({...f,spec:{readmes:{'README.md':[{after:'Existing prose.\r\n',block:'\n![x](x.png)\n```sh\nrm x\n```\n'}]}}}),/image|shell|caption/);
+});
+test('images-only verify fails closed without a frozen baseline',async()=>{
+  const f=await fixture();await fs.writeFile(path.join(f.repo,'README.md'),'# Notebook\n\nExisting prose.\n');
+  const r=await verify({repo:f.repo,work:f.work,mode:'images-only',local:true});
+  assert.equal(r.mode,'images-only');
+  assert.equal(r.ok,false);
+  assert.ok(r.checks.some(c=>c.id==='I1'&&c.status==='fail'));
+});
+test('images-only accepts a real web screenshot and catches later output tampering',async()=>{
+  const f=await fixture();
+  const art=path.join(f.repo,'docs/readme');
+  const c=await web.captureWeb({...f,work:art,id:'note',role:'core','timeout-ms':10000});
+  await fs.copyFile(path.join(art,c.outputs[0].file),path.join(art,'note.png'));
+  await fs.writeFile(path.join(art,'art-manifest.json'),JSON.stringify({files:[{file:'note.png',sha256:c.outputs[0].sha256,captureId:'note'}]}));
+  await fs.writeFile(path.join(f.repo,'README.md'),'# Notebook\n\nSave a note.\n\n## Quick start\n\n```sh\nnode app.cjs\n```\n');
+  await fs.mkdir(f.work,{recursive:true});
+  await fs.writeFile(path.join(f.work,'brief.json'),JSON.stringify({install:{block:'node app.cjs'}}));
+  await only.prepareImagesOnly(f);
+  await only.applyImagesOnly({...f,spec:{readmes:{'README.md':[{after:'Save a note.\n',block:'\n<img src="docs/readme/note.png" width="400" alt="Saved note">\n\nSynthetic local note.\n'}]}}});
+  const options={repo:f.repo,work:f.work,mode:'images-only',local:true};
+  const pass=await verify(options);
+  assert.equal(pass.ok,true,JSON.stringify(pass.checks));
+  await fs.writeFile(path.join(art,c.outputs[0].file),'changed');
+  const fail=await verify(options);
+  assert.equal(fail.checks.find(c=>c.id==='I3').status,'fail');
+});
+test('images-only rejects a capture whose recorded source was changed',async()=>{
+  const f=await fixture(), art=path.join(f.repo,'docs/readme');
+  const c=await web.captureWeb({...f,work:art,id:'note',role:'core','timeout-ms':10000});
+  await fs.copyFile(path.join(art,c.outputs[0].file),path.join(art,'note.png'));
+  await fs.writeFile(path.join(art,'art-manifest.json'),JSON.stringify({files:[{file:'note.png',sha256:c.outputs[0].sha256,captureId:'note'}]}));
+  await fs.writeFile(path.join(f.repo,'README.md'),'# Notebook\n\nSave a note.\n\n```sh\nnode app.cjs\n```\n');
+  await only.prepareImagesOnly(f);
+  await only.applyImagesOnly({...f,spec:{readmes:{'README.md':[{after:'Save a note.\n',block:'\n<img src="docs/readme/note.png" width="400" alt="Saved note">\n'}]}}});
+  await fs.appendFile(path.join(f.repo,'app.cjs'),'\n// modified source');
+  const r=await verify({repo:f.repo,work:f.work,mode:'images-only',local:true});
+  assert.equal(r.checks.find(c=>c.id==='I3').status,'fail');
+});
+test('web monorepo dependencies are copied beside nested packages',async()=>{
+  const {runCopy}=await import('../scripts/lib/execute.mjs');
+  const f=await fixture();
+  await fs.mkdir(path.join(f.repo,'client/node_modules/demo'),{recursive:true});
+  await fs.writeFile(path.join(f.repo,'client/package.json'),'{}');
+  await fs.writeFile(path.join(f.repo,'client/node_modules/demo/index.js'),'module.exports="nested dependency"');
+  const r=await runCopy(f.repo,`cd client && node -e 'console.log(require("demo"))'`);
+  assert.equal(r.exitCode,0,r.stderr);
+  assert.match(r.stdout,/nested dependency/);
+});

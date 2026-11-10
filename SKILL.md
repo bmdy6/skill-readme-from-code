@@ -1,6 +1,6 @@
 ---
 name: readme-from-code
-description: Use when a user wants to write, rewrite, or audit a repository README with source-backed claims, executable examples, designed images, and first-screen evidence.
+description: Use when a user wants to write, rewrite, or audit a repository README with source-backed claims, executable examples, designed images, and first-screen evidence, including real web-app captures and images-only updates.
 ---
 
 # Readme from code
@@ -22,6 +22,17 @@ command contracts and JSON formats are in [docs/reference.md](docs/reference.md)
 
 The default agent workflow is **write**. **audit** only runs the audit command and
 returns its report; it does not rewrite files or execute project commands.
+**images-only** preserves every original README byte and inserts only image markup
+and one short provenance caption per insertion. Use it when the existing text is
+preferred or a rewrite fails. Run `images-only prepare` before editing to freeze
+all language files, then `images-only apply --spec FILE`. Keep WORK’s baseline and insertion plan for review; never re-freeze them to conceal edits.
+Run `verify --mode images-only`: I1 checks exact preservation, I2 new image loading
+and dimensions, I3 hashes and sourced core captures, and V2 the complete first
+screen in both desktop themes. Existing copy, links and commands are outside this
+mode's checks; report that boundary rather than calling them executed or fixed.
+Both modes require exactly three fresh blind readers and 2/3 wins before a README PR; never rerun a losing round.
+The five-question single-reader score is required for rewrites and diagnostic for images-only.
+
 `write` is an agent workflow, not a CLI subcommand. All outputs default to
 `~/.cache/readme-from-code/<repo>/`; choose `--work` to isolate repeated runs.
 Record the target path once, then pass it using `--repo` on each command.
@@ -49,7 +60,6 @@ must stay in its README or have its ID and a specific deletion reason there
 Run `node scripts/run.mjs audit --repo DIR --work WORK/before` before editing.
 Keep the old score and desktop light/dark and mobile screenshots. Do not remove
 inconvenient failures from the baseline. Online links require `--online`.
-
 ## 2. G1: choose the position
 
 Read [prompts/position.md](prompts/position.md). Ask at most three questions:
@@ -84,7 +94,6 @@ brief before the independent reader sees the screenshot.
 For explicitly noninteractive work, select the recommended position yourself
 and record `decidedBy: "agent"` plus `gates.G1` with choice and reason.
 Do not use noninteractive mode to override a user who asked to choose.
-
 ## 3. Capture and design
 
 Run `capture --repo DIR --id ID -- 'COMMAND'` for genuine project output. It
@@ -115,8 +124,15 @@ hero-prompt, hero-code, hero-screens, strip-3, social. Data schema and an origin
 fixture example are in docs/reference.md and docs/design/art.json.
 Use `captureId` for terminal text; `stats` may reference only verify summary
 fields. Label pure diagrams `illustration: true`. Use only original content or
-project screenshots. hero-screens composes existing images, it does not capture
-a running web app. Keep the result short enough to read at README width.
+project screenshots. For web apps, run `capture-web --repo DIR --id ID --role core --plan FILE`.
+Review the startup command and synthetic-data action plan in docs/reference.md.
+It starts the app in a disposable copy, permits loopback only, asserts actual
+Playwright actions, saves screenshot/source hashes and logs, and stops its process
+group. Inspect the PNG; external disposable databases need separate cleanup.
+Use its screenshot in hero-screens or directly with its native art-manifest entry.
+For reused generated results, capture a real copy/hash operation, label the original
+source and disclose that no new generation occurred. Tests/templates are not live use.
+Keep the result short enough to read at README width.
 
 Run `art --repo DIR --spec DIR/docs/readme/art.json --out DIR/docs/readme`.
 Every image gets light/dark × en/zh-CN variants and a self-check manifest.
@@ -143,7 +159,6 @@ Inspect the PNGs yourself: readable text, even spacing and a useful result,
 including dark and Chinese variants. If the image is poor, revise and rerender.
 Keep art.json, art-manifest.json, captures and visual inputs in docs/readme so
 regeneration works without the original cache. Do not hand-edit rendered PNGs.
-
 ## 4. G2: inspect the first screen
 
 Write only the README top through Quick start. Use a picture element for theme
@@ -183,7 +198,7 @@ Write WORK/command-plan.json. Every shell block, in both languages, must have
 an exact code or index rule: run with expected exit code, or skip with a concrete
 reason. Private clones may explicitly share the authorized gh identity via
 `shareGitHubAuth: true` in that block plan; disclose it. No command rewrites or append flags behind the reader's back.
-Run `node scripts/run.mjs verify --repo DIR`. V1–V11 must have no failures.
+Run `node scripts/run.mjs verify --repo DIR`. V1–V11 must have no failures in write mode; images-only must pass I1–I3 and V2.
 Read the report and resolve failures. A skip is a disclosed limitation, not an
 executed check; V1 is skip when every block is unexecuted, with reasons in the reports. Project test commands come from scan. Use command-plan `projectTests.skip` with
 a concrete reason when a user forbids those tests (V8 is skip, never pass), or
@@ -226,7 +241,7 @@ delivery.json and pr-body.md for either outcome, including "保留现有 README"
 when the new version wins fewer than 2/3. This is a completed delivery: return
 the report, verbatim reader feedback and improvements; do not open a replacement
 PR. Missing/invalid blind evidence remains not-run and cannot authorize replacement.
-Link screenshots in a replacement PR only when the new version wins and both verify and stranger score pass.
+Link screenshots in a replacement PR only when the new version wins and verify passes; write mode also requires the single-reader score to pass.
 
 After a blind win and passing verify, with user authorization, create
 `readme/YYYYMMDD`, inspect the diff, run any user-supplied private/denied word scan, commit and open a PR when gh and remote

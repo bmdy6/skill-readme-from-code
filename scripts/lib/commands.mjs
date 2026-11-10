@@ -26,6 +26,15 @@ export async function dispatch(command, opts) {
       await b.close();
     }
     console.log("Node and Chromium ready");
+  } else if (command === "capture-web") {
+    const {captureWeb} = await import('./capture-web.mjs');
+    const r = await captureWeb(opts);
+    console.log(JSON.stringify(r, null, 2));
+    if (r.exitCode !== 0) process.exitCode = 1;
+  } else if (command === "images-only") {
+    const {prepareImagesOnly, applyImagesOnly} = await import('./images-only.mjs');
+    if (!['prepare','apply'].includes(opts.action)) throw Error('images-only requires prepare or apply');
+    console.log(await (opts.action === 'prepare' ? prepareImagesOnly : applyImagesOnly)(opts));
   } else if (command === "capture") {
     const { capture } = await import("./capture.mjs");
     const r = await capture(opts);

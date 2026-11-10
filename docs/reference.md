@@ -10,7 +10,7 @@ Use a trusted project: command execution uses disposable copies, not OS sandboxe
 `~/.cache/readme-from-code/<repository-basename>/`. Distinct repositories with
 the same basename should use explicit work directories. `--brief FILE` selects
 brief.json; otherwise it is read from work. Commands never write target files
-except `art` when its output is explicitly selected in that target.
+except `art` when its output is explicitly selected in that target and `images-only apply`, which inserts the validated image blocks.
 
 Exit 0: command completed (audit may have findings). Exit 1: verification, art
 self-check, capture execution, or stranger score failed. Exit 2: invalid inputs,
@@ -212,8 +212,8 @@ V5 supports common SPDX licenses (MIT, Apache-2.0, GPL-3.0-only, BSD-3-Clause).
 V7 recognizes bilingual skeleton section names and checks other translated headings structurally. A source citation is not a semantic proof. A desktop screenshot uses Markdown
 rendered with GitHub styling and geometry, not a claim about every live browser
 layout or authenticated repository UI. Test copies can use network; they are not
-a malware boundary. No GIF recording, automatic web-app capture, settings
-changes, publishing or CI drift checking are included in v0.2.
+a malware boundary. No GIF recording, settings changes, publishing or CI drift checking are included.
+v0.3 adds explicit loopback web-app capture using a reviewed startup/action plan.
 
 Stranger scoring requires normalized firstCommand equality for a shell install,
 or the exact visible installLink label and a firstStep term hit for a GUI install.
@@ -428,3 +428,62 @@ Disposable copies omit credential files, `.build`, `.venv` and Python caches.
 Only Git-tracked `.env.example` templates are allowed; other `.env.*` stay excluded.
 Dependency symlinks are recreated inside the copy (including npm .bin); links
 resolving outside node_modules are rejected. No dependency writes reach the source.
+
+## v0.3: running web apps
+
+```
+node scripts/run.mjs capture-web --repo /path/to/app --work /path/to/app/docs/readme --id note --role core --plan web-plan.json --timeout-ms 120000
+```
+
+A web plan (no inherited credentials):
+
+```json
+{
+  "command": "npm run dev -- --host 127.0.0.1 --port 4317",
+  "url": "http://127.0.0.1:4317",
+  "sourceFiles": ["package.json", "src/App.jsx"],
+  "data": "disposable synthetic notes; no model calls",
+  "viewport": {"width": 1000, "height": 600},
+  "steps": [
+    {"action": "fill", "selector": "input[name=note]", "value": "Synthetic note"},
+    {"action": "click", "selector": "button[type=submit]"},
+    {"action": "text", "selector": "main", "value": "Synthetic note"}
+  ]
+}
+```
+
+`visible` waits for a selector; `press` sends a key named by `value`. Text assertions
+use CSS selectors. Any missing action, unavailable server, startup failure or timeout
+produces a failed capture, preserving logs. All startup descendants are stopped;
+external databases/services must be managed separately. `outputs[0].file` is the
+source for hero-screens, relative to WORK. Successful captures also update
+WORK/art-manifest.json with a native web-screenshot entry and measured viewport. Save captures and screenshot inputs
+beside art.json before rendering; the generated art manifest references captureId.
+
+## v0.3: images-only
+
+```
+node scripts/run.mjs images-only prepare --repo DIR --work WORK
+node scripts/run.mjs images-only apply --repo DIR --work WORK --spec insertions.json
+node scripts/run.mjs verify --repo DIR --work WORK --mode images-only
+```
+
+The insertion plan maps existing README filenames to ordered unique anchors:
+
+```json
+{"readmes":{"README.md":[{"after":"Existing introduction.\n","block":"\n<img src=\"docs/readme/screen.png\" width=\"600\" alt=\"Saved synthetic note\">\n\nSynthetic local example.\n"}]}}
+```
+
+Only image markup and one short caption are added. Shell blocks, headings, deleted
+text, altered whitespace and added language files fail. Baselines cannot be silently
+overwritten. I2 decodes added images (minimum 400x100) and checks paths, I3 verifies
+manifest image hashes against successful core captures and hashed source/output
+files. Native screenshots may use manifest entries `{file, sha256, captureId}`;
+composites additionally use `sourceSha256` to identify the captured input. Designed
+art still uses the full art command's self-checks. V2 checks name, lead, whole hero
+and install block in both desktop themes. Mobile is recorded. Preserve WORK's
+baseline, insertion plan and before/after screenshots for PR review.
+
+Both modes retain the random three-reader blind gate. A single-reader response is
+diagnostic in images-only and required in write mode. Reports label verification
+scope, so images-only scores are not presented as full README audit improvements.

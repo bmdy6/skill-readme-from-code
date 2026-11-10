@@ -81,7 +81,7 @@ export async function heroRelevance(repo, brief, facts) {
   }
   if (!capture) issues.push("Hero requires a core capture");
   else {
-    if (typeof capture.stdout !== "string" || !capture.stdout.trim())
+    if (capture.kind !== "web-run" && (typeof capture.stdout !== "string" || !capture.stdout.trim()))
       issues.push("Core capture has no output");
     if (capture.role !== "core") issues.push("Hero capture role must be core");
     const command = capture.command || "";
@@ -99,6 +99,15 @@ export async function heroRelevance(repo, brief, facts) {
         /^#{1,2}\s+.+/m.test(capture.stdout || ""))
     )
       issues.push("Hero shows README text rather than a core result");
+    if (capture.kind === "web-run") {
+      if (!capture.steps?.length || !capture.visibleText || !capture.usedFiles?.length || !capture.outputs?.length || !capture.provenance?.capturedAt)
+        issues.push("Web-run needs actions, visible text, sources, screenshot and provenance");
+      for (const used of [...(capture.usedFiles || []).map(s=>({...s,root:repo})), ...(capture.outputs || []).map(s=>({...s,root:base}))]) {
+        const p=path.resolve(used.root,used.file),real=await fs.realpath(p).catch(()=>null);
+        if (!real?.startsWith((await fs.realpath(used.root))+path.sep) || hash(await fs.readFile(p))!==used.sha256)
+          issues.push(`Changed web-run source: ${used.file}`);
+      }
+    }
     if (capture.kind === "agent-run") {
       if (
         !capture.input ||

@@ -405,6 +405,11 @@ export async function audit(opts) {
   return r;
 }
 export async function verify(opts) {
+  if (opts.mode === 'images-only') {
+    const {verifyImagesOnly} = await import('./images-only.mjs');
+    return verifyImagesOnly(opts);
+  }
+  if (opts.mode && opts.mode !== 'write') throw Error('Unknown verify mode');
   const { facts, brief, checks } = await base(opts),
     commandResults = [];
   const plan = await json(
@@ -554,6 +559,12 @@ export async function verify(opts) {
       if (!(await exists(full))) artIssues.push(`Missing ${f.file}`);
       else if (hash(await fs.readFile(full)) !== f.sha256)
         artIssues.push(`Hash mismatch ${f.file}`);
+      if (f.template === 'web-screenshot') {
+        const capture = await json(path.join(opts.repo, 'docs/readme/captures', f.captureId + '.json'));
+        if (f.width < 400 || f.height < 100 || capture?.kind !== 'web-run' || capture.exitCode !== 0 || !capture.outputs?.some(o=>o.file===f.file && o.sha256===f.sha256))
+          artIssues.push(`Invalid native web screenshot ${f.file}`);
+        continue;
+      }
       if (
         !f.checks ||
         [
@@ -589,7 +600,7 @@ export async function verify(opts) {
           const f = manifest.files.find((f) =>
             image.src.endsWith("/docs/readme/" + f.file),
           );
-          if (!f) continue;
+          if (!f || f.template === "web-screenshot") continue;
           const scaled =
             f.minMainFontSize * Math.min(1, image.width / f.cssWidth);
           if (!Number.isFinite(scaled) || scaled < 13)
