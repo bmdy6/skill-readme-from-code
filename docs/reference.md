@@ -443,14 +443,13 @@ node scripts/run.mjs illustrate verify --repo DIR --work WORK
 
 brief.json must declare the exact installation block as `install.block` (or
 per-README `installs[filename]`); a demo/test block is not installation.
-Baseline writes `illustrate-baseline.json` exclusively and refuses overwrite.
+Baseline writes only the git commit and README blob SHAs to `illustrate-baseline.json`, refuses overwrite and rejects uncommitted README text. Verify reads original bytes with `git show`; a manifest may embed this compact `baseline` object for portable replay.
 Verification removes only exact declared blocks before comparing original bytes,
 H2, badges and shell commands in every discovered README. It does not execute
 README commands, demand blind readers, or apply V9/V10. Images must be local,
 reachable from the declared README, under 400,000 bytes and 200–3840 × 40–2160
-pixels. Both alt and caption are required. The full desktop install block must
-still fit 1280×800 (838px content and 72px header); mobile is recorded. An existing
-below-fold install is a disclosed hard failure, permitting only a draft PR.
+pixels. Both alt and a single-line caption are required. Before installation/quick start, allow at most one hero with rendered height <=420px. Put step images after installation beside matching prose; otherwise use a three-column table of linked thumbnails. Set `placement: "hero"` or `"step"`; images sharing `group: "steps"` use one gallery marker pair via `illustrationBlock({id:"steps", images: entries})`.
+The full desktop install block must stay within 1280×800 if baseline was within it (838px content, 72px header). A pre-existing below-fold block is a warning included in the report, not failure; height and placement checks still apply. Mobile is recorded.
 
 WORK/illustrate.json example (repeat entries for each language):
 
@@ -471,8 +470,7 @@ Illustration: mention, read shared context, query scoped sources, reply.
 
 `source.kind` is `illustration`, `command-run` or `web-app`. Every source declares
 `command` and `data`. Web sources also require actual `url`, `viewport` and
-`sha256` matching the inserted PNG; retain the untouched capture receipt and
-preparation script with the PR's image provenance. Original diagram source is
+`sha256` matching the inserted PNG. Keep capture receipts and briefs in WORK, outside the target repository. Commit only images, one SOURCES.md and a small manifest containing baseline commit/blob references, image hashes and insertion fields; reproducible synthetic-data/drawing scripts may stay. A compact manifest uses `sources: "docs/images/SOURCES.md"` and per-image `sha256` instead of repeating source objects; SOURCES.md identifies every image/hash with command, data origin, route and viewport. Declare synthetic data / model-call status once, in SOURCES.md or the hero caption. Never put disclaimers in synthetic fixture content; use natural dialogue and feedback. Original diagram source is
 not a screenshot. Do not substitute test logs for live acceptance.
 
 ## Web application capture brief

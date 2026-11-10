@@ -30,21 +30,22 @@ Use **illustrate** when the words already make sense and only pictures are missi
 use **write** below when positioning, prose or instructions need revision.
 Illustrate is separate: skip write's G1/G2, V1–V11 and stranger gates.
 1. Read the code. Run `illustrate baseline --repo DIR --work WORK` before editing.
-   All README bytes are frozen. Declare the exact install block in brief.json.
+   Freeze git commit + README blob SHAs, never README text in JSON; verify uses git show. Commit README edits first. Declare the exact install block in WORK/brief.json.
 2. Capture genuine output. Web apps declare setup/prepare, service commands/ports/readiness,
-   synthetic data, routes/selectors and viewports in brief.json webCapture; run
-   `capture --type web-app --repo DIR --work WORK --id demo --brief FILE`.
-   Inspect/authorize commands first. Commands/URLs/viewports/hashes are recorded;
-   owned process groups stop even on failure. Never replace a failed app with a mockup.
+   synthetic data, routes/selectors and viewports in brief.json webCapture; run `capture --type web-app --repo DIR --work WORK --id demo --brief FILE`.
+   Inspect/authorize commands first. Commands/URLs/viewports/hashes are recorded; owned process groups stop even on failure. Never replace a failed app with a mockup.
 3. Declare WORK/illustrate.json images using the reference's exact insertion blocks.
-   Images in docs/images/ are <400KB with alt, caption and source command/page/data/hash.
-   Label diagrams source.kind: illustration and caption illustration/示意图.
-   Insert only declared blocks; preserve every original byte, H2, badge and command.
+   Images in docs/images/ are <400KB with alt, caption and source command/page/data/hash. Label diagrams source.kind: illustration and caption illustration/示意图.
+   Keep at most one hero before install/quick start, rendered height <=420px. Steps go after installation, beside matching prose; otherwise use a three-column linked thumbnail table.
+   One caption line per image, one synthetic-data/model-call declaration in SOURCES.md or hero caption. Never put disclaimers in synthetic data; screenshots show natural dialogue and feedback.
+   Use one marker pair per insertion (one pair for a gallery). Preserve every original byte.
 4. Run `illustrate verify --repo DIR --work WORK` and inspect its PNGs. Checks cover
    preservation, image reachability/dimensions/bytes/alt/caption/provenance and desktop install.
-   A pre-existing below-fold install remains a failure; no blind win or V9/V10 manifest is required.
+   A baseline install within the fold must stay within it; existing below-fold is a report warning.
+   Placement/height caps still apply. No blind win or V9/V10 manifest is required.
 5. With authorization, review the diff and open an unmerged PR; disclose sources/limitations.
-   Remaining failures permit only a draft PR. Preview screenshots stay in WORK/task shots, never the repo.
+   Commit only images, one SOURCES.md and a small image/hash/placement/baseline manifest; replay scripts may stay.
+   Keep receipts, briefs and previews in WORK/task shots. Remaining failures permit only a draft PR.
 
 ## 1. Read and establish a baseline
 
