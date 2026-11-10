@@ -29,31 +29,38 @@ export async function scan(repo, { github = true } = {}) {
       source: `${file}:${Math.max(1, (texts[file] || "").split("\n").findIndex((l) => l.includes(needle)) + 1)}`,
     });
   const texts = {};
-  for (const f of list.filter((f) =>
-    /\.(json|mjs|js|ts|md|ya?ml|toml)$|(^|\/)LICENSE/.test(f),
+  for (const f of list.filter(
+    (f) =>
+      f === "Package.swift" ||
+      /\.(json|mjs|js|ts|md|ya?ml|toml)$|(^|\/)LICENSE/.test(f),
   ))
     texts[f] = await read(path.join(repo, f));
   const manifest = await json(path.join(repo, "package.json"), {});
+  const swiftPM = list.includes("Package.swift");
   const projectType = list.includes("SKILL.md")
     ? "agent-skill"
-    : manifest.bin
-      ? "cli"
-      : manifest.scripts?.dev ||
-          manifest.dependencies?.react ||
-          list.includes("index.html")
-        ? "web-app"
-        : manifest.main || manifest.exports
-          ? "library"
-          : "other";
+    : swiftPM
+      ? "other"
+      : manifest.bin
+        ? "cli"
+        : manifest.scripts?.dev ||
+            manifest.dependencies?.react ||
+            list.includes("index.html")
+          ? "web-app"
+          : manifest.main || manifest.exports
+            ? "library"
+            : "other";
   add(
     "project-type",
     "Project type",
     projectType,
     list.includes("SKILL.md")
       ? "SKILL.md"
-      : list.includes("package.json")
-        ? "package.json"
-        : list[0] || "README.md",
+      : swiftPM
+        ? "Package.swift"
+        : list.includes("package.json")
+          ? "package.json"
+          : list[0] || "README.md",
   );
   if (list.includes("package.json"))
     for (const k of [
@@ -111,6 +118,22 @@ export async function scan(repo, { github = true } = {}) {
   for (const [i, f] of images.entries())
     add(`image-${i}`, "Existing image", f, f);
   const testCommands = manifest.scripts?.test ? ["npm test"] : [];
+  if (swiftPM) {
+    add("build-system", "Build system", "swiftpm", "Package.swift");
+    const swiftTestStep = /^[ \t]*(?:-[ \t]*)?run:[ \t]*swift test[ \t]*$/m;
+    const testWorkflow = workflows.find((file) => swiftTestStep.test(texts[file]));
+    const testTarget = /^(?![ \t]*\/\/).*\.testTarget[ \t]*\(/m.exec(texts["Package.swift"]);
+    if (testWorkflow || testTarget) {
+      testCommands.push("swift test");
+      add(
+        "swift-test",
+        "Test command",
+        "swift test",
+        testWorkflow || "Package.swift",
+        testWorkflow ? swiftTestStep.exec(texts[testWorkflow])[0].trim() : testTarget[0],
+      );
+    }
+  }
   const remote = gitRepo(repo);
   let metadata = null;
   if (github && remote) {
@@ -206,14 +229,15 @@ export async function scan(repo, { github = true } = {}) {
     facts.at(-1).kind = "alternative";
   }
   const install =
-    manifest.name && !manifest.private
-      ? `npm install ${manifest.name}`
-      : remote
-        ? `npx skills add ${remote}`
+    projectType === "agent-skill" && remote
+      ? `npx skills add ${remote}`
+      : !swiftPM && manifest.name && !manifest.private
+        ? `npm install ${manifest.name}`
         : null;
   return {
     schemaVersion: 1,
     projectType,
+    ...(swiftPM ? { buildSystem: "swiftpm" } : {}),
     manifest,
     install,
     entries,

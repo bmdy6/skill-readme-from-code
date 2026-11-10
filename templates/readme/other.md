@@ -13,9 +13,7 @@
 
 ## Quick start
 
-```sh
-{{tested_install_command}}
-```
+{{tested_shell_install_or_release_link_and_steps}}
 
 {{at_most_four_first_use_lines}}
 

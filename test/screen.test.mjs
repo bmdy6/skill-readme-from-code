@@ -126,3 +126,27 @@ test("P12 routing rejects non-GET images and GET non-image resources", async () 
     }
   }
 });
+
+test("GUI install uses the linked install section, including its first step, instead of a build block", async (t) => {
+  const { dir } = await fixture(t);
+  const install = { url: "https://example.com/releases/latest", heading: "安装" };
+  const download = "## 安装\n\n[下载示例](https://example.com/releases/latest)\n\n解压并拖到应用程序。";
+  const spacer = Array.from({ length: 24 }, (_, i) => `Paragraph ${i}`).join("\n\n");
+  for (const [contents, visible, label] of [
+    [`${download}\n\n## Details\n\n${spacer}`, true, "下载示例"],
+    [`${spacer}\n\n${download}`, false, "下载示例"],
+    [download.replace("releases/latest", "source"), false, null],
+    [download.replace("解压并拖到应用程序。", ""), false, null],
+  ]) {
+    await fs.writeFile(
+      path.join(dir, "README.md"),
+      [
+        "# Demo", "A desktop application.", contents, "## Source",
+        "```sh\ngit clone https://example.com/source.git\n```",
+      ].join("\n\n"),
+    );
+    const r = await firstScreen({ repo: dir, work: path.join(dir, "screen"), offline: true, install });
+    assert.equal(r.viewports.desktop.checks.install, visible);
+    assert.equal(r.viewports.desktop.install, label);
+  }
+});

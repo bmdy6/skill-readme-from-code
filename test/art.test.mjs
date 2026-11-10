@@ -184,3 +184,34 @@ test("frame boundary overflow is checked on all four edges", async (t) => {
   for (const edge of ["top", "bottom", "left", "right"])
     assert.ok(result.problems.overflow.includes(`DIV.${edge}`), edge);
 });
+
+test("prompt and three-step layouts fit useful bilingual content without lowering the density floor", async (t) => {
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "rfc-compact-art-"));
+  t.after(() => fs.rm(dir, { recursive: true, force: true }));
+  const labels = { title: "Writing workflow", subtitle: "A sample transformation" };
+  await write(path.join(dir, "art.json"), { images: [
+    {
+      ...labels, id: "draft", template: "hero-prompt", illustration: true,
+      prompt: "这次页面调整先保留标题和链接，整理主要内容后再统一字号。等静态版确认下来，我们再决定需不需要动画。改完可以发我一张预览图。",
+      result: "这次先保留标题和链接，把主要内容理顺，再统一字号。动画等静态版确认后再决定，改完发我一张预览图。",
+    },
+    {
+      ...labels, id: "steps", template: "strip-3", illustration: true,
+      steps: [
+        { en: "Build a profile", "zh-CN": "建立档案" },
+        { en: "Polish a draft", "zh-CN": "润色草稿" },
+        { en: "Check and learn", "zh-CN": "检查并学习" },
+      ],
+      details: [
+        { en: "Use your own local messages.", "zh-CN": "从本地消息中提取文风。" },
+        { en: "Keep the meaning and your voice.", "zh-CN": "保留原意和自己的口吻。" },
+        { en: "Score drafts and learn from edits.", "zh-CN": "检查草稿，从修改中学习。" },
+      ],
+    },
+  ] });
+  const r = await renderArt({ spec: path.join(dir, "art.json"), out: path.join(dir, "out") });
+  for (const f of r.files) {
+    assert.ok(f.contentRatio >= 0.6, JSON.stringify(f));
+    assert.ok(Object.values(f.checks).every((v) => v === "pass"), JSON.stringify(f));
+  }
+});

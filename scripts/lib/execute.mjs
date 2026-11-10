@@ -14,6 +14,11 @@ export async function runCopy(
     outputDir,
   } = {},
 ) {
+  if (!Number.isSafeInteger(timeoutMs) || timeoutMs <= 0 || timeoutMs > 3600000)
+    throw Error("timeoutMs must be an integer between 1 and 3600000");
+  for (const file of outputs)
+    if (path.isAbsolute(file) || file.split(/[\\/]/).includes(".."))
+      throw Error("Capture output escapes disposable repository");
   const temp = await fs.mkdtemp(path.join(os.tmpdir(), "readme-run-"));
   const cwd = path.join(temp, "repo"),
     home = path.join(temp, "home");
@@ -30,11 +35,7 @@ export async function runCopy(
     }
     // Dependencies are inputs, never a writable link back into the source repository.
     try {
-      await fs.cp(
-        path.join(repo, "node_modules"),
-        path.join(cwd, "node_modules"),
-        { recursive: true, dereference: true },
-      );
+      await copyDependencies(path.join(repo, "node_modules"), path.join(cwd, "node_modules"));
     } catch (e) {
       if (e.code !== "ENOENT") throw e;
     }
@@ -90,7 +91,7 @@ export async function runCopy(
             child.kill("SIGKILL");
           }
         },
-        Math.min(timeoutMs, 60000),
+        timeoutMs,
       );
       child.on("error", (e) => {
         stderr += e.message;
@@ -104,6 +105,7 @@ export async function runCopy(
           exitCode,
           signal,
           durationMs: Date.now() - start,
+          timeoutMs,
           timedOut,
           requiresTTY: tty,
           environment: {
@@ -122,7 +124,9 @@ export async function runCopy(
       if (!outputDir)
         throw Error("Capture outputs require an output directory");
       result.outputs = [];
+      result.outputErrors = [];
       for (const file of outputs) {
+        try {
         const from = path.resolve(cwd, file),
           real = await fs.realpath(from);
         if (
@@ -136,10 +140,34 @@ export async function runCopy(
         await fs.mkdir(path.dirname(to), { recursive: true });
         await fs.writeFile(to, bytes);
         result.outputs.push({ file, sha256: hash(bytes) });
+        } catch (e) {
+          result.outputErrors.push({ file, error: e.message, code: e.code || "COLLECTION_ERROR" });
+        }
       }
     }
     return result;
   } finally {
     await fs.rm(temp, { recursive: true, force: true });
   }
+}
+
+// Recreate only dependency links whose resolved target stays within node_modules.
+// Convert absolute internal links to relative links in the disposable tree.
+async function copyDependencies(source, destination) {
+  const base = await fs.realpath(source);
+  async function copy(from, to) {
+    const stat = await fs.lstat(from);
+    if (stat.isSymbolicLink()) {
+      const real = await fs.realpath(from);
+      if (real !== base && !real.startsWith(base + path.sep))
+        throw Error("Dependency symlink escapes node_modules");
+      const target = path.join(destination, path.relative(base, real));
+      await fs.symlink(path.relative(path.dirname(to), target), to);
+    } else if (stat.isDirectory()) {
+      await fs.mkdir(to, {recursive: true});
+      for (const entry of await fs.readdir(from))
+        await copy(path.join(from, entry), path.join(to, entry));
+    } else if (stat.isFile()) await fs.copyFile(from, to);
+  }
+  await copy(source, destination);
 }
