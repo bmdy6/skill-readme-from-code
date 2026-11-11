@@ -126,7 +126,7 @@ export function leadText(md) {
         (t.type === "html" && /<h1\b[^>]*>[\s\S]*<\/h1>/i.test(t.text))) {
       const banner = images(t.type === "html"
         ? t.text.match(/<h1\b[^>]*>([\s\S]*?)<\/h1>/i)[1]
-        : t.raw)[0];
+        : t.raw).find(i => !i.source);
       if (banner?.alt?.trim()) return banner.alt.trim();
       afterImage = false;
       continue;

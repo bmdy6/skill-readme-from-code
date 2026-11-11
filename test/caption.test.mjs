@@ -50,6 +50,7 @@ test("first screen measures the tagline, not a visible caption", async (t) => {
   assert.equal(missing.viewports.desktop.checks.oneLiner, false);
 });
 for (const h1 of [
+  '<h1><picture><source media="(prefers-color-scheme: dark)" srcset="hero.svg"><img src="hero.svg" alt="Moss — Turn notes into a digest."></picture></h1>',
   '<h1><img src="hero.svg" alt="Moss — Turn notes into a digest."></h1>',
   '# ![Moss — Turn notes into a digest.](hero.svg)',
 ]) test("banner heading uses its alt instead of the caption: " + h1, async (t) => {
