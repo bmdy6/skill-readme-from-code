@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs/promises";
 test("skill names every command, gates and hard delivery boundaries", async () => {
   const s = await fs.readFile("SKILL.md", "utf8");
-  assert.ok(s.split("\n").length <= 262);
+  assert.ok(s.split("\n").length <= 265);
   for (const term of [
     "G1",
     "G2",
@@ -45,6 +45,7 @@ test("showcase style relaxes copy limits but keeps empty wording banned", async 
   assert.match((await v6("\nIt is blazing fast.\n", { style: "showcase" })).issues.join(" "), /blazing fast/);
   const s = await fs.readFile("SKILL.md", "utf8");
   assert.ok(s.includes("prompts/showcase.md") && s.includes("brag.json"));
+  for (const f of ["templates/showcase/banner.example.html", "templates/showcase/features.example.html", "scripts/showcase-shot.mjs"]) await fs.access(f);
   const t = await fs.readFile("templates/readme/showcase.md", "utf8");
   assert.ok(t.indexOf("</picture>") < t.indexOf("## Quick start"));
 });

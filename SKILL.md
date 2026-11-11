@@ -56,7 +56,8 @@ templates/readme/showcase.md instead of the project-type skeleton.
 Mine counts, measured numbers, guarantees and before/after contrasts into
 WORK/brag.json first; every boast is a number, a demo or a contrast with a fact
 ID. Verify relaxes to 900 words, eight badges, emoji headings and install below
-the fold; name, tagline and hero stay on the first screen. Fabricated metrics,
+the fold; name, tagline and hero stay on the first screen. Build the banner and
+feature-grid images from templates/showcase/ with scripts/showcase-shot.mjs. Fabricated metrics,
 users, benchmarks and unmeasured superlatives remain forbidden.
 
 ## 1. Read and establish a baseline

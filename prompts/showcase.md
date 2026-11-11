@@ -70,6 +70,35 @@ Follow templates/readme/showcase.md, in this order:
 Emoji headings are allowed, one per H2 at most. Body within wordBudget
 (default 900). Paragraphs stay at three sentences or fewer.
 
+## 3b. Make it look expensive
+
+The first image decides the impression. Build one **banner** that carries the
+whole pitch, so a visitor who reads nothing else still gets it:
+
+- Left: a small eyebrow pill (what kind of thing it is), the name in large
+  gradient type, the tagline with the key number highlighted, one supporting
+  sentence, and chips for integrations or sources.
+- Right: a terminal or app window showing the **real captured run**, with the
+  capture date in the window title. Use the actual field names and values.
+- Bottom: the stat row as four glass cards.
+- Dark gradient background with a faint grid and two soft glows, 20px corner
+  radius, one accent pair for the whole README. A dark banner reads well on
+  both GitHub themes, so one variant per language is enough.
+
+Then one **feature grid** image: six cards, each with a short icon tile, a
+result-first title and one sentence. Use it in place of the features table.
+
+Start from templates/showcase/banner.example.html and features.example.html
+(a real run of a search tool); replace every string and number with this
+project's facts. Render with `node scripts/showcase-shot.mjs FILE.html OUT.png`,
+convert to WebP (quality ~88) so each image stays under 400KB, and store them
+with their HTML sources in docs/readme/showcase/. Wrap the banner in `<h1>` and
+give it alt text that states the name, tagline and what the terminal shows; do
+not repeat the name and tagline as text below it. Put badges and the nav line
+directly under the banner, then a one-line caption with the capture command and
+date. Inspect the rendered page in light and dark before delivery: no wrapped
+chips, no clipped terminal lines, numbers match brag.json.
+
 ## 4. Lines not to cross
 
 - No invented stars, downloads, users, testimonials, logos or benchmarks.
