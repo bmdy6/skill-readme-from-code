@@ -478,7 +478,7 @@ export async function renderArt({ spec, out, work, repo }) {
           });
           await page.route("**/*", (r) => r.abort());
           await page.setContent(
-            `<!doctype html><meta charset="utf-8"><style>${await read(path.join(templateDir, "base.css"))}:root{--accent:${accent}}</style><body class="${theme}"><main class="frame ${item.template === "social" ? "social" : item.template === "strip-3" ? "strip" : ""} ${item.template} ${item.compact ? "compact" : ""}">${content}</main></body>`,
+            `<!doctype html><meta charset="utf-8"><style>${await read(path.join(templateDir, "base.css"))}:root{--accent:${accent}}</style><body class="${theme}"><main lang="${lang}" class="frame ${item.template === "social" ? "social" : item.template === "strip-3" ? "strip" : ""} ${item.template} ${item.compact ? "compact" : ""}">${content}</main></body>`,
           );
           await page.evaluate(() => document.fonts.ready);
           if (
