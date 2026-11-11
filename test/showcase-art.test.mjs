@@ -59,7 +59,7 @@ test("art CLI renders four measured banners and updates both README files idempo
   assert.equal(await fs.readFile(path.join(f.repo, "README.md"), "utf8"), before);
 });
 
-test("banner keeps density headroom with installed CJK sans and serif fonts", async t => {
+test("banner keeps density headroom with installed CJK fonts after heading fit", async t => {
   const f = await fixture(t);
   const banner = await prepareBanner(f.item, f.capture, f.repo, f.out);
   const css = await fs.readFile(new URL("../templates/art/base.css", import.meta.url), "utf8");
@@ -69,7 +69,7 @@ test("banner keeps density headroom with installed CJK sans and serif fonts", as
   const probe = await browser.newPage();
   const fonts = await probe.evaluate(async () => {
     const available = [];
-    for (const font of ["Noto Sans CJK SC", "Noto Serif CJK SC", "PingFangSC-Regular"])
+    for (const font of ["Noto Sans CJK SC", "Noto Serif CJK SC", "WenQuanYi Micro Hei", "PingFangSC-Regular"])
       try { await new FontFace("Banner CJK test", `local("${font}")`).load(); available.push(font); }
       catch { /* Do not silently measure a fallback as the requested font. */ }
     return available;
@@ -93,12 +93,23 @@ test("banner keeps density headroom with installed CJK sans and serif fonts", as
             .banner-pitch > :not(.banner-integrations), .banner-metric > *, .banner-terminal .head {
               font-family: "Banner CJK test", sans-serif !important;
             }
-          </style><body class="${theme}"><main class="frame showcase-banner">${template.replace(/\{\{(\w+)\}\}/g, (_, key) => values[key])}</main></body>`);
+          </style><body class="${theme}"><main lang="${lang}" class="frame showcase-banner">${template.replace(/\{\{(\w+)\}\}/g, (_, key) => values[key])}</main></body>`);
           await page.evaluate(async font => {
             const face = await new FontFace("Banner CJK test", `local("${font}")`).load();
             document.fonts.add(face);
             await document.fonts.ready;
           }, font);
+          // Match renderArt's final heading fit; CJK ascenders can trigger it
+          // even when the words fit horizontally.
+          await page.evaluate(() => {
+            for (const title of document.querySelectorAll(".frame h1,.frame h2")) {
+              let size = parseFloat(getComputedStyle(title).fontSize);
+              while (size > 16 &&
+                (title.scrollWidth > title.clientWidth + 1 || title.scrollHeight > title.clientHeight + 1)) {
+                title.style.fontSize = `${--size}px`;
+              }
+            }
+          });
           const result = await inspectArt(page);
           t.diagnostic(`${lang}/${theme}: ${(result.contentRatio * 100).toFixed(2)}% content`);
           assert.ok(result.contentRatio >= 0.63, JSON.stringify(result));

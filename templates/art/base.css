@@ -815,3 +815,8 @@ h2 {
 .showcase-banner .banner-metric + .banner-metric { padding-left:16px; border-left:1px solid var(--line); }
 .showcase-banner .banner-metric strong { display:block; font:800 30px/1.1 system-ui; }
 .showcase-banner .banner-metric span { display:block; font:500 13px/1.5 system-ui; color:var(--mute); }
+/* CJK needs taller heading line boxes to survive the final overflow fit.
+   Larger copy also keeps a short, narrow-font pitch balanced with the terminal. */
+.showcase-banner:lang(zh) h1 { line-height:1.5; }
+.showcase-banner:lang(zh) h2 { font-size:32px; line-height:1.5; }
+.showcase-banner:lang(zh) .banner-pitch > p:not(.eyebrow) { font-size:20px; line-height:1.5; }
