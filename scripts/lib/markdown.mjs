@@ -119,9 +119,33 @@ export function proseParagraphs(md) {
 
 // Use the same visible lead forms as firstScreen; captions are not taglines.
 export function leadText(md) {
+  let afterImage = false;
   for (const t of tokens(md)) {
+    if (t.type === "space") continue;
+    if ((t.type === "heading" && t.depth === 1) ||
+        (t.type === "html" && /<h1\b[^>]*>[\s\S]*<\/h1>/i.test(t.text))) {
+      const banner = images(t.type === "html"
+        ? t.text.match(/<h1\b[^>]*>([\s\S]*?)<\/h1>/i)[1]
+        : t.raw)[0];
+      if (banner?.alt?.trim()) return banner.alt.trim();
+      afterImage = false;
+      continue;
+    }
+    // An image block's next prose block is its caption. A title between a
+    // logo and the tagline resets this adjacency; blank lines do not.
+    const imageBlock = images(t.raw || t.text || "").some(
+      (i) => !/badge|shields\.io|badgen/i.test(i.src || ""),
+    );
+    if (imageBlock) {
+      afterImage = true;
+      continue;
+    }
+    if (afterImage) {
+      afterImage = false;
+      if (["paragraph", "html"].includes(t.type)) continue;
+    }
     if (t.type === "html") {
-      const lead = t.text.match(/<(h[23]|blockquote)\b[^>]*>([\s\S]*?)<\/\1>/i);
+      const lead = t.text.match(/<(h[23]|blockquote|p)\b[^>]*>([\s\S]*?)<\/\1>/i);
       if (lead) return lead[2].replace(/<[^>]*>/g, "").trim();
     }
     if (t.type === "heading" && [2, 3].includes(t.depth)) return t.text;
