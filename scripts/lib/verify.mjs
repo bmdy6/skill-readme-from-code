@@ -238,18 +238,21 @@ export async function staticChecks(repo, facts, brief = {}, opts = {}) {
         );
     }
   }
+  const showcase = brief.style === "showcase";
+  const budget = brief.wordBudget ?? (showcase ? 900 : 400);
+  const badgeLimit = showcase ? 8 : 4;
   const words = prose(md).match(/\b[\w'-]+\b/g) || [];
-  if (words.length > (brief.wordBudget ?? 400))
-    copy.push(`Word budget: ${words.length} > ${brief.wordBudget ?? 400}`);
+  if (words.length > budget)
+    copy.push(`Word budget: ${words.length} > ${budget}`);
   for (const para of proseParagraphs(md))
     if ((para.match(/[.!?。！？](?:\s|$)/g) || []).length > 3)
       copy.push("Paragraph exceeds three sentences");
   if (
     (md.match(/!\[[^\]]*\]\([^)]*(?:badge|shields\.io|badgen)[^)]*\)/gi) || [])
-      .length > 4
+      .length > badgeLimit
   )
-    copy.push("More than four badges");
-  if (headings(md).some((h) => /\p{Extended_Pictographic}/u.test(h.text)))
+    copy.push(`More than ${showcase ? "eight" : "four"} badges`);
+  if (!showcase && headings(md).some((h) => /\p{Extended_Pictographic}/u.test(h.text)))
     copy.push("Emoji heading");
   for (const term of ["blazing fast", "revolutionary", "seamless"])
     if (all.toLowerCase().includes(term)) copy.push(`Empty wording: ${term}`);
@@ -373,7 +376,7 @@ async function base(opts) {
       check(
         "V2",
         Object.entries(screen.viewports.desktop.checks)
-          .filter(([, v]) => !v)
+          .filter(([k, v]) => !v && !(k === "install" && brief.style === "showcase"))
           .map(([k]) => `${k} is not fully visible on desktop`),
         { screen },
       ),
