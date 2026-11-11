@@ -4,7 +4,9 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
-import { renderArt } from "../scripts/lib/art.mjs";
+import { chromium } from "playwright";
+import { renderArt, inspectArt } from "../scripts/lib/art.mjs";
+import { prepareBanner, bannerValues } from "../scripts/lib/art-banner.mjs";
 import { write, json, hash } from "../scripts/lib/io.mjs";
 
 async function fixture(t) {
@@ -40,6 +42,7 @@ test("art CLI renders four measured banners and updates both README files idempo
   assert.equal(manifest.files.length, 4);
   for (const file of manifest.files) {
     assert.ok(Object.values(file.checks).every(s => s === "pass"), JSON.stringify(file));
+    assert.ok(file.contentRatio >= 0.63, JSON.stringify(file));
     assert.equal(file.sha256, hash(await fs.readFile(path.join(f.out, file.file))));
     assert.equal(file.banner.metrics[0].value, 10);
   }
@@ -54,6 +57,54 @@ test("art CLI renders four measured banners and updates both README files idempo
   assert.match(zh, /从笔记生成摘要/);
   await renderArt(f);
   assert.equal(await fs.readFile(path.join(f.repo, "README.md"), "utf8"), before);
+});
+
+test("banner keeps density headroom with installed CJK sans and serif fonts", async t => {
+  const f = await fixture(t);
+  const banner = await prepareBanner(f.item, f.capture, f.repo, f.out);
+  const css = await fs.readFile(new URL("../templates/art/base.css", import.meta.url), "utf8");
+  const template = await fs.readFile(new URL("../templates/art/showcase-banner.html", import.meta.url), "utf8");
+  const browser = await chromium.launch();
+  t.after(() => browser.close());
+  const probe = await browser.newPage();
+  const fonts = await probe.evaluate(async () => {
+    const available = [];
+    for (const font of ["Noto Sans CJK SC", "Noto Serif CJK SC", "PingFangSC-Regular"])
+      try { await new FontFace("Banner CJK test", `local("${font}")`).load(); available.push(font); }
+      catch { /* Do not silently measure a fallback as the requested font. */ }
+    return available;
+  });
+  await probe.close();
+  if (!fonts.length) return t.skip("No supported CJK font is installed");
+  for (const font of fonts)
+    await t.test(font, async t => {
+      const page = await browser.newPage();
+      t.after(() => page.close());
+      for (const lang of ["en", "zh-CN"])
+        for (const theme of ["light", "dark"]) {
+          const text = v => typeof v === "string" ? v : v[lang];
+          const values = {
+            ...bannerValues(f.item, banner, text),
+            title: text(f.item.title), subtitle: text(f.item.subtitle),
+            terminalLabel: lang === "en" ? "terminal capture" : "终端记录",
+            command: f.capture.command,
+          };
+          await page.setContent(`<style>${css}
+            .banner-pitch > :not(.banner-integrations), .banner-metric > *, .banner-terminal .head {
+              font-family: "Banner CJK test", sans-serif !important;
+            }
+          </style><body class="${theme}"><main class="frame showcase-banner">${template.replace(/\{\{(\w+)\}\}/g, (_, key) => values[key])}</main></body>`);
+          await page.evaluate(async font => {
+            const face = await new FontFace("Banner CJK test", `local("${font}")`).load();
+            document.fonts.add(face);
+            await document.fonts.ready;
+          }, font);
+          const result = await inspectArt(page);
+          t.diagnostic(`${lang}/${theme}: ${(result.contentRatio * 100).toFixed(2)}% content`);
+          assert.ok(result.contentRatio >= 0.63, JSON.stringify(result));
+          assert.ok(Object.values(result.checks).every(s => s === "pass"), JSON.stringify(result));
+        }
+    });
 });
 for (const mode of ["missing-capture", "failed-capture", "missing-field", "invented-metric", "escape-readme", "bad-markers"])
   test("banner rejects " + mode + " before changing README text", async t => {
