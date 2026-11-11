@@ -5,6 +5,7 @@ import { execFileSync } from "node:child_process";
 import { chromium } from "playwright";
 import { marked } from "marked";
 import GithubSlugger from "github-slugger";
+import { leadText } from "./markdown.mjs";
 import { read, write, escape, installationBlock, readmeDocuments } from "./io.mjs";
 const root = fileURLToPath(new URL("../../", import.meta.url));
 const remotePlaceholder =
@@ -114,7 +115,7 @@ export async function firstScreen({
       );
       await page.evaluate(() => document.fonts.ready);
       const measured = await page.evaluate(
-        ({ installCommand, download, height }) => {
+        ({ installCommand, download, height, leadHTML }) => {
           const root = document.querySelector("article");
           const box = (e) => {
             if (!e) return null;
@@ -131,16 +132,22 @@ export async function firstScreen({
               !/badge|shields\.io|badgen/i.test(i.src) && i.naturalHeight > 40,
           );
           const heading = root.querySelector("h1");
-          const banner = imgs.find(
+          const banner = imgs.find((i) => heading?.contains(i)) || imgs.find(
             (i) =>
               !heading ||
               heading.compareDocumentPosition(i) &
                 Node.DOCUMENT_POSITION_PRECEDING,
           );
           const title = banner || heading;
-          const lead = [...root.querySelectorAll("p,h2,h3,blockquote")].find(
+          const expectedLead = document.createElement("template");
+          expectedLead.innerHTML = leadHTML;
+          const normalize = (s) => s.replace(/\s+/g, " ").trim();
+          const lead = (banner &&
+            normalize(banner.alt) === normalize(expectedLead.content.textContent)
+              ? banner : null) || [...root.querySelectorAll("p,h2,h3,blockquote")].find(
             (p) =>
-              p.textContent.trim().length > 10 &&
+              !!leadHTML &&
+              normalize(p.textContent) === normalize(expectedLead.content.textContent) &&
               !p.querySelector("img") &&
               (!heading ||
                 !!(
@@ -148,7 +155,8 @@ export async function firstScreen({
                   Node.DOCUMENT_POSITION_FOLLOWING
                 )),
           );
-          const hero = imgs.find((i) => i !== banner && i.naturalWidth >= 400);
+          const hero = (heading?.contains(banner) && banner?.naturalWidth >= 400
+            ? banner : null) || imgs.find((i) => i !== banner && i.naturalWidth >= 400);
           let installBox = null, installText = null;
           if (download) {
             const heading = [...root.querySelectorAll("h2,h3,h4")].find(
@@ -231,7 +239,7 @@ export async function firstScreen({
             })),
           };
         },
-        { installCommand, download, height },
+        { installCommand, download, height, leadHTML: marked.parseInline(leadText(md) || "") },
       );
       const file = `first-screen-${name}.png`;
       await page.screenshot({ path: path.join(work, file) });
