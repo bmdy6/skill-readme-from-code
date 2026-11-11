@@ -1,6 +1,6 @@
 ---
 name: readme-from-code
-description: Use when a user wants to illustrate, write, rewrite, or audit a repository README with source-backed claims, executable examples, designed images, and first-screen evidence.
+description: Use when a user wants to illustrate, write, rewrite, showcase, or audit a repository README with source-backed claims, executable examples, designed images, and first-screen evidence.
 ---
 
 # Readme from code
@@ -46,6 +46,19 @@ Illustrate is separate: skip write's G1/G2, V1–V11 and stranger gates.
 5. With authorization, review the diff and open an unmerged PR; disclose sources/limitations.
    Commit only images, one SOURCES.md and a small image/hash/placement/baseline manifest; replay scripts may stay.
    Keep receipts, briefs and previews in WORK/task shots. Remaining failures permit only a draft PR.
+
+## Showcase: make the project look as strong as it is
+
+Use **showcase** when the user wants an impressive, portfolio-grade README
+("make it look great", "吹一下"). It is the write workflow with `brief.style:
+"showcase"`. Read [prompts/showcase.md](prompts/showcase.md) and use
+templates/readme/showcase.md instead of the project-type skeleton.
+Mine counts, measured numbers, guarantees and before/after contrasts into
+WORK/brag.json first; every boast is a number, a demo or a contrast with a fact
+ID. Verify relaxes to 900 words, eight badges, emoji headings and install below
+the fold; name, tagline and hero stay on the first screen. Build the banner and
+feature-grid images from templates/showcase/ with scripts/showcase-shot.mjs. Fabricated metrics,
+users, benchmarks and unmeasured superlatives remain forbidden.
 
 ## 1. Read and establish a baseline
 
