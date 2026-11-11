@@ -70,23 +70,28 @@ Follow templates/readme/showcase.md, in this order:
 Emoji headings are allowed, one per H2 at most. Body within wordBudget
 (default 900). Paragraphs stay at three sentences or fewer.
 
-## 3b. Make it look expensive
+## 3b. Make it look designed, not generated
 
 The first image decides the impression. Build one **banner** that carries the
 whole pitch, so a visitor who reads nothing else still gets it:
 
-- Left: a small eyebrow pill (what kind of thing it is), the name in large
-  gradient type, the tagline with the key number highlighted, one supporting
-  sentence, and chips for integrations or sources.
-- Right: a terminal or app window showing the **real captured run**, with the
-  capture date in the window title. Use the actual field names and values.
-- Bottom: the stat row as four glass cards.
-- Dark gradient background with a faint grid and two soft glows, 20px corner
-  radius, one accent pair for the whole README. A dark banner reads well on
-  both GitHub themes, so one variant per language is enough.
+- Left: a small eyebrow label (what kind of thing it is), the name in large
+  heavy type, the tagline with the key number marked by a highlighter stroke,
+  one supporting sentence, and a plain list of integrations or sources.
+- Right: a flat terminal or app window showing the **real captured run**, with
+  the capture date in the window title. Use the actual field names and values.
+- Bottom: the stat row as four big numbers under a rule, split by hairlines.
 
-Then one **feature grid** image: six cards, each with a short icon tile, a
-result-first title and one sentence. Use it in place of the features table.
+Style: flat and editorial, like a printed spec sheet. A paper-toned solid
+background, near-black ink, one accent colour used sparingly, hairline borders.
+Avoid the generic AI look: no dark purple/blue gradients, no glows, no glass
+cards, no gradient text, no emoji icon tiles, no neon. If the project has its
+own brand colours, use those as ink and accent. One variant per language works
+on both GitHub themes.
+
+Then one **feature grid** image: six cells in a ruled grid, each with a mono
+index number (01–06), a result-first title and one sentence. Use it in place of
+the features table.
 
 Start from templates/showcase/banner.example.html and features.example.html
 (a real run of a search tool); replace every string and number with this
