@@ -56,8 +56,8 @@ templates/readme/showcase.md instead of the project-type skeleton.
 Mine counts, measured numbers, guarantees and before/after contrasts into
 WORK/brag.json first; every boast is a number, a demo or a contrast with a fact
 ID. Verify relaxes to 900 words, eight badges, emoji headings and install below
-the fold; name, tagline and hero stay on the first screen. Build the banner and
-feature-grid images from templates/showcase/ with scripts/showcase-shot.mjs. Fabricated metrics,
+the fold; name, tagline and hero stay on the first screen. Build the banner with `art` using `showcase-banner` (reference schema below);
+feature-grid images may still use templates/showcase/ with scripts/showcase-shot.mjs. Fabricated metrics,
 users, benchmarks and unmeasured superlatives remain forbidden.
 
 ## 1. Read and establish a baseline
@@ -142,7 +142,7 @@ handwrite an output and call it a run. Caption agent-produced work explicitly as
 profile. For this skill, show a real fixture's before/after first-screen images
 and its actual audit scores, not an excerpt of this skill's own README.
 
-Write docs/readme/art.json using one of seven templates: hero-link, hero-terminal,
+Write docs/readme/art.json using one of eight templates: showcase-banner, hero-link, hero-terminal,
 hero-prompt, hero-code, hero-screens, strip-3, social. Data schema and an original
 fixture example are in docs/reference.md and docs/design/art.json.
 Use `captureId` for terminal text; `stats` may reference only verify summary

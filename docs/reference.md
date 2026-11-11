@@ -180,6 +180,7 @@ captures directory. Art copies captures and screen inputs into its output.
 | hero-screens | screens: two original local image paths (or language maps). |
 | strip-3 | steps: three localized strings; optional details of the same shape. |
 | social | captureId, or illustration:true plus localized result. |
+| showcase-banner | Successful JSON capture, localized pitch, captured metric paths and optional README map; see below. |
 
 Pure diagrams require illustration:true and get a visible Illustration / 示意
 label. Original fictional examples use fixture:true so the manifest distinguishes
@@ -516,3 +517,42 @@ process lifecycle management, not an OS security sandbox. Copy only intended
 public product images and nonsecret provenance into the target repository;
 README preview screenshots belong outside it. Use illustrate verify `--shots DIR`
 to write previews directly to a task shots directory.
+
+## Showcase banners through art
+
+`art` renders `showcase-banner` through the same four-variant, hash and self-check
+pipeline. The capture must exit successfully and stdout must be a JSON object.
+`metrics[].field` selects a numeric field; `outputFields` selects 1–8 scalar
+fields from that same output (dot paths are supported). Numbers are never
+accepted as handwritten metric values. Capture a small summary of the real core
+operation, rather than a test/install command or a fabricated transcript.
+
+```json
+{"images":[{
+  "id":"hero","template":"showcase-banner","captureId":"demo",
+  "title":"Moss",
+  "subtitle":{"en":"Turn notes into a digest.","zh-CN":"从笔记生成摘要。"},
+  "eyebrow":{"en":"LOCAL MCP","zh-CN":"本地 MCP"},
+  "description":{"en":"Search source lines and preview the edit.","zh-CN":"搜索原文行号，预览修改。"},
+  "integrations":["MCP","Markdown"],
+  "metrics":[{"field":"tools","label":{"en":"MCP tools","zh-CN":"MCP 工具"}}],
+  "outputFields":["query","tools","matches","unchanged"],
+  "caption":{"en":"Real run on synthetic notes.","zh-CN":"合成笔记上的真实运行。"},
+  "readmes":{"README.md":"en","README.zh-CN.md":"zh-CN"}
+}]}
+```
+
+Run `capture --repo DIR --work WORK --id demo --role core -- 'COMMAND'`, then
+`art --repo DIR --work WORK --spec SPEC --out DIR/docs/readme`.
+The example expects JSON with numeric `tools` and scalar `query`, `matches`,
+`unchanged`; derive them from the real operation. Adapt the fields to the project.
+
+With `readmes`, art inserts a theme-aware banner in an H1 with name/tagline alt
+text and a caption naming the captured command. Each file gets its language's
+variants. It prepends a marked block on the first run, then replaces only that
+block on subsequent runs; other README bytes stay untouched. Prepare the README
+without a duplicate text title/tagline. Missing, escaping or symlinked-out
+README paths and unmatched/repeated markers fail before README changes.
+A failed image self-check leaves README text unchanged. Omitting `readmes`
+keeps rendering-only behavior. Existing templates retain their current behavior.
+The output remains PNG; WebP conversion is optional and is not performed.

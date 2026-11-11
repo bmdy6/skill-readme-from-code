@@ -93,15 +93,22 @@ Then one **feature grid** image: six cells in a ruled grid, each with a mono
 index number (01–06), a result-first title and one sentence. Use it in place of
 the features table.
 
-Start from templates/showcase/banner.example.html and features.example.html
-(a real run of a search tool); replace every string and number with this
-project's facts. Render with `node scripts/showcase-shot.mjs FILE.html OUT.png`,
-convert to WebP (quality ~88) so each image stays under 400KB, and store them
-with their HTML sources in docs/readme/showcase/. Wrap the banner in `<h1>` and
-give it alt text that states the name, tagline and what the terminal shows; do
-not repeat the name and tagline as text below it. Put badges and the nav line
-directly under the banner, then a one-line caption with the capture command and
-date. Inspect the rendered page in light and dark before delivery: no wrapped
+Capture the real core operation as a small JSON summary. Use art's
+`showcase-banner` template (docs/reference.md) with localized title, subtitle,
+eyebrow, description, integration names, numeric `metrics[].field` paths and
+scalar `outputFields`. Both the terminal projection and metrics come from the
+same successful capture. Set `readmes` to the existing filename/language map:
+`art --repo DIR --spec SPEC --work WORK --out DIR/docs/readme` renders four
+variants, self-checks, hashes them and inserts or updates each marked README
+banner with its caption and captured command. A failed image check does not
+change README text. Keep the title/tagline in the banner's alt; do not repeat
+them below the image. Put badges and the nav directly under the generated block.
+
+The feature grid can still start from templates/showcase/features.example.html;
+replace every string with this project's sourced facts and render with
+`node scripts/showcase-shot.mjs FILE.html OUT.png`. Keep its HTML source beside
+the image in docs/readme/showcase/. Prefer images below 400KB. PNG is supported;
+WebP conversion remains optional and manual. Inspect the rendered page in light and dark before delivery: no wrapped
 chips, no clipped terminal lines, numbers match brag.json.
 
 ## 4. Lines not to cross

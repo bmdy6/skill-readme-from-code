@@ -1,5 +1,6 @@
 import { prepareLink, linkHTML, connectLinks } from "./art-link.mjs";
 import fs from "node:fs/promises";
+import { prepareBanner, bannerValues, writeBannerReadmes } from "./art-banner.mjs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
@@ -8,6 +9,7 @@ const templateDir = fileURLToPath(
   new URL("../../templates/art/", import.meta.url),
 );
 const names = [
+  "showcase-banner",
   "hero-link",
   "hero-terminal",
   "hero-prompt",
@@ -259,7 +261,7 @@ export async function inspectArt(page) {
     };
   });
 }
-export async function renderArt({ spec, out, work }) {
+export async function renderArt({ spec, out, work, repo }) {
   spec = path.resolve(spec);
   out = path.resolve(out);
   const cfg = await json(spec);
@@ -270,6 +272,7 @@ export async function renderArt({ spec, out, work }) {
   if (!/^#[0-9a-f]{6}$/i.test(accent))
     throw Error("accent must be a six digit hex color");
   const prepared = [];
+  const bannerReadmes = new Set();
   const seen = new Set();
   for (const item of cfg.images) {
     if (!/^[a-z][a-z0-9-]*$/.test(item.id) || seen.has(item.id))
@@ -322,13 +325,20 @@ export async function renderArt({ spec, out, work }) {
       item.template === "hero-link"
         ? await prepareLink(item, capture, base, cache)
         : null;
-    prepared.push({ item, capture, link });
+    const banner = item.template === "showcase-banner"
+      ? await prepareBanner(item, capture, repo, out) : null;
+    for (const document of banner?.readmes || []) {
+      if (bannerReadmes.has(document.path)) throw Error("Only one banner may update each README");
+      bannerReadmes.add(document.path);
+      for (const field of ["title", "subtitle", "caption"]) pick(item[field], document.language, field);
+    }
+    prepared.push({ item, capture, link, banner });
   }
   await fs.mkdir(out, { recursive: true });
   const browser = await chromium.launch();
   const manifest = { schemaVersion: 1, accent, files: [] };
   try {
-    for (const { item, capture, link } of prepared)
+    for (const { item, capture, link, banner } of prepared)
       for (const lang of ["en", "zh-CN"])
         for (const theme of ["light", "dark"]) {
           const zh = lang === "zh-CN",
@@ -404,6 +414,7 @@ export async function renderArt({ spec, out, work }) {
                   ? "Agent-run"
                   : "",
             steps: "",
+            ...(banner ? bannerValues(item, banner, text) : {}),
           };
           if (item.template === "strip-3") {
             if (item.steps?.length !== 3)
@@ -556,6 +567,7 @@ export async function renderArt({ spec, out, work }) {
                   : "Output",
             },
             ...(link ? { link: { ...link, visible: undefined } } : {}),
+            ...(banner ? { banner: { metrics: banner.metrics, outputFields: item.outputFields } } : {}),
             sha256: hash(bytes),
             bytes: bytes.length,
             cssWidth: inspected.width,
@@ -652,5 +664,6 @@ export async function renderArt({ spec, out, work }) {
         }
     }
   await write(path.join(out, "art.json"), portable);
+  await writeBannerReadmes(prepared, manifest, out, pick);
   return manifest;
 }
