@@ -627,9 +627,11 @@ old introduction and obsolete docs link shown below):
 }
 ```
 
-The four real fixtures in `test/fixtures/tidy/` preserve exact merge-parent and
-merge-commit bytes with provenance in `source.json`. jingwei, footage-mcp and
-stylepolish pass. The authentic repo-tutor #3 result retains “本轮” and “第 1 轮”
-and correctly fails T7. This is an unresolved conflict in Issue #26's requirement
-that all four authentic results pass while retained work-log wording must fail;
-no content substitution or verifier exemption conceals it.
+The four positive fixtures in `test/fixtures/tidy/` preserve exact Git blob bytes
+with provenance in `source.json` and all pass T1–T8. repo-tutor keeps the parent
+of PR #3 as its before baseline and uses PR #4's merge commit
+`ac40c5d4cbfa8ab37df0948d2f1fd4103a352096` as after. Its manifest registers both
+sentence rewrites from PR #4 with reasons; `afterPr` and `structureCommit` record
+the two-PR provenance. `repo-tutor-worklog/` separately preserves PR #3's original
+merged README, including “本轮” and “第 1 轮”, and must fail only T7. No verifier
+exemption or fabricated snapshot is needed.

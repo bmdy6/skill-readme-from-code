@@ -1,0 +1,17 @@
+{
+  "added": [
+    {
+      "readme": "README.md",
+      "kind": "oneLiner",
+      "text": "**把陌生的 Python 代码库变成带源码出处的新人课程。**",
+      "reason": "在标题下明确项目定位。"
+    },
+    {
+      "readme": "README.md",
+      "kind": "navigation",
+      "text": "[分步使用](#分步使用) · [配置](#配置) · [MCP 接入](#mcp只读接入) · [Flask 演示](#flask-演示) · [已知限制](#已知限制)",
+      "reason": "增加入口导航，保留原有链接。"
+    }
+  ],
+  "rewritten": []
+}

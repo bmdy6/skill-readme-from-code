@@ -142,7 +142,13 @@ test("baseline is immutable, refuses dirty README and verifies blob reference", 
   await fs.appendFile(path.join(o.repo, "README.md"), "dirty");
   await assert.rejects(() => tidyBaseline(o), /committed/);
 });
-for (const name of ["jingwei", "footage-mcp", "stylepolish", "repo-tutor"])
+for (const name of [
+  "jingwei",
+  "footage-mcp",
+  "stylepolish",
+  "repo-tutor",
+  "repo-tutor-worklog",
+])
   test(`real merged fixture: ${name}`, async (t) => {
     const root = new URL(`./fixtures/tidy/${name}/`, import.meta.url),
       source = JSON.parse(await fs.readFile(new URL("source.json", root)));
@@ -170,7 +176,8 @@ for (const name of ["jingwei", "footage-mcp", "stylepolish", "repo-tutor"])
       path.join(o.work, "tidy.json"),
     );
     const r = await verifyTidy(o);
-    if (name === "repo-tutor") {
+    assert.equal(r.checks.length, 8);
+    if (name === "repo-tutor-worklog") {
       assert.equal(r.ok, false);
       assert.deepEqual(
         r.checks.filter((c) => c.status === "fail").map((c) => c.id),
