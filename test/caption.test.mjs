@@ -71,3 +71,17 @@ for (const h1 of [
 test("status badges do not consume a following tagline", () => {
   assert.equal(leadText("# Moss\n\n![Tests](https://img.shields.io/badge/tests-pass-green)\n\nTurn notes into a digest."), "Turn notes into a digest.");
 });
+
+test("V6 rejects work-log wording and text before the title", async (t) => {
+  const repo = await fs.mkdtemp(path.join(os.tmpdir(), "rfc-worklog-"));
+  t.after(() => fs.rm(repo, { recursive: true, force: true }));
+  const facts = { facts: [], manifest: {}, images: [], workflows: [] };
+  const v6 = async (md) => {
+    await fs.writeFile(path.join(repo, "README.md"), md);
+    return (await staticChecks(repo, facts, {})).find(c => c.id === "V6").issues.join(" ");
+  };
+  assert.equal(await v6("[中文](README.zh-CN.md)\n\n<!-- note -->\n# Moss\n\nTurn notes into a digest.\n\n```sh\necho 本轮\n```\n"), "");
+  assert.match(await v6("# Moss\n\nTurn notes into a digest.\n\n本轮未调用真实模型。\n"), /Work-log wording: 本轮/);
+  assert.match(await v6("# Moss\n\nTurn notes into a digest.\n\nNot tested in this round.\n"), /Work-log wording/);
+  assert.match(await v6("Turn notes into a digest.\n\n# Moss\n\nTurn notes into a digest.\n"), /Text before the title/);
+});
