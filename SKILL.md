@@ -199,7 +199,9 @@ templates/readme/. Write complete sentences. Keep the English one-liner <=20
 words (Chinese <=40 characters), body <=wordBudget, paragraphs <=3 sentences,
 badges <=4, benefits exactly three, options <=5 rows and FAQs 3–5 items.
 No emoji headings, file trees, file-by-file summaries, empty superlatives or
-named competitors by default. Do not compress the text into unreadable fragments.
+named competitors by default. No work-log wording (this round / 本轮 / 第 N 轮) or
+internal account notes: state what is verified and what is not. Only language
+links, badges or a banner may precede the title; V6 checks both. Do not compress the text into unreadable fragments.
 
 Add docs/readme/claims.json as an array of `{claim, factIds}`: each benefit
 sentence maps to existing source facts. Keep English and Chinese structure,

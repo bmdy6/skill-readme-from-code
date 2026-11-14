@@ -58,3 +58,8 @@ from baseline.json: retain its image and destination, or record its stable ID
 and a specific reason in docs/readme/retention.json intentionalDeletions (e.g.
 the status endpoint is dead or the claim is false). Removing badges for visual
 simplicity is not the default. V11 fails unaccounted badge deletions.
+
+Write for a stranger, not for the task tracker. Never carry work-log wording
+into the README: this round, 本轮, 第 N 轮, "default behaviour unchanged", CI
+billing or account notes. Say what is verified and what is not, without when.
+Nothing but language links, badges or a banner goes above the title.
