@@ -40,6 +40,7 @@ Requires authenticated gh access, Node 20+, Chromium, and a skill-capable agent;
 
 | Option | Purpose |
 |---|---|
+| `tidy` | Organize README structure with registered edits and preservation checks. |
 | `audit` | Report without changing the target. |
 | `verify` | Check commands, images, and the first screen. |
 | `--online` | Also check external links. |

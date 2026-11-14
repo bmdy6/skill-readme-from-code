@@ -1,0 +1,17 @@
+{
+  "repo": "bmdy6/footage-mcp",
+  "pr": 6,
+  "before": "2b04831978252317c5533ae961092158a15982ba",
+  "after": "6da0d96d9c3adfe6e3425b2c0af00a63b92c3874",
+  "files": [
+    "README.md"
+  ],
+  "blobs": {
+    "before": {
+      "README.md": "c4358ea928444673e47a03d757349ce2862c9b88"
+    },
+    "after": {
+      "README.md": "0ba0dd7e53cfc182210242283326ba42273de491"
+    }
+  }
+}

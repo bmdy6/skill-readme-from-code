@@ -1,0 +1,48 @@
+{
+  "added": [
+    {
+      "readme": "README.md",
+      "kind": "oneLiner",
+      "text": "**在 macOS 输入框里停笔后帮你润色，保留你的口吻，发送仍由你自己按。**",
+      "reason": "在标题下明确项目定位。"
+    },
+    {
+      "readme": "README.md",
+      "kind": "navigation",
+      "text": "[下载最新版](https://github.com/bmdy6/stylepolish/releases/latest) · [安装](#安装) · [第一次使用](#第一次使用) · [隐私](#隐私) · [已知限制](#已知限制)",
+      "reason": "增加入口导航，保留原有链接。"
+    },
+    {
+      "readme": "README.md",
+      "kind": "details",
+      "text": "<details>",
+      "reason": "将已有英文说明收进折叠区域。"
+    },
+    {
+      "readme": "README.md",
+      "kind": "details",
+      "text": "<summary>English</summary>",
+      "reason": "将已有英文说明收进折叠区域。"
+    },
+    {
+      "readme": "README.md",
+      "kind": "details",
+      "text": "</details>",
+      "reason": "将已有英文说明收进折叠区域。"
+    }
+  ],
+  "rewritten": [
+    {
+      "readme": "README.md",
+      "before": "A macOS writing assistant that polishes text while keeping your voice; you stay in control of sending. WeChat is enabled by default. You can enable other apps in Settings; writeback may fail in unverified apps. Automatic checks and shortcuts only run in enabled apps.",
+      "after": "A macOS menu-bar writing assistant that polishes text while keeping your voice; you stay in control of sending.\n\nWeChat is enabled by default. You can enable other apps in Settings; writeback may fail in unverified apps. Automatic checks and shortcuts only run in enabled apps.",
+      "reason": "英文定位缩短；启用范围和写回限制拆到折叠说明中。"
+    },
+    {
+      "readme": "README.md",
+      "before": "默认在 macOS 微信里使用（`com.tencent.xinWeChat`），其他 App 可以在设置里打开（未验证的可能写回失败）。停笔后帮你润色，保留你的口吻，发送仍由你自己按。自动检查、快捷键和写回只针对已启用的 App。",
+      "after": "默认只在微信里启用（`com.tencent.xinWeChat`），其他 App 可以在设置里打开，未验证的 App 可能写回失败。自动检查、快捷键和写回只针对已启用的 App。",
+      "reason": "定位已移至开头，原段保留启用范围和写回限制。"
+    }
+  ]
+}

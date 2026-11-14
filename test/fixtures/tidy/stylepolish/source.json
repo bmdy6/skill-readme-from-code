@@ -1,0 +1,17 @@
+{
+  "repo": "bmdy6/stylepolish",
+  "pr": 6,
+  "before": "f9639c3de72e3dc5138e9706f6707f8687fcbc0e",
+  "after": "c8f91d4acaa10688af00309831ea7f17be5adb21",
+  "files": [
+    "README.md"
+  ],
+  "blobs": {
+    "before": {
+      "README.md": "3bcc97aee85fb2573d57d3a22a1c44e9041d0d7e"
+    },
+    "after": {
+      "README.md": "1067a02641ae2ed40fadf6dcf4c0b7f5038e261a"
+    }
+  }
+}

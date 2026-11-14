@@ -26,6 +26,13 @@ export async function dispatch(command, opts) {
       await b.close();
     }
     console.log("Node and Chromium ready");
+  } else if (command === "tidy") {
+    const { tidyBaseline, verifyTidy } = await import("./tidy.mjs");
+    if (!["baseline", "verify"].includes(opts.action))
+      throw Error("Usage: tidy baseline|verify --repo DIR --work WORK");
+    const r = opts.action === "baseline" ? await tidyBaseline(opts) : await verifyTidy(opts);
+    console.log(JSON.stringify(r, null, 2));
+    if (r.ok === false) process.exitCode = 1;
   } else if (command === "illustrate") {
     const { illustrateBaseline, verifyIllustrate } = await import(
       "./illustrate.mjs"
