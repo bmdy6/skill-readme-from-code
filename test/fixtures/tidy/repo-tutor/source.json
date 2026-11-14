@@ -1,0 +1,19 @@
+{
+  "repo": "bmdy6/repo-tutor",
+  "pr": 3,
+  "before": "30f5d5286357e7d0c07a5a226ce9e09bfe6004c1",
+  "after": "ac40c5d4cbfa8ab37df0948d2f1fd4103a352096",
+  "files": [
+    "README.md"
+  ],
+  "blobs": {
+    "before": {
+      "README.md": "a5cc23185ff843c510b2c7537e8066f91ac64126"
+    },
+    "after": {
+      "README.md": "356f8fc3a69ff19ade18218a6cedb250cb50223e"
+    }
+  },
+  "structureCommit": "b58c6e6a5bdf65ee7e2bc800baeffde950ee3bd9",
+  "afterPr": 4
+}

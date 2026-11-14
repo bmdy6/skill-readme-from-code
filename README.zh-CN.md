@@ -40,6 +40,7 @@ gh repo clone bmdy6/skill-readme-from-code .agents/skills/readme-from-code
 
 | 选项 | 用途 |
 |---|---|
+| `tidy` | 整理 README 结构，登记个别文案修改并校验正文保留。 |
 | `audit` | 只出报告，不改目标。 |
 | `verify` | 检查命令、图片和首屏。 |
 | `--online` | 额外检查外链。 |

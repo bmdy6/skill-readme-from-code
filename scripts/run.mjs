@@ -28,7 +28,7 @@ try {
     console.log(JSON.stringify(result, null, 2));
   } else if (!command || command === "help") {
     console.log(
-      "scan     → source facts\nillustrate baseline/verify → preserve text, validate added images\ncapture  → real command or --type web-app output\nart      → light and dark images\nverify   → commands, links and first screen",
+      "scan     → source facts\ntidy baseline/verify → organize structure, preserve prose\nillustrate baseline/verify → preserve text, validate added images\ncapture  → real command or --type web-app output\nart      → light and dark images\nverify   → commands, links and first screen",
     );
   } else {
     const { dispatch } = await import("./lib/commands.mjs");

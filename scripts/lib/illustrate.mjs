@@ -1,4 +1,5 @@
 import fs from "node:fs/promises";
+import { freezeBaseline } from "./baseline.mjs";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
 import { chromium } from "playwright";
@@ -8,23 +9,7 @@ import { firstScreen } from "./screen.mjs";
 
 const git = (repo, args) => execFileSync("git", ["-C", repo, ...args], {encoding:"utf8"});
 const baselineFile = (o) => path.join(o.work, "illustrate-baseline.json");
-export async function illustrateBaseline(o) {
-  const file = baselineFile(o);
-  const commit = git(o.repo, ["rev-parse", "HEAD"]).trim();
-  const readmes = [];
-  for (const d of await readmeDocuments(o.repo)) {
-    const blob = git(o.repo, ["rev-parse", `${commit}:${d.file}`]).trim();
-    if (git(o.repo, ["show", `${commit}:${d.file}`]) !== d.text)
-      throw Error(`README must be committed before baseline: ${d.file}`);
-    readmes.push({ file: d.file, blob });
-  }
-  const baseline = { version: 2, commit, readmes };
-  await fs.mkdir(o.work, { recursive: true });
-  await fs.writeFile(file, JSON.stringify(baseline, null, 2) + "\n", {
-    flag: "wx",
-  });
-  return baseline;
-}
+export const illustrateBaseline = (o) => freezeBaseline(o, baselineFile(o));
 export function illustrationBlock(i) {
   if (Array.isArray(i.images)) {
     const cells = i.images.map(x => `<td align="center"><a href="${escape(x.file)}"><img src="${escape(x.file)}" alt="${escape(x.alt)}" width="250"></a><br>${escape(x.caption)}</td>`);

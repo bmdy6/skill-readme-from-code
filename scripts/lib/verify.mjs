@@ -20,6 +20,24 @@ const check = (id, issues = [], extra = {}) => ({
   issues,
   ...extra,
 });
+export function editorialChecks(documents) {
+  const issues = [];
+  for (const { file, text } of documents) {
+    // Work-log wording belongs in a PR, not in a README a stranger reads.
+    const log = prose(text).match(
+      /本轮|上一轮|第\s*[0-9一二三四五六七八九十]+\s*轮|\b(?:this|last|previous) round\b|\bin round \d+\b/i,
+    );
+    if (log) issues.push(`${file}: Work-log wording: ${log[0]}`);
+    const lines = text.replace(/<!--[\s\S]*?-->/g, "").split(/\r?\n/);
+    const title = lines.findIndex((l) => /^#\s|<h1[\s>]/i.test(l));
+    if (
+      title > 0 &&
+      lines.slice(0, title).some((l) => /^\s*[^\s<\[!|>-]/.test(l))
+    )
+      issues.push(`${file}: Text before the title`);
+  }
+  return issues;
+}
 export async function staticChecks(repo, facts, brief = {}, opts = {}) {
   const documents = await readmeDocuments(repo, brief);
   const md = documents.find(d => d.language === "en")?.text || documents[0]?.text || "",
@@ -238,20 +256,7 @@ export async function staticChecks(repo, facts, brief = {}, opts = {}) {
         );
     }
   }
-  for (const { file, text } of documents) {
-    // Work-log wording belongs in a PR, not in a README a stranger reads.
-    const log = prose(text).match(
-      /本轮|上一轮|第\s*[0-9一二三四五六七八九十]+\s*轮|\b(?:this|last|previous) round\b|\bin round \d+\b/i,
-    );
-    if (log) copy.push(`${file}: Work-log wording: ${log[0]}`);
-    const lines = text.replace(/<!--[\s\S]*?-->/g, "").split(/\r?\n/);
-    const title = lines.findIndex((l) => /^#\s|<h1[\s>]/i.test(l));
-    if (
-      title > 0 &&
-      lines.slice(0, title).some((l) => /^\s*[^\s<\[!|>-]/.test(l))
-    )
-      copy.push(`${file}: Text before the title`);
-  }
+  copy.push(...editorialChecks(documents));
   const showcase = brief.style === "showcase";
   const budget = brief.wordBudget ?? (showcase ? 900 : 400);
   const badgeLimit = showcase ? 8 : 4;

@@ -556,3 +556,82 @@ README paths and unmatched/repeated markers fail before README changes.
 A failed image self-check leaves README text unchanged. Omitting `readmes`
 keeps rendering-only behavior. Existing templates retain their current behavior.
 The output remains PNG; WebP conversion is optional and is not performed.
+
+## Tidy mode (0.5.0)
+
+`node scripts/run.mjs tidy baseline --repo DIR --work WORK` freezes committed root
+`README*.md` files as commit/blob references in `tidy-baseline.json`, using the same
+implementation as illustrate. It refuses dirty READMEs and an existing baseline.
+`tidy verify` reads the frozen git objects, current READMEs and WORK/tidy.json,
+writes `tidy-report.json` and `tidy-report.md`, and exits 0 for pass, 1 for failed
+checks, 2 for invalid input/baseline or execution errors. `--local --offline` uses
+the existing local renderer and remote-image placeholders for reproducible runs.
+It does not run write/illustrate verification or execute project commands.
+
+T1 preserves H2 headings; T2/T3 compare trimmed nonempty lines with multiplicity,
+independently for every language file. Registered replacements are replayed before
+comparison, so sentence edits within a paragraph work too. Reordered sections need
+no registration. T4 preserves every fenced block's language, content and count,
+including non-shell blocks; ordering may change. T5 preserves parsed image/link
+URLs unless explicitly removed or covered by a registered text replacement.
+T6 resolves fragment links in registered added navigation against rendered anchors
+(including explicit HTML IDs). T7 directly shares V6's work-log and pre-title prose
+checks; it does not apply the rest of V6 or waive pre-existing wording. T8 reuses
+firstScreen and gates desktop light/dark installation visibility; mobile is
+captured for inspection. An already below-fold installation warns. A missing
+previously identified installation fails. Without an identifiable installation,
+T8 warns that it was not measured. Missing image assets affect rendering; reports
+state their renderer and offline policy, and real acceptance needs target assets.
+
+### WORK/tidy.json
+
+All fields are optional; `{}` is valid for pure section movement. Unknown top-level
+fields, invalid entries, unknown README files and empty reasons fail verification.
+Use exact text, not regexes. Each entry names its `readme`. Removed/rewritten text
+must exist in baseline; rewritten output must exist in the result (split paragraphs
+can appear separately). Overlapping/repeated replacements fail. Empty `after`
+means deletion. Heading names in `renamedHeadings` omit `##`; register a removed
+heading in `removed` with its full Markdown line. New files/deleted language files
+are outside tidy and fail T2.
+
+`added` accepts one-line entries with `kind`: `oneLiner` (below H1, before H2),
+`navigation` (a line of Markdown links separated by punctuation), `heading` (H2),
+or `details` (`<details>`, `<summary>…</summary>`, `</details>` or opening details
+and summary on one line). It cannot authorize arbitrary new body paragraphs.
+Keep at most one oneLiner and one navigation entry per README. Existing prose can
+be wrapped without registering the prose. Code changes cannot be waived.
+`removedLinks` records a URL intentionally dropped without a body replacement.
+`installs` optionally overrides the first-shell-block heuristic for each README,
+using the existing `{block: "…"}` or `{url: "…", heading: "…"}` contract.
+
+Complete example (a hypothetical README originally containing `## Setup`, the
+old introduction and obsolete docs link shown below):
+
+```json
+{
+  "renamedHeadings": [
+    {"readme": "README.md", "before": "Setup", "after": "Quick start", "reason": "Use the entry-point label in navigation"}
+  ],
+  "rewritten": [
+    {"readme": "README.md", "before": "This round we built a CLI that creates course files.", "after": "A CLI that creates course files.", "reason": "Remove development-process wording"}
+  ],
+  "removed": [
+    {"readme": "README.md", "before": "[Old docs](docs/old.md)", "after": "", "reason": "Obsolete documentation removed"}
+  ],
+  "added": [
+    {"readme": "README.md", "kind": "navigation", "text": "[Quick start](#quick-start) · [Guide](#guide)", "reason": "Expose existing sections"},
+    {"readme": "README.md", "kind": "details", "text": "<details><summary>English</summary>", "reason": "Fold existing English explanation"},
+    {"readme": "README.md", "kind": "details", "text": "</details>", "reason": "Close English explanation wrapper"}
+  ],
+  "installs": {"README.md": {"block": "npm ci"}}
+}
+```
+
+The four positive fixtures in `test/fixtures/tidy/` preserve exact Git blob bytes
+with provenance in `source.json` and all pass T1–T8. repo-tutor keeps the parent
+of PR #3 as its before baseline and uses PR #4's merge commit
+`ac40c5d4cbfa8ab37df0948d2f1fd4103a352096` as after. Its manifest registers both
+sentence rewrites from PR #4 with reasons; `afterPr` and `structureCommit` record
+the two-PR provenance. `repo-tutor-worklog/` separately preserves PR #3's original
+merged README, including “本轮” and “第 1 轮”, and must fail only T7. No verifier
+exemption or fabricated snapshot is needed.
