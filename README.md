@@ -21,7 +21,7 @@ Then tell your agent:
 
 > Use readme-from-code to write a source-backed README for this repo.
 
-Requires authenticated gh access, Node 20+, Chromium, and a skill-capable agent; network for setup.
+Requires gh, Node 20+, Chromium, and a skill-capable agent; network for setup.
 
 ## What you get
 
@@ -55,7 +55,7 @@ See the [command reference](docs/reference.md).
 
 **Is image data real?** Terminal text comes from captures; diagrams are labeled illustrations. This hero shows the fixture’s actual before/after first screens.
 
-**Can I install remotely?** This private preview requires authenticated gh access and installs the main branch; unauthenticated installation is unverified.
+**Can I install remotely?** The repository is public and installation uses the main branch; unauthenticated gh installation is unverified.
 
 **What do audit scores mean?** They count passed README checks, not ratings from visitors.
 
