@@ -1,3 +1,5 @@
+低维护：作为作品展示，Issue 可能不及时回复
+
 # readme-from-code
 
 Turn code into a README people want to try, with tested commands and a checked first screen.
